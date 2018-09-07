@@ -30,6 +30,7 @@
 				<option value="7" <?php if ($input_property_type==7 ) echo "selected"; ?> class="text">Multi-family</option>
 				<option value="8" <?php if ($input_property_type==8 ) echo "selected"; ?> class="text">Recreational</option>
 				<option value="9" <?php if ($input_property_type==9 ) echo "selected"; ?> class="text">Exclusive</option>
+				<option value="10" <?php if ($input_property_type==10 ) echo "selected"; ?> class="text">Mobile</option>
 			</select>
 		</div>
 	</div>
@@ -120,8 +121,8 @@
 	<input type="hidden" name="wk-clear" value="Clear">
 </form>
 
-<?php 
-if(isset($_POST['price'])) 
+<?php
+if(isset($_POST['price']))
 	$mm = explode(';',$_POST['price']);
 	else $mm = array(0,1000);
 ?>
