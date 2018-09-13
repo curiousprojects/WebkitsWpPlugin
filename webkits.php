@@ -3,12 +3,13 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.010
- * Author: Curious Projects 
+ * Version: 3.020
+ * Author: Curious Projects
  **/
 
 /*error_reporting(E_ERROR | E_WARNING | E_PARSE);
 ini_set('display_errors', 1); */
+
 require 'includes/updater.php';
 $MyUpdateChecker = PucFactory::buildUpdateChecker(
     'https://webkitadmin.com/plugin/metadata.json',
@@ -17,7 +18,15 @@ $MyUpdateChecker = PucFactory::buildUpdateChecker(
 );
 
 //$dbHost = 'http://159.203.14.115/';
-$dbHost = 'https://webkitadmin.com/';
+$dbHost = 'http://webkitadmin.com/';
+//$dbHost = 'http://webkitadmin.project:7700/';
+if(strpos($_SERVER['HTTP_HOST'], 'project') !== false)
+{
+	$dbHost = 'http://webkitadmin.project:7700/';
+}
+else{
+	$dbHost = 'http://webkitadmin.com/';
+}
 
 add_action('wp_loaded', 'webkits_override'); //Cache Flush
 add_action('wp_enqueue_scripts', 'webkits_styles');  //CSS Files
@@ -50,7 +59,7 @@ add_shortcode("agents_page", "webkits_agents_shortcode"); //AGENTS SHORTCODE
 add_shortcode("agent", "webkits_agent_shortcode");  //AGENT DETAILS SHORTCODE
 /* section =   [mini, name, bio, awards, social, testimonial, office, listings] */
 add_shortcode("mainpage", "webkits_mainpage_shortcode"); // WIDGETS DETAILS SHORTCODE
-/* section =   [search,openhouse,calculator,slider] 
+/* section =   [search,openhouse,calculator,slider]
    class   =   ?
    type     = [random : lastest] - slider link*/
 add_shortcode("seo", "webkits_seo_shortcode"); //SEO Shortcode
@@ -123,14 +132,14 @@ function webkits_get_markers() {
     session_start();
     if (isset($_SESSION['webkit-search'])) {
         $_POST = $_SESSION['webkit-search'];
-    }    
-    $options = get_option('webkits');    
+    }
+    $options = get_option('webkits');
     $link = "ShowMarkers/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
     $json_feed_url = $dbHost . $link;
     $_POST['data'] = $_POST;
-    $_POST['perpage'] = $listingPerPage;          
+    $_POST['perpage'] = $listingPerPage;
     $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-    echo $json['body']; 
+    echo $json['body'];
     die();
 }
 
@@ -180,7 +189,7 @@ function webkits_accept_crea() {
     session_start();
     echo($_SESSION['webkits-accept']);
     $options = get_option('webkits');
-    if((isset($_POST['data']) && $_POST['data'] == 1 ) || (isset($options['webkits_agree_msg']) && $options['webkits_agree_msg'] == '0')) 
+    if((isset($_POST['data']) && $_POST['data'] == 1 ) || (isset($options['webkits_agree_msg']) && $options['webkits_agree_msg'] == '0'))
     $_SESSION['webkits-accept'] = 1;
     echo($_SESSION['webkits-accept']);
     die();
@@ -237,7 +246,7 @@ function webkits_og_tags() {
             }
                 $listing = $_SESSION['listings'];
                 ?>
-                
+
                 <meta property="og:title" id="ogtitle"
                       content="<?php echo $listing->basic->UnparsedAddress . ", " . $listing->basic->City . ' - $' . $listing->content->mprice ?>"/>
                 <meta property="og:description" id="ogdescription" content="<?php echo $listing->content->Remarks; ?>"/>
@@ -249,7 +258,7 @@ function webkits_og_tags() {
                 <meta property="og:image:width" content="<?php echo $listing->content->imagewidth; ?>" />
                 <meta property="og:image:height" content="<?php echo $listing->content->imageheight; ?>" />
                 <?php
-        
+
         }
     }
 }
@@ -281,23 +290,23 @@ function add_email_header($message, $args) {
         $l = $listing->basic;
         if($args['plain_text'] != 1) {
             $email_header = '
-           '.$l->UnparsedAddress.' 
-<br> 
+           '.$l->UnparsedAddress.'
+<br>
 '.$l->City.'<br>
 '.$l->StateOrProvince.' <br>
-'.$l->PostalCode.' 
+'.$l->PostalCode.'
 <br>
 '.substr($l->PostalCode,0,3).'
 			<br>
 '.$listing->info->ListingID.'
 			<br>
-           
+
 '.$l->Type.'
-		   <br> 
+		   <br>
 teamrealty.ca
-            
+
 			';
-        
+
         } else {
         $email_header = 'Street Address: '.$l->UnparsedAddress." \r\n ".'City: '.$l->City." \r\n ".'Province: '.$l->StateOrProvince." \r\n ".'Postal: '.$l->PostalCode.' - '.substr($l->PostalCode,0,3)." \r\n";
         $email_header .= "MLS: ".$listing->info->ListingID." \r\n ".'Property Type: '.$l->Type." \r\n\r\n\r\n";
@@ -420,7 +429,7 @@ function webkits_details_shortcode($atts, $content = null) {
             include('inc/agreement.php');
             break;
         case 'price':
-            echo $listing->content->price;
+            echo '<p class="price">$' . number_format( (float) $listing->content->mprice ) . '</p>';
             break;
         case 'tags':
             echo $listing->content->tags;
@@ -496,6 +505,7 @@ function webkits_agent_shortcode($atts, $content = null) {
         $options = get_option('webkits');
         $link = "agents/" . $options['webkits_list_id'] . "/" . $_GET['l'];
         $json_feed_url = $dbHost . $link;
+
         $args = array('timeout' => 120);
 
         $json_feed = wp_remote_post($json_feed_url, $args);
@@ -511,7 +521,7 @@ function webkits_agent_shortcode($atts, $content = null) {
         'section' => "mini",
     ), $atts));
 
-    
+
     if ($args['section'] == "listings") {
         wp_enqueue_style('map', plugin_dir_url(__FILE__) . ('public/css/map.css'));
         wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
@@ -523,10 +533,11 @@ function webkits_agent_shortcode($atts, $content = null) {
 
     ob_start();
 
+    $newMini = str_replace('<a ', '<a target="_blank" ', $agent->agent->list);
 
     switch ($args['section']) {
         case 'mini':
-            echo $agent->agent->list;
+            echo $newMini;
             break;
         case 'name':
             echo $agent->agent->name;
@@ -573,7 +584,7 @@ function webkits_agent_shortcode($atts, $content = null) {
 
             $_POST['commercial'] = 1;
             $_POST['lots'] = 1;
-            
+
 
             if (!isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) $_POST = $_SESSION['webkit-search'];
             $link = "ShowListings/agent/" . $agent->agent->aid;
@@ -583,7 +594,7 @@ function webkits_agent_shortcode($atts, $content = null) {
 
             $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
             $listings = json_decode($json['body']);
-           
+
             $webkitsIgnore = true;
             require("inc/listing_page.php");
             break;
@@ -630,6 +641,7 @@ function webkits_options() {
             $options['webkits_agree_msg'] = $_POST['webkits_agree_msg'];
             $options['webkits_feature_template'] = $_POST['webkits_feature_template'];
             $options['webkits_listing_default'] = $_POST['webkits_listing_default'];
+            $options['webkits_officemlsid'] = $_POST['webkits_officemlsid'];
             update_option('webkits', $options);
 
             if (isset($_POST['webkits_update_feed_now']) && $_POST['webkits_update_feed_now'] == 'Y') {
@@ -662,6 +674,7 @@ function webkits_options() {
         $webkits_map_style = (isset($options['webkits_map_style'])) ? str_replace('\"', '"', $options['webkits_map_style']) : '[]';
         $webkits_listing_default = (isset($options['webkits_listing_default'])) ? str_replace('\"', '"', $options['webkits_listing_default']) : "grid";
         $webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
+	    $webkits_officemlsid = (isset($options['webkits_officemlsid'])) ? $options['webkits_officemlsid'] : '';
     }
     $pages = get_pages();
     require("includes/options-pages.php");
@@ -856,7 +869,7 @@ function webkits_change_view() {
 //PAGINATION
 function renderNavigation($cntAround = 1, $cntPages = 1, $current = 1) {
     $out      = '';
-    $isGap    = false; 
+    $isGap    = false;
     $cntPages = ceil($cntPages);
     $current--;
     for ($i = 0; $i < $cntPages; $i++) {
@@ -866,7 +879,7 @@ function renderNavigation($cntAround = 1, $cntPages = 1, $current = 1) {
             $isGap = true;
             $i = ($i < $current ? $current - $cntAround : $cntPages - 1) - 1;
         }
-        $lnk = ($isGap ? '<li><a href="#">...</a></li>' : ($i + 1)); 
+        $lnk = ($isGap ? '<li><a href="#">...</a></li>' : ($i + 1));
         if ($i != $current && !$isGap) {
             $params = $_GET;
             unset($params["listing-page"]);
@@ -878,9 +891,9 @@ function renderNavigation($cntAround = 1, $cntPages = 1, $current = 1) {
         if ($i == $current) {
             $lnk = '<li class="active"><a href="#">' . $lnk . '</a></li>';
         }
-        $out .= $lnk; 
+        $out .= $lnk;
     }
-    return $out; 
+    return $out;
 }
 //SHORTCODE
 function webkits_listings_sc($atts, $content = null) {
@@ -894,7 +907,7 @@ function webkits_listings_sc($atts, $content = null) {
         wp_enqueue_script('gmap', plugin_dir_url(__FILE__) . 'public/js/map.js', array('jquery'), '', true);
         wp_enqueue_script('cluster', plugin_dir_url(__FILE__) . 'public/js/marker.js', array('jquery'), '', true);
         wp_enqueue_script('listings', plugin_dir_url(__FILE__) . 'public/js/listings.js', array('jquery'), '', true);
-        
+
         wp_enqueue_script('masonary', plugin_dir_url(__FILE__) . 'public/js/masonry.min.js', array('jquery'), '', true);
         wp_enqueue_script('search', plugin_dir_url(__FILE__) . 'public/js/search.js', array('jquery'), '', true);
 
@@ -909,7 +922,6 @@ function webkits_listings_sc($atts, $content = null) {
 
     $options = get_option("webkits");
 
-    
     if (isset($_POST['clear']) && isset($_SESSION['webkit-search'])) {
         unset($_SESSION['webkit-search']);
         unset($_POST);
@@ -924,6 +936,7 @@ function webkits_listings_sc($atts, $content = null) {
         'section' => "listings",
         'filter' => '',
         'show'    => 0,
+        "all"   =>  1,
     ), $atts));
 
     $check = "";
@@ -948,12 +961,19 @@ function webkits_listings_sc($atts, $content = null) {
             $listingPerPage = $options['webkits_listing_perpage'];
             $hideAgent      = isset($options['webkits_hide_agents']) ? $options['webkits_hide_agents'] : 0;
 
+            $officeMlsId      = isset($options['webkits_officemlsid']) ? $options['webkits_officemlsid'] : '';
+
             if (isset($_GET['listing-page']) && is_numeric($_GET['listing-page'])) {
                 $_POST['offset'] = $listingPerPage * ($_GET['listing-page'] - 1);
 
                 $CurrentPage = $_GET['listing-page'];
             } else {
                 $CurrentPage = 1;
+            }
+
+            if(isset($officeMlsId) && !empty($officeMlsId) && isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
+            {
+	            $_POST['officeMlsId'] = $officeMlsId;
             }
 
             if(isset($args['filter'])) {
@@ -974,11 +994,11 @@ function webkits_listings_sc($atts, $content = null) {
             }
 
             $json_feed_url = $dbHost . $link;
+
             $_POST['data']    = $_POST;
             $_POST['perpage'] = $listingPerPage;
             $json     = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
             $listings = json_decode($json['body']);
-
 
             $allListings = json_decode($json['body']);
 
@@ -1003,8 +1023,6 @@ function webkits_listings_sc($atts, $content = null) {
                 }
 
             }
-            
-
 
             if (isset($atts['from-city']) && $atts['from-city'] != '') {
                 $_POST['from_city'] = $atts['from-city'];
@@ -1042,6 +1060,7 @@ function webkits_listings_sc($atts, $content = null) {
             $link = "ShowListings/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
 
             if (isset($_POST['srch-term'])) {
+
                 if ($_POST['srch-term'] == "openhouse") {
                     $link = "ShowOpenHouse/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
                 }
@@ -1050,10 +1069,15 @@ function webkits_listings_sc($atts, $content = null) {
             $link = "ShowListings/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
 
             $json_feed_url = $dbHost . $link;
+            //return $json_feed_url;
             $_POST['data'] = $_POST;
-            $_POST['perpage'] = $listingPerPage;          
+            $_POST['perpage'] = $listingPerPage;
+
             $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
             $listings = json_decode($json['body']);
+
+
             require "inc/listing_page.php";
             if(isset($search)) $_POST['search'] = $search;
             break;
@@ -1123,7 +1147,7 @@ function webkits_listings_sc($atts, $content = null) {
             require "includes/listing_map.php";
              if(isset($search)) $_POST['search'] = $search;
             break;
-            case 'search':
+        case 'search':
             wp_enqueue_style('jquery-mob',plugin_dir_url(__FILE__) . ('public/css/ion.rangeSlider.css'));
             wp_enqueue_style('jquery-mob2',plugin_dir_url(__FILE__) . ('public/css/ion.rangeSlider.skinHTML5.css'));
             wp_enqueue_script('jquery-m',plugin_dir_url(__FILE__) . ('public/js/ion.rangeSlider.min.js'));
@@ -1137,6 +1161,7 @@ function webkits_listings_sc($atts, $content = null) {
 
             $link          = "GetOffices/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
             $json_feed_url = $dbHost . $link;
+
             $json    = wp_remote_post($json_feed_url, array());
             $offices = json_decode($json['body']);
             require "inc/listing_search.php";
@@ -1145,7 +1170,7 @@ function webkits_listings_sc($atts, $content = null) {
         wp_enqueue_style('jquery-mob',plugin_dir_url(__FILE__) . ('public/css/ion.rangeSlider.css'));
         wp_enqueue_style('jquery-mob2',plugin_dir_url(__FILE__) . ('public/css/ion.rangeSlider.skinHTML5.css'));
         wp_enqueue_script('jquery-m',plugin_dir_url(__FILE__) . ('public/js/ion.rangeSlider.min.js'));
-        
+
             if (!isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
                 $_POST = $_SESSION['webkit-search'];
             }

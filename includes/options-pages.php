@@ -117,7 +117,7 @@
                 <th scope="row"><label for="webkits_hide_agents">Hide Agent Name<br/><em></em></label></th>
                 <td><input name="webkits_hide_agents" id="webkits_hide_agents" value="1" class="regular-text" type="checkbox" <?php echo $webkits_hide_agents; ?> ></td>
             </tr>
-            
+
             <tr>
                 <th scope="row"><label for="webkits_bc_agent">BC Agent?<br/><em></em></label></th>
                 <td><input name="webkits_bc_agent" id="webkits_bc_agent" value="1" class="regular-text" type="checkbox" <?php echo $webkits_bc_agent; ?> ></td>
@@ -192,6 +192,13 @@
                 <th scope="row"><label for="webkits_update_feed_now">Update feed now</label></th>
                 <td>
                     <input name="webkits_update_feed_now" type="checkbox" value="Y"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row"><label for="webkits_officemlsid">Office MLSID#</label></th>
+                <td>
+                    <input name="webkits_officemlsid" type="text" value="<?php echo $webkits_officemlsid; ?>"/>
                 </td>
             </tr>
 
