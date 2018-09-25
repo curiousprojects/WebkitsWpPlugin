@@ -32,7 +32,7 @@
               <label for="input_open_house"><input name="input_open_house" id="input_open_house" value="1" type="checkbox" <?php echo $check; ?> /> Open Houses Only</label>
           </div>
           <div class="col-sm-4">
-            
+
             <div class="range">
               <div class="row">
               <div class="col-sm-12 " style="margin-bottom:-35px;">
@@ -47,14 +47,14 @@
             </div>
 
             <!-- Bathrooms -->
-            
+
             <div class="range">
               <div class="row">
               <div class="col-sm-12 " style="margin-bottom:-35px;">
               <label  style="text-align:center;width:100%">
               <small>Bathrooms</small>
             </label>
-            </div> 
+            </div>
               <div class="col-sm-12 ">
               <input type="text"  name="bathroom" class="slider10" value="" />
       </div>
@@ -62,7 +62,7 @@
 
             </div>
 
-   
+
             <div class="range">
               <div class="row">
               <div class="col-sm-12 ">
@@ -70,7 +70,7 @@
               <label style="text-align:center;width:100%">
               <small>Price</small>
             </label>
-            </div> 
+            </div>
 
         <input type="text" id='range-price' name="price" value="" />
       </div>
@@ -96,6 +96,7 @@
                 <option value="7" <?php if ($_POST['input_property_type']==7 ) echo "selected"; ?> class="text">Multi-family</option>
                 <option value="8" <?php if ($_POST['input_property_type']==8 ) echo "selected"; ?> class="text">Recreational</option>
                 <option value="9" <?php if ($_POST['input_property_type']==9 ) echo "selected"; ?> class="text">Exclusive</option>
+                <option value="10" <?php if ($input_property_type==10 ) echo "selected"; ?> class="text">Mobile</option>
               </select>
             </div>
             <div class="form-group">
