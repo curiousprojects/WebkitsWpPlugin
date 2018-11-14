@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.020
+ * Version: 3.023
  * Author: Curious Projects
  **/
 
@@ -18,7 +18,7 @@ $MyUpdateChecker = PucFactory::buildUpdateChecker(
 );
 
 //$dbHost = 'http://159.203.14.115/';
-$dbHost = 'http://webkitadmin.com/';
+//$dbHost = 'http://webkitadmin.com/';
 //$dbHost = 'http://webkitadmin.project:7700/';
 if(strpos($_SERVER['HTTP_HOST'], 'project') !== false)
 {
@@ -1005,6 +1005,7 @@ function webkits_listings_sc($atts, $content = null) {
             require "inc/listing_page.php";
             break;
         case 'listings':
+
             $listingPerPage = $options['webkits_listing_perpage'];
             $listingpage    = get_post($options['webkits_listing_page'])->guid . "&l=";
             $hideAgent      = isset($options['webkits_hide_agents']) ? $options['webkits_hide_agents'] : 0;
@@ -1044,7 +1045,33 @@ function webkits_listings_sc($atts, $content = null) {
                 $_POST['lots'] = 1;
             }
 
+            if (isset($atts['condo']) && $atts['condo'] == 1)
+            {
+                $_POST['condo'] = 1;
+
+            }
+            if (isset($atts['address']) && $atts['address'] != '')
+            {
+                if(strpos($atts['address'],',') != false)
+                {
+                    $address = explode(',',$atts['address']);
+
+                    if(isset($address[0]))
+                        $_POST['address'] = $address[0];
+
+                    if(isset($address[1]))
+                        $_POST['city'] = $address[1];
+
+                    if(isset($address[2]))
+                        $_POST['postalcode'] = $address[2];
+                }
+                else {
+                    $_POST['address'] = $atts['address'];
+                }
+            }
+            
             if (isset($_POST['pressed'])) {
+
                 $search = $_POST['search'];
                 unset($_POST['pressed']);
                 $_POST['live-search'] = true;
@@ -1053,10 +1080,12 @@ function webkits_listings_sc($atts, $content = null) {
                 $_SESSION['webkit-search'] = $_POST;
                 header('Location: '.$_SERVER['REQUEST_URI']);
             }
-            if (!isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
+
+            if (!isset($_POST['condo']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
                 $_POST = $_SESSION['webkit-search'];
             }
 
+//FERNSIDE STREET,FINLAYSON CRESCENT,NOBLE CRESCENT,noble crescent//19663544
             $link = "ShowListings/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
 
             if (isset($_POST['srch-term'])) {
@@ -1074,7 +1103,7 @@ function webkits_listings_sc($atts, $content = null) {
             $_POST['perpage'] = $listingPerPage;
 
             $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
+            //echo "<pre>";print_r($json);die;
             $listings = json_decode($json['body']);
 
 
@@ -1163,6 +1192,7 @@ function webkits_listings_sc($atts, $content = null) {
             $json_feed_url = $dbHost . $link;
 
             $json    = wp_remote_post($json_feed_url, array());
+
             $offices = json_decode($json['body']);
             require "inc/listing_search.php";
             break;
@@ -1181,7 +1211,53 @@ function webkits_listings_sc($atts, $content = null) {
 
             $link          = "GetOffices/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
             $json_feed_url = $dbHost . $link;
-            $json    = wp_remote_post($json_feed_url, array());
+
+	        //file_put_contents('000.txt',$json_feed_url);
+	        //error_reporting(E_ERROR | E_WARNING | E_PARSE);
+	        //ini_set('display_errors', 1);
+            /*$json    = wp_remote_post('http://inside.bulkbuyonly.com/api.php',
+                                      array('area'=> 'Master','module'=>'GetFabricList','token'=>'.CL5xHL!3rHn1#bHkJ5w^M0VH~W7oC5s.')
+            );
+            WP_Error Object
+            (
+                [errors] => Array
+                    (
+                        [http_request_failed] => Array
+                            (
+                                [0] => cURL error 6: Could not resolve host: inside.bulkbuyonly.com
+                            )
+
+                    )
+
+                [error_data] => Array
+                    (
+                    )
+
+            )
+            */
+
+	        $json    = wp_remote_post($json_feed_url,array());
+	        /*
+	        WP_Error Object
+            (
+                [errors] => Array
+                    (
+                        [http_request_failed] => Array
+                            (
+                                [0] => cURL error 7: Failed to connect to webkitadmin.project port 7700: No route to host
+                            )
+
+                    )
+
+                [error_data] => Array
+                    (
+                    )
+
+            )
+	        */
+
+	        //file_put_contents('000.txt',print_r($json,true));exit;
+
             $offices = json_decode($json['body']);
             require "includes/listing_search.php";
             break;
