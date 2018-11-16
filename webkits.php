@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.023
+ * Version: 3.024
  * Author: Curious Projects
  **/
 
@@ -1048,11 +1048,20 @@ function webkits_listings_sc($atts, $content = null) {
             if (isset($atts['condo']) && $atts['condo'] == 1)
             {
                 $_POST['condo'] = 1;
+                $_POST['condo_search'] = true;
 
             }
+
             if (isset($atts['address']) && $atts['address'] != '')
             {
-                if(strpos($atts['address'],',') != false)
+                 $arraddress = explode('|',$atts['address']);
+
+                    if(is_array($arraddress) && count($arraddress) > 0)
+                    {
+                        $_POST['address'] = $arraddress;
+                    }
+
+                /* if(strpos($atts['address'],',') != false)
                 {
                     $address = explode(',',$atts['address']);
 
@@ -1067,7 +1076,7 @@ function webkits_listings_sc($atts, $content = null) {
                 }
                 else {
                     $_POST['address'] = $atts['address'];
-                }
+                }*/
             }
             
             if (isset($_POST['pressed'])) {
@@ -1078,10 +1087,11 @@ function webkits_listings_sc($atts, $content = null) {
                 $CurrentPage               = 1;
                 $_POST['offset']           = 0;
                 $_SESSION['webkit-search'] = $_POST;
+
                 header('Location: '.$_SERVER['REQUEST_URI']);
             }
 
-            if (!isset($_POST['condo']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
+            if (!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
                 $_POST = $_SESSION['webkit-search'];
             }
 
@@ -1098,10 +1108,11 @@ function webkits_listings_sc($atts, $content = null) {
             $link = "ShowListings/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
 
             $json_feed_url = $dbHost . $link;
+
             //return $json_feed_url;
             $_POST['data'] = $_POST;
             $_POST['perpage'] = $listingPerPage;
-
+          //  echo "<pre>";print_r($_POST);die;
             $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
             //echo "<pre>";print_r($json);die;
             $listings = json_decode($json['body']);
