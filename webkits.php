@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.024
+ * Version: 3.025
  * Author: Curious Projects
  **/
 
@@ -395,6 +395,7 @@ function webkits_details_shortcode($atts, $content = null) {
     } else {
         $listing = $_SESSION['listings'];
     }
+
     $args = (shortcode_atts(array(
         'section' => "address",
         'col' => "2",
@@ -404,7 +405,7 @@ function webkits_details_shortcode($atts, $content = null) {
 
     ob_start();
 
-
+    //echo "<pre>";print_r($listing->content->FloorInfo);die;
     switch ($args['section']) {
         case 'address':
             if (isset($_SESSION['listings'])) {
@@ -1078,7 +1079,7 @@ function webkits_listings_sc($atts, $content = null) {
                     $_POST['address'] = $atts['address'];
                 }*/
             }
-            
+
             if (isset($_POST['pressed'])) {
 
                 $search = $_POST['search'];
@@ -1089,6 +1090,8 @@ function webkits_listings_sc($atts, $content = null) {
                 $_SESSION['webkit-search'] = $_POST;
 
                 header('Location: '.$_SERVER['REQUEST_URI']);
+                //header('Location: '.$_SERVER['HTTP_HOST'].'/listings');
+
             }
 
             if (!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search'])) {
@@ -1112,7 +1115,7 @@ function webkits_listings_sc($atts, $content = null) {
             //return $json_feed_url;
             $_POST['data'] = $_POST;
             $_POST['perpage'] = $listingPerPage;
-          //  echo "<pre>";print_r($_POST);die;
+            //echo "<pre>";print_r($json_feed_url);die;
             $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
             //echo "<pre>";print_r($json);die;
             $listings = json_decode($json['body']);

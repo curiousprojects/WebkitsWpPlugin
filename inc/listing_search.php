@@ -1,4 +1,4 @@
-<form id="search" class="search-listing" method="post">
+<form id="search" class="search-listing" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_listings_page'])->guid;}?>">
 	<div clas="row">
 		<div class="searcharrow">
 			<img src="https://webkitadmin.com/assets/images/home-search-arrow.png" alt="Search Arrow">
