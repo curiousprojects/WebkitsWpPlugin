@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.025
+ * Version: 3.026
  * Author: Curious Projects
  **/
 
@@ -642,7 +642,7 @@ function webkits_options() {
             $options['webkits_agree_msg'] = $_POST['webkits_agree_msg'];
             $options['webkits_feature_template'] = $_POST['webkits_feature_template'];
             $options['webkits_listing_default'] = $_POST['webkits_listing_default'];
-            $options['webkits_officemlsid'] = $_POST['webkits_officemlsid'];
+            $options['webkits_officemlsid'] =  esc_html(str_replace(',','|',$_POST['webkits_officemlsid']));
             update_option('webkits', $options);
 
             if (isset($_POST['webkits_update_feed_now']) && $_POST['webkits_update_feed_now'] == 'Y') {
@@ -675,7 +675,7 @@ function webkits_options() {
         $webkits_map_style = (isset($options['webkits_map_style'])) ? str_replace('\"', '"', $options['webkits_map_style']) : '[]';
         $webkits_listing_default = (isset($options['webkits_listing_default'])) ? str_replace('\"', '"', $options['webkits_listing_default']) : "grid";
         $webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
-	    $webkits_officemlsid = (isset($options['webkits_officemlsid'])) ? $options['webkits_officemlsid'] : '';
+	    $webkits_officemlsid = (isset($options['webkits_officemlsid'])) ? str_replace('|',',',$options['webkits_officemlsid']) : '';
     }
     $pages = get_pages();
     require("includes/options-pages.php");
@@ -746,6 +746,7 @@ function webkits_mainpage_shortcode($atts, $content = null) {
                 $link = "slider/random/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
             else
                 $link = "slider/latest/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
+
             $json_feed_url = $dbHost. $link;
 
             $json = wp_remote_get($json_feed_url, array("body" => array("p" => $_POST)));
@@ -962,7 +963,7 @@ function webkits_listings_sc($atts, $content = null) {
             $listingPerPage = $options['webkits_listing_perpage'];
             $hideAgent      = isset($options['webkits_hide_agents']) ? $options['webkits_hide_agents'] : 0;
 
-            $officeMlsId      = isset($options['webkits_officemlsid']) ? $options['webkits_officemlsid'] : '';
+            $officeMlsId      = isset($options['webkits_officemlsid']) ? explode('|',$options['webkits_officemlsid']) : '';
 
             if (isset($_GET['listing-page']) && is_numeric($_GET['listing-page'])) {
                 $_POST['offset'] = $listingPerPage * ($_GET['listing-page'] - 1);
@@ -972,7 +973,7 @@ function webkits_listings_sc($atts, $content = null) {
                 $CurrentPage = 1;
             }
 
-            if(isset($officeMlsId) && !empty($officeMlsId) && isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
+            if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 && isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
             {
 	            $_POST['officeMlsId'] = $officeMlsId;
             }
@@ -981,6 +982,13 @@ function webkits_listings_sc($atts, $content = null) {
                 switch ($args['filter']){
                     case 'openhouse':
                         $link   = "Show/OpenHouse/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
+	                    if (isset($_POST['pressed'])) {
+	                        unset($_POST['pressed']);
+
+		                    $_POST['offset']           = 0;
+
+		                    header('Location: '.$_SERVER['REQUEST_URI']);
+		                    }
                     break;
                     case 'commercial':
                         $link   = "Show/Commercial/". $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
@@ -1045,7 +1053,9 @@ function webkits_listings_sc($atts, $content = null) {
             if (isset($atts['lots']) && $atts['lots'] == '1') {
                 $_POST['lots'] = 1;
             }
-
+            if(isset($atts['retail']) && $atts['retail'] == '1'){
+                $_POST['retail'] = 1;
+            }
             if (isset($atts['condo']) && $atts['condo'] == 1)
             {
                 $_POST['condo'] = 1;
