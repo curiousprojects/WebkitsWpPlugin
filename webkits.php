@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.028
+ * Version: 3.029
  * Author: Curious Projects
  **/
 
@@ -1006,6 +1006,7 @@ function webkits_listings_sc($atts, $content = null) {
         'filter' => '',
         'show'    => 0,
         "all"   =>  1,
+        "all_agent"   => 1,
     ), $atts));
 
     $check = "";
@@ -1040,17 +1041,14 @@ function webkits_listings_sc($atts, $content = null) {
             } else {
                 $CurrentPage = 1;
             }
-            if(isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
+            if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 && isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
             {
-	            if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 )
-	            {
-		            $_POST['officeMlsId'] = $officeMlsId;
-	            }
-	            if(isset($agentId) && !empty($agentId) && is_array($agentId) && count($agentId) > 0)
-	            {
-		            $_POST['AgentId'] = $agentId;
-	            }
+	               $_POST['officeMlsId'] = $officeMlsId;
             }
+	        if(isset($agentId) && !empty($agentId) && is_array($agentId) && count($agentId) > 0 &&  isset($args['all_agent']) && ($args['all_agent'] == false || $args['all_agent'] == '0' || $args['all_agent'] == 0))
+	        {
+		           $_POST['AgentId'] = $agentId;
+	        }
 
 
             //echo "<pre>";print_r($_POST);die;
