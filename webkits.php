@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.026
+ * Version: 3.028
  * Author: Curious Projects
  **/
 
@@ -643,6 +643,7 @@ function webkits_options() {
             $options['webkits_feature_template'] = $_POST['webkits_feature_template'];
             $options['webkits_listing_default'] = $_POST['webkits_listing_default'];
             $options['webkits_officemlsid'] =  esc_html(str_replace(',','|',$_POST['webkits_officemlsid']));
+            $options['webkits_agentid'] =  esc_html(str_replace(',','|',$_POST['webkits_agentid']));
             update_option('webkits', $options);
 
             if (isset($_POST['webkits_update_feed_now']) && $_POST['webkits_update_feed_now'] == 'Y') {
@@ -676,6 +677,7 @@ function webkits_options() {
         $webkits_listing_default = (isset($options['webkits_listing_default'])) ? str_replace('\"', '"', $options['webkits_listing_default']) : "grid";
         $webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
 	    $webkits_officemlsid = (isset($options['webkits_officemlsid'])) ? str_replace('|',',',$options['webkits_officemlsid']) : '';
+	    $webkits_agentid = (isset($options['webkits_agentid'])) ? str_replace('|',',',$options['webkits_agentid']) : '';
     }
     $pages = get_pages();
     require("includes/options-pages.php");
@@ -716,6 +718,35 @@ function webkits_mainpage_shortcode($atts, $content = null) {
         wp_enqueue_script('slu', plugin_dir_url(__FILE__) . 'public/js/sly.min.js', array('jquery'), '', true);
         wp_enqueue_script('vendor', plugin_dir_url(__FILE__) . 'public/js/vendor.js', array('jquery'), '', true);
     } else $start = '';
+
+	if(!wp_script_is("3dslide_js", "enqueued")){
+
+		/*wp_deregister_script('jquery-core');
+		wp_deregister_script('jquery-migrate');*/
+
+		wp_enqueue_style('font_css', plugin_dir_url(__FILE__) . ('public/3D_Slider/css/font-awesome/css/font-awesome.css'));
+		wp_enqueue_style('prphoto_css', plugin_dir_url(__FILE__) . ('public/3D_Slider/css/prettyPhoto.css'));
+		wp_enqueue_style('flex_css', plugin_dir_url(__FILE__) . ('public/3D_Slider/css/flexslider.css'));
+		wp_enqueue_style('3dslide_css', plugin_dir_url(__FILE__) . ('public/3D_Slider/css/style.css'));
+		/*wp_enqueue_style('aud_360p', plugin_dir_url(__FILE__) . ('public/3D_Slider/js/audioplayer/360player.css'));
+		wp_enqueue_style('aud_360pv', plugin_dir_url(__FILE__) . ('public/3D_Slider/js/audioplayer/360player-visualization.css'));*/
+
+		//wp_enqueue_script('jquery-core', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/jquery.js', array('jquery'), '', true);
+
+		wp_enqueue_script('modernizr', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/modernizr.custom.79639.js', array('jquery'), '2.0', true);
+		wp_enqueue_script('prphoto_js', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/jquery.prettyPhoto.js', array('jquery'), '2.0', true);
+		wp_enqueue_script('3dslide_js', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/all-functions.js', array('jquery'), '2.0', true);
+		wp_enqueue_script('class_list', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/classList.js', array('jquery'), '2.0', true);
+		wp_enqueue_script('bespoke', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/bespoke.js', array('jquery'), '2.0', true);
+		wp_enqueue_script('flex_js', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/jquery.flexslider.js', array('jquery'), '2.0', true);
+		/*wp_enqueue_script('aud_ber', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/audioplayer/script/berniecode-animator.js', array('jquery'), '', true);
+		wp_enqueue_script('aud_sound', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/audioplayer/script/soundmanager2.js', array('jquery'), '', true);
+		wp_enqueue_script('aud_mp3', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/audioplayer/mp3-player-button.js', array('jquery'), '', true);
+		wp_enqueue_script('aud_360p', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/audioplayer/script/360player.js', array('jquery'), '', true);*/
+
+		wp_enqueue_script('3d_custom', plugin_dir_url(__FILE__) . 'public/3D_Slider/js/custom.js', array('jquery'), '1.0', true);
+
+	}
     $scriptUrl = admin_url('admin-ajax.php');
     $options = get_option("webkits");
     $realurl = get_post($options['webkits_listings_page']);
@@ -803,6 +834,42 @@ function webkits_mainpage_shortcode($atts, $content = null) {
 
             require("includes/main_slider.php");
             break;
+	    case 'new_slider':
+		    /*if ($args['type'] == 'random')
+			    $link = "slider/random/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
+		    else
+			    $link = "slider/latest/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
+
+		    $json_feed_url = $dbHost. $link;
+
+		    $json = wp_remote_get($json_feed_url, array("body" => array("p" => $_POST)));
+		    $all = json_decode($json['body']);
+		    $show = '';
+		    foreach ($all->listing as $s) {
+			    $dom = new DOMDocument;
+			    $dom->loadHTML($s->listing);
+			    $img = null;
+			    $a = null;
+			    foreach ($dom->getElementsByTagName('img') as $node) {
+				    $img[] = $dom->saveHTML($node);
+			    }
+			    foreach ($dom->getElementsByTagName('a') as $node) {
+				    $link = $node->getAttribute('href');
+			    }
+			    foreach ($dom->getElementsByTagName('span') as $node) {
+				    if ($node->getAttribute('class') == 'agentslider')
+					    $agent = $dom->saveHTML($node);
+			    }
+
+			    $s_ele = '';
+			    $show .= $s_ele;
+		    }
+		    $realurl2 = get_post($options['webkits_listing_page']);
+
+		    $show = str_replace("{{CHANGEURL}}", $realurl2->guid . "&l=", $show);*/
+
+		    require("includes/new_main_slider.php");
+		    break;
     }
     $content .= ob_get_clean();
     return $content;
@@ -963,7 +1030,8 @@ function webkits_listings_sc($atts, $content = null) {
             $listingPerPage = $options['webkits_listing_perpage'];
             $hideAgent      = isset($options['webkits_hide_agents']) ? $options['webkits_hide_agents'] : 0;
 
-            $officeMlsId      = isset($options['webkits_officemlsid']) ? explode('|',$options['webkits_officemlsid']) : '';
+            $officeMlsId      = (isset($options['webkits_officemlsid'] ) && !empty($options['webkits_officemlsid']))? explode('|',$options['webkits_officemlsid']) : '';
+	        $agentId      = (isset($options['webkits_agentid']) && !empty($options['webkits_agentid']))? explode('|',$options['webkits_agentid']) : '';
 
             if (isset($_GET['listing-page']) && is_numeric($_GET['listing-page'])) {
                 $_POST['offset'] = $listingPerPage * ($_GET['listing-page'] - 1);
@@ -972,12 +1040,20 @@ function webkits_listings_sc($atts, $content = null) {
             } else {
                 $CurrentPage = 1;
             }
-
-            if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 && isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
+            if(isset($args['all']) && ($args['all'] == false || $args['all'] == '0' || $args['all'] == 0))
             {
-	            $_POST['officeMlsId'] = $officeMlsId;
+	            if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 )
+	            {
+		            $_POST['officeMlsId'] = $officeMlsId;
+	            }
+	            if(isset($agentId) && !empty($agentId) && is_array($agentId) && count($agentId) > 0)
+	            {
+		            $_POST['AgentId'] = $agentId;
+	            }
             }
 
+
+            //echo "<pre>";print_r($_POST);die;
             if(isset($args['filter'])) {
                 switch ($args['filter']){
                     case 'openhouse':
@@ -1006,7 +1082,9 @@ function webkits_listings_sc($atts, $content = null) {
 
             $_POST['data']    = $_POST;
             $_POST['perpage'] = $listingPerPage;
+
             $json     = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
             $listings = json_decode($json['body']);
 
             $allListings = json_decode($json['body']);

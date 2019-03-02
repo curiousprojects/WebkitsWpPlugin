@@ -196,12 +196,17 @@
             </tr>
 
             <tr>
-                <th scope="row"><label for="webkits_officemlsid">Office MLSID#</label></th>
+                <th scope="row"><label for="webkits_officemlsid">Office MLSID#<br/><em>(Seperate Multiple with Commas)</em></label></th>
                 <td>
                     <input name="webkits_officemlsid" type="text" value="<?php echo $webkits_officemlsid; ?>"/>
                 </td>
             </tr>
-
+            <tr>
+                <th scope="row"><label for="webkits_agentid">Agent ID<br/><em>(Seperate Multiple with Commas)</em></label></th>
+                <td>
+                    <input name="webkits_agentid" type="text" value="<?php echo $webkits_agentid; ?>"/>
+                </td>
+            </tr>
             </tbody>
         </table>
 
