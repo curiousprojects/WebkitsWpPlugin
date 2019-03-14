@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.029
+ * Version: 3.030
  * Author: Curious Projects
  **/
 
@@ -834,8 +834,8 @@ function webkits_mainpage_shortcode($atts, $content = null) {
 
             require("includes/main_slider.php");
             break;
-	    case 'new_slider':
-		    /*if ($args['type'] == 'random')
+	    case 'carousel_slider':
+		    if ($args['type'] == 'random')
 			    $link = "slider/random/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
 		    else
 			    $link = "slider/latest/" . $options['webkits_site_type'] . "/" . $options['webkits_list_id'];
@@ -844,12 +844,14 @@ function webkits_mainpage_shortcode($atts, $content = null) {
 
 		    $json = wp_remote_get($json_feed_url, array("body" => array("p" => $_POST)));
 		    $all = json_decode($json['body']);
+
 		    $show = '';
 		    foreach ($all->listing as $s) {
 			    $dom = new DOMDocument;
 			    $dom->loadHTML($s->listing);
 			    $img = null;
 			    $a = null;
+                //echo "<pre>";print_r($s);
 			    foreach ($dom->getElementsByTagName('img') as $node) {
 				    $img[] = $dom->saveHTML($node);
 			    }
@@ -861,12 +863,63 @@ function webkits_mainpage_shortcode($atts, $content = null) {
 					    $agent = $dom->saveHTML($node);
 			    }
 
-			    $s_ele = '';
-			    $show .= $s_ele;
-		    }
+			    $section = '
+			        <section>
+                    <div class="ss-row gglass go-anim"><!-- greensea is the class for the color scheme(there are 19) go-anim is for slide up animation on roll over -->
+                        
+                        <div class="-hover-effect h-style img-block">
+                            <a href="'.$link.'" >'.
+                                $img[0].'
+                                <div class="mask"><i class="icon-search"></i>
+                                    <span class="img-rollover"></span>
+                                </div>
+                            </a>
+
+                        </div>
+                        <!--<div class="hover-effect h-style">
+                            <a href="images/preview/01.jpg" rel="prettyPhotoImages[7]">
+                                <img src="images/preview/01.jpg" class="clean-img">
+                                <div class="mask"><i class="icon-search"></i>
+                                    <span class="img-rollover"></span>
+                                </div>
+                            </a>
+                        </div>-->
+                        
+                        <div class="ss-container">
+                            <h3 class="content-title"><a href="'.$link.'">'.$s->info->UnparsedAddress.'</a></h3>
+                            <div>'.wp_trim_words($s->info->PublicRemarks,40).'
+                                <!--<a href="#" data-target=""> <strong>Read more</strong>  <i class="icon-long-arrow-right"></i></a>-->
+                            </div>
+                            
+                            <!-- START INFO HOLDER -->
+                            <div class="icon-soc-container">
+                                <div class="share-btns detail-sec">
+                                    <div class="empty-left time-holder "> <i class="fa fa-bed -icon-large"></i><span> ' . $s->info->Building->BedroomsTotal .'</span></div>
+                                    <div class="empty-left user-holder"><i class="fa fa-bathtub -icon-large"></i><span> ' . $s->info->Building->BathroomTotal .'</span> </div>
+                                    ';
+			    /*if(!empty($s->info->Building->SizeInterior))
+			    {
+				    $section .= '<div class="empty-left user-holder"> <i class="fa fa-square icon-large"></i> '.$s->info->Building->SizeInterior.'</div>
+                                ';
+			    }*/
+			    $section.= '
+                            <!-- END INFO HOLDER -->
+                            <div class="font-w-normal empty-left city-holder -time-holder"><span>&nbsp;&nbsp;' . $s->info->City .'</span></div>
+                            <!-- START SHARE BUTTON -->
+            <div class="empty-right">' . $s->info->ListPrice .'</div>
+            
+            <!-- END SHARE BUTTON -->
+                        </div>
+                    </div>
+                </section>';
+
+			    $show .= $section;
+            }//die;
+
+
 		    $realurl2 = get_post($options['webkits_listing_page']);
 
-		    $show = str_replace("{{CHANGEURL}}", $realurl2->guid . "&l=", $show);*/
+		    $show = str_replace("{{CHANGEURL}}", $realurl2->guid . "&l=", $show);
 
 		    require("includes/new_main_slider.php");
 		    break;
