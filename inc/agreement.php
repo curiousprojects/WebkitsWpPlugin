@@ -1,6 +1,7 @@
 
 
 <!-- Modal -->
+<div>
 <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="z-index:1400" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -23,7 +24,7 @@ The listing content on this website is protected by copyright and other laws, an
     </div>
   </div>
 </div>
-
+</div>
 
 <script>
     showModal = <?php if ((isset($_SESSION['webkits-accept']) && $_SESSION['webkits-accept'] == 1 ) || isset($webkitsIgnore) ) echo 0; else echo 1; ?>;
@@ -31,6 +32,8 @@ The listing content on this website is protected by copyright and other laws, an
         jQuery('#messageModal').appendTo("body");
         if(typeof showModal !== "undefiened" && showModal == 1)
         jQuery("#messageModal").modal("show");
+       setTimeout('jQuery("#messageModal").removeClass("mm-page mm-slideout");',50);
+       setTimeout('jQuery(".modal-backdrop").removeClass("mm-page mm-slideout");',50);
     });
 
     jQuery("#accept").click(function(e) {
