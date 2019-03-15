@@ -143,7 +143,7 @@ right: 0;
     border: 1px solid #ccc;
     border-radius: 0 !important;
     position: relative;
-	
+
 }
 
 .search-input--what{
@@ -622,7 +622,7 @@ min-height: 0;
  cursor: pointer;
 }
 .frame ul li.active {
- 
+
 }
 .frame h5 {
  text-align: bottom;
@@ -630,7 +630,7 @@ font-size:18px;
 }
 
 .scrollbar .handle {
-  
+
     background: #F90000 !important;
 }
 
@@ -665,4 +665,13 @@ span.agentname {
     position: relative;
     top: 14px;
     z-index: 1000;
+}
+#messageModal.mm-slideout,.modal-backdrop.mm-slideout{
+
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+    position:fixed !important;
+
 }

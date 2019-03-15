@@ -32,8 +32,6 @@ The listing content on this website is protected by copyright and other laws, an
         jQuery('#messageModal').appendTo("body");
         if(typeof showModal !== "undefiened" && showModal == 1)
         jQuery("#messageModal").modal("show");
-       setTimeout('jQuery("#messageModal").removeClass("mm-page mm-slideout");',50);
-       setTimeout('jQuery(".modal-backdrop").removeClass("mm-page mm-slideout");',50);
     });
 
     jQuery("#accept").click(function(e) {
