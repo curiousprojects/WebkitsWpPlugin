@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.036
+ * Version: 3.037
  * Author: Curious Projects
  **/
 

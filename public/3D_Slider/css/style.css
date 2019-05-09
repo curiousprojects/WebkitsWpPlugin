@@ -3359,7 +3359,7 @@ padding: 15px!important;
 	color:rgba(0,0,0, 0.6)!important;
 }
 .gglass .ss-container, .gglass .ch-grid .share-action, .gglass.slider {
-	background: rgba(255,255,255, 0.3)!important;
+	background: rgba(255,255,255, 0.3);
 }
 .gglass .ss-container a, .gglass .ss-container{
 	color: #fff;
