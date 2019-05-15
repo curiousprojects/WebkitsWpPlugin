@@ -3,7 +3,7 @@
  * Plugin Name: WEBKITS Real Estate Api
  * Plugin URI: https://mywebkit.ca
  * Description: Search and Display Real Estate Listings
- * Version: 3.037
+ * Version: 3.038
  * Author: Curious Projects
  **/
 
@@ -320,9 +320,7 @@ $crawlers = array(
 	'Extreme Picture Finder',
 	'EyeNetIE',
 	'ezooms',
-	'facebookexternalhit',
-	'facebookplatform',
-	'fairshare',
+    'fairshare',
 	'Faraday v',
 	'fasthttp',
 	'Faveeo',
@@ -1244,7 +1242,7 @@ $crawlers = array(
 	'Zombie\.js',
 	'Zoom\.Mac',
 	'ZyBorg',
-	'[a-z0-9\-_]*(bot|crawl|archiver|transcoder|spider|uptime|validator|fetcher|cron|checker|reader|extractor|monitoring|analyzer)',
+	'[a-z0-9\-_]*(crawl|archiver|transcoder|spider|uptime|validator|fetcher|cron|checker|reader|extractor|monitoring|analyzer)',
 );
  $data = array(
 	'Safari.[\d\.]*',
