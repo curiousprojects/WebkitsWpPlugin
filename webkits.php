@@ -12,7 +12,7 @@ ini_set('display_errors', 1); */
 
 require 'includes/updater.php';
 $MyUpdateChecker = PucFactory::buildUpdateChecker(
-    'https://webkitadmin.com/plugin/metadata.json',
+    'https://curiouscloud.ca/plugin/metadata.json',
     __FILE__,
     'webkits'
 );
