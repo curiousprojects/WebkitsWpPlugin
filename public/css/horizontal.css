@@ -20,9 +20,10 @@
 }
 .frame ul li {
 	float: left;
-	width: 236px;
+	//width: 236px;
+	//width: 310px;
 	height: 100%;
-	margin: 0 0px 0 0;
+	margin: 0 15px 0 15px;
 	padding: 0;
 	background: #fff;
 	color: #ddd;
@@ -30,7 +31,7 @@
 	overflow:hidden;
 }
 .frame ul li.active {
-	
+
 }
 .frame h5 {
 	text-align: bottom;
@@ -84,9 +85,170 @@
 }
 
 /* Controls */
-.controls { 
-    margin: 0px 0px 5px; 
-    text-align: right; 
-    
+.controls {
+    margin: 0px 0px 5px;
+    text-align: right;
+
+}
+
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+.carousel-control {
+    width: 8%;
+    width: 0px;
+}
+.carousel-control.left,
+.carousel-control.right {
+    margin-right: 40px;
+    margin-left: 32px;
+    background-image: none;
+    opacity: 1;
+}
+.carousel-control > a > span {
+    color: white;
+    font-size: 29px !important;
+}
+
+.carousel-col {
+    position: relative;
+    min-height: 1px;
+    padding: 5px;
+    float: left;
+}
+
+.active > div { display:none; }
+.active > div:first-child { display:flex; }
+
+.block {
+    width: auto;
+
+}
+.block img{
+    height: 200px;
+
+}
+.carousel-col a:hover{
+    text-decoration: none;
+}
+.feature-col{
+    margin: 3em 0;
+}
+.guide{
+    height:550px;
+}
+@media (max-width: 668px) {
+    .carousel-inner .active.left { left: -50%; }
+    .carousel-inner .active.right { left: 50%; }
+    .carousel-inner .next        { left:  50%; }
+    .carousel-inner .prev		     { left: -50%; }
+    .carousel-col                { width: 50%; }
+    .active > div:first-child + div { display:flex; }
+    .carousel-inner > .active{
+        display:flex;
+    }
+    .block {
+    //    width: 306px;
+      //  height: 230px;
+    }
+    .list_info{
+        width:auto;
+    }
+    .carousel-col{
+        margin-left:10px;
+    }
+    .feature-col {
+        margin: 0 auto !important;
+    }
+
+}
+/*xs*/
+@media (max-width: 420px) {
+    .carousel-inner .active.left { left: -50%; }
+    .carousel-inner .active.right { left: 50%; }
+    .carousel-inner .next        { left:  50%; }
+    .carousel-inner .prev		     { left: -50%; }
+    .carousel-col                { width: 100%; }
+    .active > div:first-child + div { display:flex; }
+    .carousel-inner > .active{
+        display:flex;
+    }
+    .block {
+       // width: 306px;
+        //height: 230px;
+    }
+    .list_info{
+        width:306px;
+    }
+
+    .feature-col {
+        margin: 0 auto !important;
+    }
+    .block img{
+        height: auto;
+
+    }
+    .carousel-control.right {
+        margin-right: 26px;
+    }
+    .guide{
+        height:300px;
+    }
+}
+/*sm*/
+@media (min-width: 736px) and (max-width: 991px) {
+    .carousel-inner .active.left { left: -50%; }
+    .carousel-inner .active.right { left: 50%; }
+    .carousel-inner .next        { left:  50%; }
+    .carousel-inner .prev		     { left: -50%; }
+    .carousel-col                { width: 50%; }
+    .active > div:first-child + div { display:flex; }
+    .carousel-inner > .active{
+        display:flex;
+    }
+    .block {
+       //width: 306px;
+        //height: 230px;
+    }
+    .list_info{
+        width:306px;
+    }
+
+    .feature-col {
+        margin: 0 auto !important;
+    }
+    .block img{
+        height: 235px;
+
+    }
+}
+
+/*md*/
+@media (min-width: 992px) and (max-width: 1199px) {
+    .carousel-inner .active.left { left: -33%; }
+    .carousel-inner .active.right { left: 33%; }
+    .carousel-inner .next        { left:  33%; }
+    .carousel-inner .prev		     { left: -33%; }
+    .carousel-col                { width: 33%; }
+    .active > div:first-child + div { display:flex; }
+    .active > div:first-child + div + div { display:flex; }
+}
+
+/*lg*/
+@media (min-width: 1200px) {
+    .carousel-inner .active.left { left: -23%; }
+    .carousel-inner .active.right{ left:  23%; }
+    .carousel-inner .next        { left:  23%; }
+    .carousel-inner .prev		     { left: -23%; }
+    .carousel-col                { width: 23.7%; }
+    .active > div:first-child + div { display:flex; }
+    .active > div:first-child + div + div { display:flex; }
+    .active > div:first-child + div + div + div { display:flex; }
+    .carousel-col{
+        margin-left:10px;
+    }
 }
 
