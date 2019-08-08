@@ -1,10 +1,20 @@
 <div class="clearfix"></div>
 
 <div class="container-fluid">
+
+
     <div class="container-fluid container-pad" id="property-listings">
 
         <input name="viewtype" id="viewtype" value="<?php if (isset($_POST['viewtype'])) echo $_POST['viewtype']; else echo "grid"; ?>" type="hidden">
-
+	    <?php if($creb == true && $ll_apikey != '')
+	    {?>
+        <div class="flexible-div width-element" id="ll-lifestyle">
+            <button class="submit-search" type="submit" name="pressed" id="local-lifestyle">Life Style <span id="llcount">0</span></button>
+            <section class="ll-search">
+                <div id="local-search" class="d-none"></div>
+            </section>
+        </div>
+        <?php }?>
         <div class="row buttonslisting">
             <div class="btn-group pull-right">
                 <a href="#" id="grid" class="btn btn-default btn-sm">Grid</a>
@@ -14,41 +24,56 @@
             </div>
         </div>
 
-        <div class="row listingSelection hide" id="listings-grid">
+        <div class="row listingSelection" id="listings-grid">
 	        <?php
 		        session_start();
-		        
+
 				if(isset($_POST['advanced'])){
 					//print_r($_POST);
 					$_SESSION['webkit-search'] = $_POST;
 					//print_r($_SESSION['webkit-search']);
 				}
-				
+
 				//print_r($_SESSION['webkit-searcha']);
-		        
-		        
+
+
 	        ?>
+
             <?php foreach ($listings->listing as $l) { ?>
             <?php //if($l->info->Building->Type != 'Apartment') continue; ?>
             <?php //echo '>>' . $l->info->PropertyType; ?>
+
                 <div class="col-sm-4">
-                    <a href="<?php 
+                    <a href="<?php
                         $link = ($l->info->UnparsedAddress == '') ? 'none' : (str_replace(" ", "-", $l->info->UnparsedAddress));
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                         <div class="grid-box">
                             <div class="grid-overlay">
                                 <?php if ($l->info->ct != '') { ?>
-                                    <img class="grid-banner" src="https://webkitadmin.com/assets/images/<?php echo $l->info->ct; ?>.png">
+                                    <img class="grid-banner" src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png">
                                 <?php } ?>
                                 <div class="grid-image">
-                                    <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>"/>
+                                    <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
                                 </div>
                             </div>
                             <div class="grid-address">
-                                <span><?php echo $l->info->ListPrice; ?></span>
-                                <?php echo strtoupper($l->info->UnparsedAddress); ?>
-                                <br/><?php echo strtoupper($l->info->City); ?>
+                                <span><?php if($l->info->ShowPrice == 1) {echo $l->info->ListPrice;} ?></span>
+                                <span><?php echo strtoupper($l->info->UnparsedAddress); ?>
+                                <br/><?php echo strtoupper($l->info->City); ?></span>
+	                            <?php if($creb == true && $ll_apikey != '')
+	                            {
+	                                if($l->info->lat != '' &&  $l->info->lng !='')
+	                                ?>
+
+                                <span
+                                        class="match-score ll-match-score " style="padding: 0 10px 0 0 !important;"
+                                        data-id="<?php echo $l->info->ListingKey ?>"
+                                        <?php if($l->info->lat != ''){echo "data-lat=".$l->info->lat; }?>
+                                        <?php if($l->info->lng != ''){echo "data-lng=".$l->info->lng; }?>>
+                                    </span>
+                                <?php }?>
                             </div>
+
                             <div class="grid-broker">
                                 <?php if (!$hideAgent) echo $l->info->agent; ?>
                             </div>
@@ -61,18 +86,18 @@
         <div class="row listingSelection hide" id="listings-list">
             <?php foreach ($listings->listing as $l) { ?>
                 <div class="row list-row">
-                <a href="<?php 
+                <a href="<?php
                         $link = ($l->info->UnparsedAddress == '') ? 'none' : (str_replace(" ", "-", $l->info->UnparsedAddress));
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                                             <div class="col-sm-5 list-image-box">
                             <div class="list-overlay">
-                                
-                               
+
+
                                 <div class="list-image">
-                                    <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>"/>
+                                    <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
                                 </div>
                                 <?php if ($l->info->ct != '') { ?>
-                                <div class="list-banner"><img src="https://webkitadmin.com/assets/images/<?php echo $l->info->ct; ?>.png" /> </div>
+                                <div class="list-banner"><img src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png" /> </div>
                                 <?php } ?>
                             </div>
 
@@ -103,9 +128,9 @@
                 <div class="progress" id="map-loading">
                 <div class="progress-bar progress-bar-striped active" role="progressbar"
                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                
+
                 </div>
-                </div> 
+                </div>
             </div>
         </div>
         <div id="radios" class="item gradient rounded shadow" style=""></div>
@@ -129,12 +154,12 @@
                     <?php foreach ($listings->listing as $l) { ?>
                         <tr>
                             <td>
-                            <a href="<?php 
+                            <a href="<?php
                         $link = ($l->info->UnparsedAddress == '') ? 'none' : (str_replace(" ", "-", $l->info->UnparsedAddress));
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                                     <div class="col-sm-5">
                                         <div class="listing-table-image">
-                                            <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>"/>
+                                            <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
                                         </div>
                                     </div>
 
@@ -197,8 +222,8 @@
 
     echo "var dlatlng ='{$options['webkits_latlng']}';";
 }
-    
-if(isset($_POST['input_main']) && !empty($_POST['input_main'])) 
+
+if(isset($_POST['input_main']) && !empty($_POST['input_main']))
     echo "var searched = true;";
     else echo "var searched = false;";
 
@@ -213,3 +238,56 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
     }
     ?>
 </script>
+<?php if($creb == true && $ll_apikey != '')
+    {?>
+        <script type="text/javascript">
+            var searchWidget;
+            var selected ;
+            function initLocallogic () {
+                searchWidget = new locallogic.LocalSearch('local-search',{
+                    displayAs: 'grid',
+                    locale: 'en',
+                    color: '#ff0000',
+                });
+
+
+            }
+            setTimeout(function(){ setcount(); }, 2000);
+            function setcount(){
+                jQuery('#llcount').html(searchWidget.selection().length);
+
+            }
+            jQuery('#local-lifestyle').unbind('click');
+            jQuery('#local-lifestyle').on('click',function () {
+                if(jQuery('#local-search').hasClass('d-none'))
+                {
+                    jQuery('.ll-grid-score').unbind('click');
+                    jQuery('.ll-grid-score').click(function () {
+
+                        if(jQuery(this).hasClass('ll-selected'))
+                        {
+                            jQuery('#llcount').html(searchWidget.selection().length-1);
+                        }
+                        else{jQuery('#llcount').html(searchWidget.selection().length+1);}
+
+
+
+                    });
+
+                    jQuery('#local-search').removeClass('d-none');
+                }else{
+
+                    jQuery('#local-search').addClass('d-none');
+                }
+
+            });
+
+
+        </script>
+        <?php if($creb == true && $ll_apikey != ''){   ?>
+        <script
+                src="https://cdn.locallogic.co/sdk/?token=<?php echo $ll_apikey ?>&callback=initLocallogic">
+        </script>
+     <?php }?>
+
+    <?php }?>
