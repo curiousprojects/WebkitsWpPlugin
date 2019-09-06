@@ -3,7 +3,7 @@
 <div class="container-fluid">
 
 
-    <div class="container-fluid container-pad" id="property-listings">
+    <div class="container-fluid container-pad property-listings" id="property-listings">
 
         <input name="viewtype" id="viewtype" value="<?php if (isset($_POST['viewtype'])) echo $_POST['viewtype']; else echo "grid"; ?>" type="hidden">
 	    <?php if($creb == true && $ll_apikey != '')
@@ -17,14 +17,14 @@
         <?php }?>
         <div class="row buttonslisting">
             <div class="btn-group pull-right">
-                <a href="#" id="grid" class="btn btn-default btn-sm">Grid</a>
-                <a href="#" id="list" class="btn btn-default btn-sm">List</a>
-                <a href="#" id="table" class="btn btn-default btn-sm">Table</a>
-                <a href="#" id="map" class="btn btn-default btn-sm">Map</a>
+                <a href="#" id="grid" class="grid btn btn-default btn-sm">Grid</a>
+                <a href="#" id="list" class="list btn btn-default btn-sm">List</a>
+                <a href="#" id="table" class="btn-table btn btn-default btn-sm">Table</a>
+                <a href="#" id="map" class="btn-map btn btn-default btn-sm">Map</a>
             </div>
         </div>
 
-        <div class="row listingSelection" id="listings-grid">
+        <div class="row listingSelection listings-grid" id="listings-grid">
 	        <?php
 		        session_start();
 
@@ -124,7 +124,7 @@
 
         <div class="row listingSelection hide" id="listings-map">
             <div class="item rounded dark">
-                <div id="map_canvas" class="map rounded"></div>
+                <div id="map_canvas_1" class="map rounded map_canvas"></div>
                 <div class="progress" id="map-loading">
                 <div class="progress-bar progress-bar-striped active" role="progressbar"
                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
@@ -133,7 +133,7 @@
                 </div>
             </div>
         </div>
-        <div id="radios" class="item gradient rounded shadow" style=""></div>
+        <div id="radios" class="item radios gradient rounded shadow" style=""></div>
 
         <div class="row listingSelection hide list-table" id="listings-table">
             <div class="col-sm-12">
