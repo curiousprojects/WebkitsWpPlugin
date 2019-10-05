@@ -1,13 +1,13 @@
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
-        jQuery("#listings").append("<li class='col-sm-3 agentsbox' style='height:250px;'><a href='" + realurl + marker.aid + "'><img class='img-responsive' src='https://webkitadmin.com/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></a></li>")
+        jQuery("#listings").append("<li class='col-sm-3 agentsbox' style='height:250px;'><a href='" + realurl + marker.aid + "'><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></a></li>")
     }
 }
 
 jQuery("#submit").click(function (event) {
     event.preventDefault();
-    data2 = jQuery("#search").serializeArray();
+    data2 = jQuery("#agent-search").serializeArray();
     var filterObj = {
         name: "filter",
         value: filter
