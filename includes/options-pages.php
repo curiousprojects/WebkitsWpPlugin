@@ -6,13 +6,13 @@
     <div id="icon-plugins" class="icon32"></div>
     <h2>WebKits Options</h2>
 
-    <?php if (isset($update_feed_now_result)) { ?>
-    <div id="message" class="updated">
-        <h4>We updated the feed successfully!</h4>
-    </div>
-    <?php } ?>
+	<?php if (isset($update_feed_now_result)) { ?>
+        <div id="message" class="updated">
+            <h4>We updated the feed successfully!</h4>
+        </div>
+	<?php } ?>
 
-    <form method="post" action="">
+    <form method="post" action="" autocomplete="off">
 
         <input type="hidden" name="webkits_form_submitted" value="Y">
 
@@ -84,7 +84,7 @@
             </tr>
 
 
-                        <tr>
+            <tr>
                 <th scope="row"><label for="listing_page">CREA Agreement Message</label></th>
                 <td>
                     <select name="webkits_agree_msg" id="webkits_agree_msg">
@@ -131,11 +131,11 @@
                 <th scope="row"><label for="webkits_listings_page">Select Listings Page</label></th>
                 <td>
                     <select name="webkits_listings_page" id="webkits_listings_page">
-                        <?php foreach ($pages as $p) { ?>
+						<?php foreach ($pages as $p) { ?>
 
                             <option value="<?php echo $p->ID; ?>" <?php if ($options['webkits_listings_page'] == $p->ID) { ?>selected="selected"<?php } ?> ><?php echo $p->post_title; ?></option>';
 
-                        <?php } ?>
+						<?php } ?>
                     </select>
                 </td>
             </tr>
@@ -144,11 +144,11 @@
                 <th scope="row"><label for="webkits_list_id">Select Listing's Details Page</label></th>
                 <td>
                     <select name="webkits_listing_page" id="webkits_listing_page">
-                        <?php foreach ($pages as $p) { ?>
+						<?php foreach ($pages as $p) { ?>
 
                             <option value="<?php echo $p->ID; ?>" <?php if ($options['webkits_listing_page'] == $p->ID) { ?>selected="selected"<?php } ?> ><?php echo $p->post_title; ?></option>';
 
-                        <?php } ?>
+						<?php } ?>
                     </select>
                 </td>
             </tr>
@@ -158,11 +158,11 @@
                 <th scope="row"><label for="webkits_list_id">Select Agent's Details Page</label></th>
                 <td>
                     <select name="webkits_agent_page" id="webkits_agent_page">
-                        <?php foreach ($pages as $p) { ?>
+						<?php foreach ($pages as $p) { ?>
 
                             <option value="<?php echo $p->ID; ?>" <?php if ($options['webkits_agent_page'] == $p->ID) { ?>selected="selected"<?php } ?> ><?php echo $p->post_title; ?></option>';
 
-                        <?php } ?>
+						<?php } ?>
                     </select>
                 </td>
             </tr>
@@ -207,10 +207,45 @@
                     <input name="webkits_agentid" type="text" value="<?php echo $webkits_agentid; ?>"/>
                 </td>
             </tr>
+            <tr>
+                <th scope="row"><label for="webkits_enable_sold">Enable Sold Listing ?</label></th>
+
+                <td><input name="webkits_enable_sold" id="webkits_enable_sold" value="<?php echo $webkits_enable_sold; ?>" class="regular-text" type="password" placeholder="PASSWORD" autocomplete="new-password"></td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_sold_listings_page">Select Sold Listings Page</label></th>
+                <td>
+                    <select name="webkits_sold_listings_page" id="webkits_sold_listings_page">
+			            <?php foreach ($pages as $p) { ?>
+				            <?php echo $p->post_title ?>
+                            <option value="<?php echo $p->ID; ?>" <?php if ($options['webkits_sold_listings_page'] == $p->ID ) { ?>selected="selected"<?php } ?> ><?php echo $p->post_title; ?></option>;
+
+			            <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_enable_sold">Email </label> <em>(This email will be used to send registered users details.)</em></th>
+
+                <td><input name="webkits_register_email" id="webkits_register_email" value="<?php echo $webkits_register_email; ?>" class="regular-text" type="email" placeholder="EMAIL"></td>
+
+            </tr>
             </tbody>
         </table>
 
-
-        <?php submit_button(); ?>
+        <p>
+            <b>You can use below short codes for create Sold Search System :</b>
+            <br/>
+            Sold Listing :- [listings section = 'sold-listings']
+            <br/>
+            Sold Listings Search Form :- [listings section = 'sold-search-form']
+            <br/>
+            Change Password  :- [user section = 'change-password']
+            <br/>
+            Edit Profile :- [user section = 'edit-profile']
+            <br/>
+            Sold Search Button :- [listings section = 'sold-button']
+        </p>
+		<?php submit_button(); ?>
     </form>
 </div>

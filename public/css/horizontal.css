@@ -1,232 +1,54 @@
-
-
-/* Example wrapper */
-.wrap {
-	position: relative;
-	margin: 3em 0;
+.wrap{position:relative;margin:3em 0}
+.frame{height:250px;line-height:250px;overflow:hidden}
+.frame ul{list-style:none;margin:0;padding:0;height:100%}
+.frame ul li{float:left;height:100%;margin:0 15px 0 15px;padding:0;background:#fff;color:#ddd;cursor:pointer;overflow:hidden}
+.frame h5{text-align:bottom}
+.scrollbar{margin:0 0 1em 0;height:2px;background:#ccc;line-height:0}
+.scrollbar .handle{width:100px;height:100%;background:#292a33;cursor:pointer}
+.scrollbar .handle .mousearea{position:absolute;top:-9px;left:0;width:100%;height:20px}
+.pages{list-style:none;margin:20px 0;padding:0;text-align:center}
+.pages li{display:inline-block;width:14px;height:14px;margin:0 4px;text-indent:-999px;border-radius:10px;cursor:pointer;overflow:hidden;background:#fff;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.pages li:hover{background:#aaa}
+.pages li.active{background:#666}
+.controls{margin:0 0 5px;text-align:right}
+#main-slider .col-centered{float:none;margin:0 auto}
+#main-slider .carousel-control{width:8%;width:0}
+#main-slider .carousel-control:hover{cursor:pointer}
+#main-slider .carousel-control.left,#main-slider .carousel-control.right{margin-right:40px;margin-left:32px;background-image:none;opacity:1}
+#main-slider .carousel-control>a>span{color:#fff;font-size:29px!important}
+#main-slider .carousel-col{position:relative;min-height:1px;padding:5px;float:left}
+#main-slider .block{width:auto}
+#main-slider .block img{height:200px}
+#main-slider .carousel-col a:hover{text-decoration:none}
+#main-slider .feature-col{margin:3em 0}
+.guide{height:550px}
+.btn-center{margin:auto;float:unset}
+@media (max-width:668px){
+#main-slider .carousel-col{width:50%}
+.list_info{width:auto}
+.feature-col{margin:0 auto!important}
 }
-
-/* Frame */
-.frame {
-	height: 250px;
-	line-height: 250px;
-	overflow: hidden;
+@media (max-width:420px){
+#main-slider .carousel-col{width:100%}
+.list_info{width:306px}
+#main-slider .feature-col{margin:0 auto!important}
+#main-slider .block img{height:auto}
+#main-slider .carousel-control.right{margin-right:26px}
+.guide{height:300px}
 }
-.frame ul {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	height: 100%;
+@media (min-width:736px) and (max-width:991px){
+#main-slider .carousel-col{width:50%}
+#main-slider .list_info{width:306px}
+#main-slider .feature-col{margin:0 auto!important}
+#main-slider .block img{height:150px}
 }
-.frame ul li {
-	float: left;
-	//width: 236px;
-	//width: 310px;
-	height: 100%;
-	margin: 0 15px 0 15px;
-	padding: 0;
-	background: #fff;
-	color: #ddd;
-	cursor: pointer;
-	overflow:hidden;
+@media (min-width:992px) and (max-width:1199px){
+#main-slider .carousel-col{width:33%}
+#main-slider .block img{height:176px}
 }
-.frame ul li.active {
-
+@media (min-width:1200px){
+#main-slider .carousel-col{width:23.7%}
 }
-.frame h5 {
-	text-align: bottom;
-}
-
-/* Scrollbar */
-.scrollbar {
-	margin: 0 0 1em 0;
-	height: 2px;
-	background: #ccc;
-	line-height: 0;
-}
-.scrollbar .handle {
-	width: 100px;
-	height: 100%;
-	background: #292a33;
-	cursor: pointer;
-}
-.scrollbar .handle .mousearea {
-	position: absolute;
-	top: -9px;
-	left: 0;
-	width: 100%;
-	height: 20px;
-}
-
-/* Pages */
-.pages {
-	list-style: none;
-	margin: 20px 0;
-	padding: 0;
-	text-align: center;
-}
-.pages li {
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	margin: 0 4px;
-	text-indent: -999px;
-	border-radius: 10px;
-	cursor: pointer;
-	overflow: hidden;
-	background: #fff;
-	box-shadow: inset 0 0 0 1px rgba(0,0,0,.2);
-}
-.pages li:hover {
-	background: #aaa;
-}
-.pages li.active {
-	background: #666;
-}
-
-/* Controls */
-.controls {
-    margin: 0px 0px 5px;
-    text-align: right;
-
-}
-
-
-#main-slider .col-centered {
-    float: none;
-    margin: 0 auto;
-}
-
-#main-slider .carousel-control {
-    width: 8%;
-    width: 0px;
-}
-#main-slider .carousel-control:hover{
-    cursor:pointer;
-}
-#main-slider .carousel-control.left,
-#main-slider .carousel-control.right {
-    margin-right: 40px;
-    margin-left: 32px;
-
-    background-image: none;
-    opacity: 1;
-}
-#main-slider .carousel-control > a > span {
-    color: white;
-    font-size: 29px !important;
-}
-
-#main-slider .carousel-col {
-    position: relative;
-    min-height: 1px;
-    padding: 5px;
-    float: left;
-}
-
-
-#main-slider .block {
-    width: auto;
-
-}
-#main-slider .block img{
-    height: 200px;
-
-}
-#main-slider .carousel-col a:hover{
-    text-decoration: none;
-}
-#main-slider .feature-col{
-    margin: 3em 0;
-}
-.guide{
-    height:550px;
-}
-@media (max-width: 668px) {
-
-    #main-slider .carousel-col                { width: 50%; }
-
-    #main-slider .block {
-    //    width: 306px;
-      //  height: 230px;
-    }
-    .list_info{
-        width:auto;
-    }
-
-    .feature-col {
-        margin: 0 auto !important;
-    }
-
-}
-/*xs*/
-@media (max-width: 420px) {
-
-    #main-slider .carousel-col                { width: 100%; }
-
-    #main-slider .block {
-       // width: 306px;
-        //height: 230px;
-    }
-    .list_info{
-        width:306px;
-    }
-
-    #main-slider .feature-col {
-        margin: 0 auto !important;
-    }
-    #main-slider .block img{
-        height: auto;
-
-    }
-    #main-slider .carousel-control.right {
-        margin-right: 26px;
-    }
-    .guide{
-        height:300px;
-    }
-}
-
-/*sm*/
-@media (min-width: 736px) and (max-width: 991px) {
-
-    #main-slider .carousel-col                { width: 50%; }
-
-
-    #main-slider .list_info{
-        width:306px;
-    }
-
-    #main-slider .feature-col {
-        margin: 0 auto !important;
-    }
-    #main-slider .block img{
-        height: 150px;
-
-    }
-}
-
-/*md*/
-@media (min-width: 992px) and (max-width: 1199px) {
-
-    #main-slider .carousel-col                { width: 33%; }
-
-    #main-slider .block img{
-        height: 176px;
-
-    }
-}
-
-/*lg*/
-@media (min-width: 1200px) {
-
-    #main-slider .carousel-col                { width: 23.7%; }
-
-}
-@media (width: 768px)
-{
-    #main-slider .block img{
-        height: 150px;
-
-    }
+@media (width:768px){
+#main-slider .block img{height:150px}
 }

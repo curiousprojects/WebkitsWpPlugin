@@ -21,6 +21,28 @@
                 <a href="#" id="list" class="list btn btn-default btn-sm">List</a>
                 <a href="#" id="table" class="btn-table btn btn-default btn-sm">Table</a>
                 <a href="#" id="map" class="btn-map btn btn-default btn-sm">Map</a>
+                    <?php if($options['webkits_enable_sold'] == SOLD_PASSWORD){?>
+	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true){?>
+                    <a href="/<?php echo get_post($options['webkits_sold_listings_page'])->post_name ?>" id="sold" class="btn btn-default btn-sm" >SEARCH RECENT SOLDS</a>
+	            <?php }else{ ?>
+                    <a href="javascript:void(0)" id="sold" class="btn btn-default btn-sm popup-modal-sm" data-url="register.php" data-target="login">SEARCH RECENT SOLDS</a>
+	            <?php }}?>
+
+	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
+	            {?>
+                    <div class="dropdown" id="account">
+                        <img src="<?php echo plugin_dir_url(__FILE__)?>../public/img/webkits-icon1.png" height="22"/> <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Account
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="<?php echo home_url()?>/change-password">CHANGE PASSWORD</a></li>
+                            <li><a href="<?php echo home_url()?>/edit-profile">EDIT PROFILE</a></li>
+                            <li><a href="<?php echo home_url()?>/logout">LOGOUT</a></li>
+
+                        </ul>
+                    </div>
+	            <?php }?>
             </div>
         </div>
 
@@ -126,6 +148,7 @@
             <div class="item rounded dark">
                 <div id="map_canvas_1" class="map rounded map_canvas"></div>
                 <div class="progress" id="map-loading">
+
                 <div class="progress-bar progress-bar-striped active" role="progressbar"
                 aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
 

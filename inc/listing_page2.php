@@ -6,64 +6,64 @@
 <div class="row buttonslisting">
         <div class="btn-group pull-right">
             <a href="#" id="grid2" class="btn btn-default btn-sm">Grid</a>
-            <a href="#" id="list2" class="btn btn-default btn-sm">List</a> 
-            <a href="#" id="table2" class="btn btn-default btn-sm">Table</a> 
-            <a href="#" id="map2" class="btn btn-default btn-sm">Map</a> 
+            <a href="#" id="list2" class="btn btn-default btn-sm">List</a>
+            <a href="#" id="table2" class="btn btn-default btn-sm">Table</a>
+            <a href="#" id="map2" class="btn btn-default btn-sm">Map</a>
         </div></div>
 
 
 
 <div class="row listingSelection2 hide"  id="listings-grid2">
-<?php 
+<?php
 foreach ($listings->listing as $l) {
 ?>
   <div class="col-sm-4">
     <a href="<?php echo "/property/".$l->info->ListingKey. '/' . (str_replace(" ", "-", $l->info->UnparsedAddress)) . '/' . $l->info->City; ?>">  <div class="grid-box">
       <div class="grid-overlay">
-        <?php if($l->info->ct != '') {  ?> 
-        <img class="grid-banner" src="https://webkitadmin.com/assets/images/<?php echo $l->info->ct; ?>.png">
+        <?php if($l->info->ct != '') {  ?>
+        <img class="grid-banner" src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png">
         <?php } ?>
        <div class="grid-image">
-      <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>" />
+      <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>" />
       </div>
     </div>
           <div class="grid-address">
             <span><?php echo $l->info->ListPrice; ?></span>
-      <?php echo strtoupper($l->info->UnparsedAddress); ?><br /><?php echo strtoupper($l->info->City); ?> 
+      <?php echo strtoupper($l->info->UnparsedAddress); ?><br /><?php echo strtoupper($l->info->City); ?>
       </div>
       <div class="grid-broker">
       <?php if(!$hideAgent) echo $l->info->agent; ?>
       </div>
     </div></a>
   </div>
-<?php 
+<?php
 }
 ?>
 </div>
-                
+
 <div class="row listingSelection2 hide"  id="listings-list2">
-<?php 
+<?php
 foreach ($listings->listing as $l) {
 ?>
 
 
 
    <div class="row list-row">
-<a href="<?php echo "/property/".$l->info->ListingKey. '/' . (str_replace(" ", "-", $l->info->UnparsedAddress)) . '/' . $l->info->City; ?>">  
+<a href="<?php echo "/property/".$l->info->ListingKey. '/' . (str_replace(" ", "-", $l->info->UnparsedAddress)) . '/' . $l->info->City; ?>">
      <div class="col-sm-5 list-image-box">
-       
-          <div class="list-overlay">
-        
 
-             
+          <div class="list-overlay">
+
+
+
        <div class="list-image">
- <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>" />
+ <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>" />
        </div>
-       <?php if($l->info->ct != '') {  ?> 
-       <img class="list-banner" src="https://webkitadmin.com/assets/images/<?php echo $l->info->ct; ?>.png">
-       <?php } ?>  
+       <?php if($l->info->ct != '') {  ?>
+       <img class="list-banner" src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png">
+       <?php } ?>
     </div>
-       
+
      </div>
      <div class="col-sm-7">
        <Br />
@@ -82,11 +82,11 @@ foreach ($listings->listing as $l) {
      </div>
 
 
-<?php 
+<?php
 }
 ?>
 </div>
-          
+
 
 
 
@@ -118,21 +118,21 @@ foreach ($listings->listing as $l) {
 
 
          <tbody>
-<?php 
+<?php
 foreach ($listings->listing as $l) {
 ?>
 
            <tr>
              <td>
 
-<a href="<?php echo "/property/".$l->info->ListingKey. '/' . (str_replace(" ", "-", $l->info->UnparsedAddress)) . '/' . $l->info->City; ?>">  
+<a href="<?php echo "/property/".$l->info->ListingKey. '/' . (str_replace(" ", "-", $l->info->UnparsedAddress)) . '/' . $l->info->City; ?>">
 
                <div class="col-sm-5">
                <div class="listing-table-image">
- <img src="https://webkitadmin.com<?php echo $l->info->photo; ?>" />
+ <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>" />
                 </div>
                </div>
-             
+
                <div class="col-sm-7 listing-table-address"> <?php echo strtoupper($l->info->UnparsedAddress); ?></div></a></td>
              <td><?php echo ($l->info->ListPrice); ?></td>
              <td><?php if(isset($l->info->Building->BedroomsTotal) && $l->info->Building->BedroomsTotal >0) echo ($l->info->Building->BedroomsTotal); else echo "-"; ?></td>
@@ -143,17 +143,17 @@ foreach ($listings->listing as $l) {
              <td><?php
 
 
-if(isset($l->info->AgentDetails->Office->Name)) 
+if(isset($l->info->AgentDetails->Office->Name))
  echo ($l->info->AgentDetails->Office->Name);
 
 
-if(is_array($l->info->AgentDetails)) 
+if(is_array($l->info->AgentDetails))
  echo ($l->info->AgentDetails[0]->Office->Name);
 
             ?></td>
            </tr>
 
-<?php 
+<?php
 }
 ?>
          </tbody>
@@ -169,7 +169,7 @@ if(is_array($l->info->AgentDetails))
                  <div class="col-sm-12"><div id="Loading" style="margin:0 auto;width:31px;"><img src="https://webkitadmin.com/assets/images/Loader.gif" /></div>
                  </div>
 
-  
+
 
 
          <div class="col-sm-offset-4 col-sm-4">
@@ -199,15 +199,15 @@ echo renderNavigation(3,$listings->totals->Found /  $listingPerPage ,$CurrentPag
               </div>
  <script>
 
-  realurl = '<?php echo get_post($options['webkits_listing_page'])->guid; ?>' ; 
+  realurl = '<?php echo get_post($options['webkits_listing_page'])->guid; ?>' ;
 
 listing2 = '<?php if(isset($_SESSION['webkits-view'])) echo $_SESSION['webkits-view'].'2';  else echo $options['webkits_listing_default'].'2'; ?>';
 
 var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
 
 markers = <?php echo json_encode($listings->markers).";";?>
-<?php 
-if($options['webkits_map_style'] != '') 
+<?php
+if($options['webkits_map_style'] != '')
   echo "var styler = ".str_replace('\"', '"', $options['webkits_map_style']).";
 ";
 else  echo "var styler = '';
@@ -226,7 +226,7 @@ for(var i = 0; i < slides.length; i++)
   slides.item(i).style.height = slides.item(i).style.width / 1.045;
 
 }
-    
+
 });
 */
 </script>

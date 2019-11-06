@@ -1,9 +1,5 @@
-<form id="search" class="search-listing" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_listings_page'])->guid;}?>">
-	<div clas="row">
-		<div class="searcharrow">
-			<img src="https://webkitadmin.com/assets/images/home-search-arrow.png" alt="Search Arrow">
-		</div>
-	</div>
+<form id="search" class="search-listing searcharrow" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_listings_page'])->guid;}?>">
+
 	<input name="wk-advanced" id="advancedValue" value="<?php if (isset($_POST['advanced'])) echo $_POST['advanced']; else echo 0; ?>"
 	    type="hidden">
 	<input name="wk-offset" value="<?php if (isset($_POST['offset'])) $_POST['offset']; else echo 0; ?> " type="hidden">

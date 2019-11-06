@@ -1,9 +1,10 @@
 var offset = 0;
 var found = 0;
 var totaled = 0;
-
+var home_url;
 //var listing = "grid";
 //TEMP
+var IsFullView;
 viewd = listing;
 
 jQuery('.tooltip').tooltip('destroy')
@@ -185,6 +186,106 @@ jQuery('.btn-map-1').click(function (event) {
     jQuery.post(ajaxurl, {view: "map", action: "webkits_change_view"});
 
 });
+jQuery('.btn-map-sold').click(function (event) {
+    event.preventDefault();
+    map_height = jQuery('#map_canvas_1').height();
+    jQuery('.loading').css('height',map_height/2);
+    jQuery('.loading').css('top',(map_height/2)-30);
+    jQuery(this).parent().parent().siblings('.listingSelection').addClass("hide");
+
+    jQuery('#radios_1').show();
+    //*'center': dlatlng,'styles':styler*//
+    jQuery('#map_canvas_1').gmap({
+        'zoom': mzoom,
+        'center': dlatlng,
+        'styles': styler
+    }).bind('init', function (evt, map) {
+
+        ////SIDE PANEL
+        if(jQuery(window).width() > 500){
+            jQuery('#map_canvas_1').gmap('addControl', 'radios_1', google.maps.ControlPosition.TOP_RIGHT);
+        }
+
+        jQuery('#radios_1').show();
+
+        var tags = ['Homes', 'Carriage Trade', 'Commercial', 'Farm', 'Lot', 'Open House'];
+        jQuery.each(tags, function (i, tag) {
+            jQuery('#radios_1').append(('<label style="margin-right:5px;display:block;"><input type="checkbox" style="margin-right:3px" value="' + tag + '"/>' + tag + '</label>'));
+        });
+        found = 0;
+
+        if(Is_Search == true)
+        {
+            jQuery.post(ajaxurl, {action: "webkits_get_sold_markers"}, function (data) {
+                jQuery.each(data.markers, function (i, marker) {
+                    if(searched && found == 0)
+                        center =  new google.maps.LatLng(marker.latitude, marker.longitude)
+                    found = 1;
+                    if (marker.latitude != null) {
+                        newM = {
+                            'position': new google.maps.LatLng(marker.latitude, marker.longitude),
+                            'bounds': mbound,
+                            'tags': [marker.type]
+                        };
+                        jQuery('#map_canvas_1').gmap('addMarker', newM).click(function () {
+                            jQuery('#map_canvas_1').gmap('openInfoWindow', {'content': marker.content.replace(/{{CHANGEURL}}/g, realurl)}, this);
+                        });
+                    }
+                });
+
+
+                jQuery('#map_canvas_1').gmap('set', 'MarkerClusterer', new MarkerClusterer(jQuery('#map_canvas_1').gmap('get', 'map'), jQuery('#map_canvas_1').gmap('get', 'markers')));
+                if(searched) {
+                    jQuery('#map_canvas_1').gmap('option', 'center', center);
+                    jQuery('#map_canvas_1').gmap('option', 'zoom', mzoom);
+                }
+                jQuery('#map_canvas_1').siblings('#map-loading').hide();
+
+
+                jQuery('#radios_1 input:checkbox').click(function () {
+                    jQuery('#map_canvas_1').gmap('closeInfoWindow');
+                    jQuery('#map_canvas_1').gmap('set', 'bounds', null);
+                    var filters1 = [];
+                    jQuery('radios_1 input:checkbox:checked').each(function (i, checkbox) {
+                        filters1.push(jQuery(checkbox).val());
+                    });
+                    if (filters1.length > 0) {
+                        jQuery('#map_canvas_1').gmap('find', 'markers', {
+                            'property': 'tags',
+                            'value': filters1,
+                            'operator': 'OR'
+                        }, function (marker, found) {
+                            if (found) {
+                                jQuery('#map_canvas_1').gmap('addBounds', marker.position);
+                            }
+                            marker.setVisible(found);
+                        });
+                    } else {
+                        jQuery.each(jQuery('#map_canvas_1').gmap('get', 'markers'), function (i, marker) {
+                            jQuery('#map_canvas_1').gmap('addBounds', marker.position);
+                            marker.setVisible(true);
+                        });
+                    }
+                    jQuery('#map_canvas_1').gmap('get', 'MarkerClusterer').setIgnoreHidden(true)
+                    jQuery('#map_canvas_1').gmap('get', 'MarkerClusterer').repaint()
+                });
+
+
+            },'json');
+        }
+        else{
+            jQuery('#map_canvas_1').siblings('#map-loading').hide();
+        }
+
+
+    });
+
+    jQuery(this).parent().parent().siblings('#listings-map').removeClass("hide");
+    jQuery('#property-listings #listings_pagination').addClass("hide");
+    listing = "btn-map-sold";
+    jQuery.post(ajaxurl, {view: "map", action: "webkits_change_view"});
+
+});
 jQuery('.btn-map-2').click(function (event) {
     console.log(2);
     event.preventDefault();
@@ -281,4 +382,17 @@ jQuery('#clear').click(function (event) {
     event.preventDefault();
     jQuery('#clearForm').submit();
 });
+
+jQuery('#account').on('click',function () {
+    if(jQuery(this).hasClass('open'))
+    {
+        jQuery(this).removeClass('open');
+    }
+    else{
+        jQuery(this).addClass('open');
+    }
+
+});
+
+
 
