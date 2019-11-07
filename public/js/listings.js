@@ -383,16 +383,6 @@ jQuery('#clear').click(function (event) {
     jQuery('#clearForm').submit();
 });
 
-jQuery('#account').on('click',function () {
-    if(jQuery(this).hasClass('open'))
-    {
-        jQuery(this).removeClass('open');
-    }
-    else{
-        jQuery(this).addClass('open');
-    }
-
-});
 
 
 

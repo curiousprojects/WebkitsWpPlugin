@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.061
+ * Version: 3.062
 
  * Author: Curious Projects
 
@@ -5221,7 +5221,7 @@ function webkits_js()
 
 {
 
-	wp_enqueue_script('bootstrapjs', plugin_dir_url(__FILE__).'public/js/bootstrap.min.js', array('jquery'), '', true);
+	wp_enqueue_script('bootstrapjs', plugin_dir_url(__FILE__).'public/js/bootstrap.min.js', array('jquery'), '', false);
 
 
 }
@@ -5349,7 +5349,7 @@ function webkits_login()
 		return null;
 
 	}
-
+	$_POST['website_url'] = home_url( $wp->request );
 	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 	$res = json_decode($json['body']);
 
@@ -5396,7 +5396,7 @@ function webkits_forgot(){
 	$keyword    = $keywordArr[$rand_keys];
 	$randstr    = $keyword.$rand_digit;
 	$_POST['user_password'] = $randstr;
-
+	$_POST['website_url'] = home_url( $wp->request );
 	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 	$res = json_decode($json['body']);
@@ -6417,7 +6417,7 @@ function webkits_listings_sc($atts, $content = null)
 			}
 
 			$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-			
+
 			$result = json_decode($json['body']);
 
 			if($result->creb == true)

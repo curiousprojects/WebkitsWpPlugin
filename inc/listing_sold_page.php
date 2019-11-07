@@ -1,5 +1,5 @@
 <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>-->
-<?php wp_enqueue_script('bootstra', plugin_dir_url(__FILE__).'../public/js/bootstrap.js'); ?>
+
 <div class="clearfix"></div>
 
 <div class="container-fluid">
@@ -264,8 +264,10 @@
 
 
 <script>
-    var Is_Search = <?php echo $Is_Search; ?>
+
+    var Is_Search = <?php if(isset($Is_Search) && $Is_Search == true){echo $Is_Search;} else{ ?>false<?php } ?>;
     <?php if(!isset($_SESSION['User_Logged']) || (isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] != true)){?>
+        var IsUserLogged = false;
     jQuery('#modal-popup-login').modal({backdrop: 'static', keyboard: false});
     jQuery('#modal-popup-signup').modal({backdrop: 'static', keyboard: false});
     jQuery('#modal-popup-success').modal({backdrop: 'static', keyboard: false});
