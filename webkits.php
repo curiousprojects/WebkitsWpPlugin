@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.062
+ * Version: 3.064
 
  * Author: Curious Projects
 
@@ -3121,7 +3121,7 @@ function webkits_get_markers()
 function webkits_get_sold_markers()
 
 {
-	global $dbHost;
+	global $dbHost,$_SESSION;
 
 	session_start();
 
@@ -5300,7 +5300,7 @@ function webkits_register()
 		}
 
 		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-        //echo "<pre>";print_r($json);die;
+        echo "<pre>";print_r($json);die;
 		$res = json_decode($json['body']);
 
 	//echo "<pre>";print_r($json['body']);die;
@@ -5573,12 +5573,19 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-	if(isset($_POST['clear']) && isset($_SESSION['webkit-search']))
+	if(isset($_POST['clear']) && (isset($_SESSION['webkit-search']) || isset($_SESSION['webkit-sold-search'])))
 
 	{
 
-		unset($_SESSION['webkit-search']);
-		unset($_SESSION['webkit-sold-search']);
+	    if(isset($_SESSION['webkit-search']))
+        {
+	        unset($_SESSION['webkit-search']);
+        }
+		if(isset($_SESSION['webkit-sold-search']))
+		{
+			unset($_SESSION['webkit-sold-search']);
+		}
+
 
 		unset($_POST);
 		$Is_Search = false;
@@ -5817,7 +5824,8 @@ function webkits_listings_sc($atts, $content = null)
 			break;
 
 		case 'sold-listings':
-			global $wp;
+			global $_SESSION;
+
 			if($options['webkits_enable_sold'] == SOLD_PASSWORD)
 			{
 
@@ -5993,11 +6001,8 @@ function webkits_listings_sc($atts, $content = null)
 
 
 				if(isset($_POST['pressed']))
-
 				{
-
-
-					$_POST['is_search'] = true;
+				    $_POST['is_search'] = true;
 					$search             = $_POST['search'];
 
 					unset($_POST['pressed']);
@@ -6010,7 +6015,7 @@ function webkits_listings_sc($atts, $content = null)
 
 					$_SESSION['webkit-sold-search'] = $_POST;
 
-
+					//header('Location: '.$_SERVER['REQUEST_URI']);
 					//header('Location: '.$_SERVER['REQUEST_URI']);
 
 					//header('Location: '.$_SERVER['HTTP_HOST'].'/listings');
@@ -6084,34 +6089,14 @@ function webkits_listings_sc($atts, $content = null)
 				if($Is_Search == true){
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
+					//
 				$listings = json_decode($json['body']);
+
 			}
 			else{
 				$Is_Search = false;
             }
 
-				$link          = "creb/".$options['webkits_site_type']."/".$options['webkits_list_id'];
-
-				$json_feed_url = $dbHost.$link;
-
-				global $crawler;
-
-				if ($crawler )
-
-				{
-
-					return null;
-
-				}
-
-				$json_creb          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-				$result = json_decode($json_creb['body']);
-
-				if($result->creb == true)
-				{
-					$creb = true;
-				}
 				$options   = get_option("webkits");
 
 				$realurl   = get_post($options['webkits_listings_page']);
@@ -6656,6 +6641,7 @@ function webkits_listings_sc($atts, $content = null)
 			break;
 
 		case 'sold-search-form':
+		    global $_SESSION;
 			if($options['webkits_enable_sold'] == SOLD_PASSWORD)
 			{
 				wp_enqueue_style('jquery-mob', plugin_dir_url(__FILE__).('public/css/ion.rangeSlider.css'));

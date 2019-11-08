@@ -49,7 +49,7 @@
 
 			if(isset($_POST['advanced'])){
 				//print_r($_POST);
-				$_SESSION['webkit-search'] = $_POST;
+				$_SESSION['webkit-sold-search'] = $_POST;
 				//print_r($_SESSION['webkit-search']);
 			}
 
@@ -328,60 +328,4 @@
 	}
 	?>
 </script>
-<?php if($creb == true && $ll_apikey != '')
-{?>
-	<script type="text/javascript">
-        var searchWidget;
-        var selected ;
-        function initLocallogic () {
-            searchWidget = new locallogic.LocalSearch('local-search',{
-                displayAs: 'grid',
-                locale: 'en',
-                color: '#ff0000',
-            });
 
-
-        }
-        setTimeout(function(){ setcount(); }, 2000);
-        function setcount(){
-            jQuery('#llcount').html(searchWidget.selection().length);
-
-        }
-        jQuery('#local-lifestyle').unbind('click');
-        jQuery('#local-lifestyle').on('click',function () {
-            if(jQuery('#local-search').hasClass('d-none'))
-            {
-                jQuery('.ll-grid-score').unbind('click');
-                jQuery('.ll-grid-score').click(function () {
-
-                    if(jQuery(this).hasClass('ll-selected'))
-                    {
-                        jQuery('#llcount').html(searchWidget.selection().length-1);
-                    }
-                    else{jQuery('#llcount').html(searchWidget.selection().length+1);}
-
-
-
-                });
-
-                jQuery('#local-search').removeClass('d-none');
-            }else{
-
-                jQuery('#local-search').addClass('d-none');
-            }
-
-        });
-
-
-	</script>
-
-	<?php if($creb == true && $ll_apikey != ''){   ?>
-	<script
-		src="https://cdn.locallogic.co/sdk/?token=<?php echo $ll_apikey ?>&callback=initLocallogic">
-	</script>
-
-
-
-<?php }?>
-
-<?php }?>

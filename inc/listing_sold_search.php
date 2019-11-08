@@ -1,4 +1,4 @@
-<form id="search" class="search-listing" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_sold_listings_page'])->guid;}?>">
+<form id="search" class="search-listing" method="POST" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_sold_listings_page'])->guid;}?>">
 	<div clas="row">
 		<!--<div class="searcharrow">
 			<img src="https://curiouscloud.ca/assets/images/home-search-arrow.png" alt="Search Arrow">
@@ -126,7 +126,7 @@ else $mm = array(0,1000);
             select: function( event, ui ) {
                     jQuery('#wk-input_main').val(ui.item.value);
 
-                setTimeout(function(){  jQuery('.submit-search').trigger('click'); }, 500);
+                setTimeout(function(){  jQuery('#search').submit(); }, 1000);
                // console.log( "Selected: " + ui.item.value + " aka " + ui.item.id );
             }
         } ).data("ui-autocomplete")._renderItem = function (ul, item) {
