@@ -117,8 +117,9 @@ else $mm = array(0,1000);
 
         jQuery( "#usr-sold" ).autocomplete({
             source: function( request, response ) {
-                jQuery.post(ajaxurl, {term: request.term, action: "webkits_get_addresses"}).done(function (data) {
-                    console.log(data);
+
+                jQuery.post(ajaxurl, {term: request.term,onlyshow:'<?php echo $_POST['onlyshow'] ?>', action: "webkits_get_addresses"}).done(function (data) {
+
                     response(data);
                 });
             },

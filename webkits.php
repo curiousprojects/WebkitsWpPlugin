@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.064
+ * Version: 3.065
 
  * Author: Curious Projects
 
@@ -3070,6 +3070,13 @@ if(!isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
 	$_POST = $_SESSION['webkit-search'];
 
 }
+if(!isset($_POST['input_main']) && isset($_SESSION['webkit-sold-search']))
+
+{
+
+	$_POST = $_SESSION['webkit-sold-search'];
+
+}
 
 
 
@@ -3135,7 +3142,8 @@ function webkits_get_sold_markers()
 
 	$options = get_option('webkits');
 
-	$link = "ShowSoldMarkers/";
+
+	$link             = "ShowSoldMarkers/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
 	$json_feed_url = $dbHost.$link;
 
@@ -3299,7 +3307,8 @@ function webkits_get_agent()
 function webkits_get_addresses()
 {
 	global $dbHost;
-	$link          = "address/";
+	$options = get_option('webkits');
+	$link          = "address/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
 	$json_feed_url = $dbHost.$link;
 
@@ -3314,8 +3323,7 @@ function webkits_get_addresses()
 	}
 
 	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-	//echo json_decode($json);die;
+//echo "<pre>";print_r($json);die;
 	wp_send_json( json_decode($json['body']) );
 }
 
@@ -5300,7 +5308,7 @@ function webkits_register()
 		}
 
 		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-        echo "<pre>";print_r($json);die;
+
 		$res = json_decode($json['body']);
 
 	//echo "<pre>";print_r($json['body']);die;
@@ -5832,8 +5840,7 @@ function webkits_listings_sc($atts, $content = null)
 				wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 				wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
 				$listingPerPage = $options['webkits_listing_perpage'];
-				//echo get_post($options['webkits_sold_listings_page'])->guid;die;
-				//header('location: '.$options["webkits_sold_listings_page"]->guid);
+
 				$Is_Search   = false;
 				$listingpage = get_post($options['webkits_listing_page'])->guid."&l=";
 
@@ -5894,6 +5901,7 @@ function webkits_listings_sc($atts, $content = null)
 				{
 
 					$_POST['onlyshow'] = $atts['onlyshow'];
+					$_SESSION['webkit-sold-search'] = $_POST;
 
 				}
 
@@ -5964,41 +5972,7 @@ function webkits_listings_sc($atts, $content = null)
 
 					}
 
-
-					/* if(strpos($atts['address'],',') != false)
-
-					{
-
-						$address = explode(',',$atts['address']);
-
-
-
-						if(isset($address[0]))
-
-							$_POST['address'] = $address[0];
-
-
-
-						if(isset($address[1]))
-
-							$_POST['city'] = $address[1];
-
-
-
-						if(isset($address[2]))
-
-							$_POST['postalcode'] = $address[2];
-
-					}
-
-					else {
-
-						$_POST['address'] = $atts['address'];
-
-					}*/
-
 				}
-
 
 				if(isset($_POST['pressed']))
 				{
@@ -6014,35 +5988,21 @@ function webkits_listings_sc($atts, $content = null)
 					$_POST['offset'] = 0;
 
 					$_SESSION['webkit-sold-search'] = $_POST;
-
-					//header('Location: '.$_SERVER['REQUEST_URI']);
-					//header('Location: '.$_SERVER['REQUEST_URI']);
-
-					//header('Location: '.$_SERVER['HTTP_HOST'].'/listings');
-
-
 				}
 
 
 				if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-sold-search']))
 
 				{
-
-					$_POST = $_SESSION['webkit-sold-search'];
+				    $_POST = $_SESSION['webkit-sold-search'];
 
 				}
 
 				//FERNSIDE STREET,FINLAYSON CRESCENT,NOBLE CRESCENT,noble crescent//19663544
-
-				$ll_apikey = (isset($options['webkits_ll_apikey']) && !empty($options['webkits_ll_apikey']))?$options['webkits_ll_apikey']:'';
-
-
 				if(isset($_POST['srch-term']))
 
 				{
-
-
-					if($_POST['srch-term'] == "openhouse")
+				    if($_POST['srch-term'] == "openhouse")
 
 					{
 
@@ -6053,16 +6013,14 @@ function webkits_listings_sc($atts, $content = null)
 				}
 
 
-				$link = "ShowSoldListings";
 
+				$link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
-				$json_feed_url = $dbHost.$link;
+                $json_feed_url = $dbHost.$link;
 
 				//echo $json_feed_url;die;
 
-				//return $json_feed_url;
-
-				$_POST['data'] = $_POST;
+                $_POST['data'] = $_POST;
 
 				$_POST['perpage'] = $listingPerPage;
 
@@ -6077,7 +6035,7 @@ function webkits_listings_sc($atts, $content = null)
 					return null;
 
 				}
-				if(isset($_POST['input']) && $_POST['input'] != '')
+				if((isset($_POST['input']) && $_POST['input'] != ''))
                 {
 	                $Is_Search = true;
                 }
@@ -6089,7 +6047,7 @@ function webkits_listings_sc($atts, $content = null)
 				if($Is_Search == true){
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-					//
+
 				$listings = json_decode($json['body']);
 
 			}
