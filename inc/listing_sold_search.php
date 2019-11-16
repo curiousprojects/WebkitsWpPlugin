@@ -13,7 +13,7 @@
 		       placeholder="Try searching Address, Street.">
         <input type="hidden" value="<?php echo $_POST['input_main']; ?>" name="wk-input_main" id="wk-input_main"/>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-property-type">
 		<div class="search-select-wrap">
 			<?php $input_property_type = (isset($_POST['input_property_type']) ? $_POST['input_property_type'] : 0); ?>
 			<select class="form-control search-select " placeholder="" name="wk-input_property_type">
@@ -29,7 +29,7 @@
 		</div>
 	</div>
 
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-bedroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bedroom">
 				<option style="color:gray" disabled selected hidden>Bedrooms</option>
@@ -41,7 +41,7 @@
 			</select>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-bathroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bathroom">
 				<option style="color:gray" disabled selected hidden>Bathrooms</option>
@@ -53,15 +53,15 @@
 			</select>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-price">
 		<div class="search-select-wrap">
 			<span id="advanced-search" class="btn search-input form-control search-select">Price</span>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-search">
 		<button class="submit-search" type="submit" name="pressed">Search</button>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="s-clear">
 		<button class="submit-search" type="submit" name="clear">Clear</button>
 	</div>
 

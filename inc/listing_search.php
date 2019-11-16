@@ -8,10 +8,10 @@
 		<input type="text" class="form-control search-input" name="wk-input_main" value="<?php echo $_POST['input_main']; ?>" id="usr"
 		    placeholder="Try searching Listing ID, Street, Pool etc.">
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="property_type">
 		<div class="search-select-wrap">
 			<?php $input_property_type = (isset($_POST['input_property_type']) ? $_POST['input_property_type'] : 0); ?>
-			<select class="form-control search-select " placeholder="" name="wk-input_property_type">
+			<select  class="form-control search-select " placeholder="" name="wk-input_property_type">
 				<?php $options = get_option('webkits'); ?>
 				<?php $bcAgent = isset($options['webkits_bc_agent']) ? $options['webkits_bc_agent'] : 0; ?>
 				<option value="0" <?php if ($input_property_type==0 ) echo "selected"; ?> class="text">Property Type</option>
@@ -31,7 +31,7 @@
 		</div>
 	</div>
 
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="transaction_type">
 		<div class="search-select-wrap">
 			<?php $input_transaction_type = (isset($_POST['input_transaction_type']) ? $_POST['input_transaction_type'] : 0); ?>
 			<select class="form-control search-select " name="wk-input_transaction_type">
@@ -41,7 +41,7 @@
 			</select>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="bedroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bedroom">
 				<option style="color:gray" disabled selected hidden>Bedrooms</option>
@@ -53,7 +53,7 @@
 			</select>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="bathroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bathroom">
 				<option style="color:gray" disabled selected hidden>Bathrooms</option>
@@ -65,15 +65,15 @@
 			</select>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="price">
 		<div class="search-select-wrap">
 			<span id="advanced-search" class="btn search-input form-control search-select">Price</span>
 		</div>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="serch-btn">
 		<button class="submit-search" type="submit" name="pressed">Search</button>
 	</div>
-	<div class="flexible-div width-element">
+	<div class="flexible-div width-element" id="clear-btn">
 		<button class="submit-search" type="submit" name="clear">Clear</button>
 	</div>
 	<a class="search-input--what">What can I search?</a>
