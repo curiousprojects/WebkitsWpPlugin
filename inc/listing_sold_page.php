@@ -1,3 +1,5 @@
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>-->
+
 <div class="clearfix"></div>
 
 <div class="container-fluid">
@@ -290,6 +292,7 @@
     realurl = '<?php echo get_post($options['webkits_listing_page'])->guid; ?>';
 
     listing = '<?php  if($_POST['onlyshow'] && $_POST['onlyshow'] != ''){ echo 'grid'; }else { echo 'btn-map-sold'; } ?>';
+    onlyshow = '<?php  if($_POST['onlyshow'] && $_POST['onlyshow'] != ''){ echo $_POST['onlyshow']; }else { false;} ?>';
 
     var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 

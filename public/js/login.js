@@ -100,7 +100,7 @@ function login()
                         jQuery('#modal-popup-login').modal('toggle');
                         listing = 'btn-map-sold';
 
-                        if(IsFullView == true)
+                        if(IsFullView == true || typeof onlyshow != 'undefined' && onlyshow != false)
                         {
                             window.location.reload();
                         }

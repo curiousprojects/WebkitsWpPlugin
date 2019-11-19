@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.066
+ * Version: 3.067
 
  * Author: Curious Projects
 
@@ -4168,7 +4168,6 @@ function webkits_agent_shortcode($atts, $content = null)
 		$json_feed = wp_remote_post($json_feed_url, $args);
 
 
-
 		$i = 1;
 
 
@@ -4184,9 +4183,6 @@ function webkits_agent_shortcode($atts, $content = null)
 
 
 	$args = (shortcode_atts(array('section' => "mini",), $atts));
-
-
-
 
 
 	if($args['section'] == "listings")
@@ -4211,11 +4207,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 	ob_start();
 
-
-
 	$newMini = str_replace('<a ', '<a target="_blank" ', $agent->agent->list);
-
-
 
 	switch($args['section'])
 
@@ -5867,33 +5859,7 @@ function webkits_listings_sc($atts, $content = null)
 				}
 
 				//echo "<pre>";print_r($_POST);die;
-				if(isset($_POST['input']))
-				{
-					$_POST['input_main'] = $_POST['input'];
-				}
-				if(isset($_POST['srch-term']))
 
-				{
-
-					if($_POST['srch-term'] != "openhouse")
-
-					{
-
-						$_POST['input_main'] = $_POST['srch-term'];
-
-					}
-
-
-				}
-
-
-				if(isset($atts['from-city']) && $atts['from-city'] != '')
-
-				{
-
-					$_POST['from_city'] = $atts['from-city'];
-
-				}
 
 
 				if(isset($atts['onlyshow']) && $atts['onlyshow'] != '')
@@ -5901,108 +5867,134 @@ function webkits_listings_sc($atts, $content = null)
 				{
 
 					$_POST['onlyshow'] = $atts['onlyshow'];
-					$_SESSION['webkit-sold-search'] = $_POST;
 
+					unset($_SESSION['webkit-sold-search']);
 				}
-
-				if(isset($atts['maxprice']))
-
-				{
-
-					$_POST['maxprice'] = $atts['maxprice'];
-
-				}
-
-				if(isset($atts['postal']))
-
-				{
-
-					$_POST['postal'] = strtoupper($atts['postal']);
-
-				}
-
-				if(isset($atts['commercial']) && $atts['commercial'] == '1')
-
-				{
-
-					$_POST['commercial'] = 1;
-
-				}
-
-				if(isset($atts['lots']) && $atts['lots'] == '1')
-
-				{
-
-					$_POST['lots'] = 1;
-
-				}
-
-				if(isset($atts['retail']) && $atts['retail'] == '1')
-
-				{
-
-					$_POST['retail'] = 1;
-
-				}
-
-				if(isset($atts['condo']) && $atts['condo'] == 1)
-
-				{
-
-					$_POST['condo'] = 1;
-
-					$_POST['condo_search'] = true;
-
-
-				}
-
-
-				if(isset($atts['address']) && $atts['address'] != '')
-
-				{
-
-					$arraddress = explode('|', $atts['address']);
-
-
-					if(is_array($arraddress) && count($arraddress) > 0)
+				else{
+					if(isset($_POST['input']))
+					{
+						$_POST['input_main'] = $_POST['input'];
+					}
+					if(isset($_POST['srch-term']))
 
 					{
 
-						$_POST['address'] = $arraddress;
+						if($_POST['srch-term'] != "openhouse")
+
+						{
+
+							$_POST['input_main'] = $_POST['srch-term'];
+
+						}
+
 
 					}
 
-				}
 
-				if(isset($_POST['pressed']))
-				{
-				    $_POST['is_search'] = true;
-					$search             = $_POST['search'];
+					if(isset($atts['from-city']) && $atts['from-city'] != '')
 
-					unset($_POST['pressed']);
+					{
 
-					$_POST['live-search'] = true;
+						$_POST['from_city'] = $atts['from-city'];
 
-					$CurrentPage = 1;
+					}
+					if(isset($atts['maxprice']))
 
-					$_POST['offset'] = 0;
+					{
 
-					$_SESSION['webkit-sold-search'] = $_POST;
-				}
+						$_POST['maxprice'] = $atts['maxprice'];
+
+					}
+
+					if(isset($atts['postal']))
+
+					{
+
+						$_POST['postal'] = strtoupper($atts['postal']);
+
+					}
+
+					if(isset($atts['commercial']) && $atts['commercial'] == '1')
+
+					{
+
+						$_POST['commercial'] = 1;
+
+					}
+
+					if(isset($atts['lots']) && $atts['lots'] == '1')
+
+					{
+
+						$_POST['lots'] = 1;
+
+					}
+
+					if(isset($atts['retail']) && $atts['retail'] == '1')
+
+					{
+
+						$_POST['retail'] = 1;
+
+					}
+
+					if(isset($atts['condo']) && $atts['condo'] == 1)
+
+					{
+
+						$_POST['condo'] = 1;
+
+						$_POST['condo_search'] = true;
 
 
-				if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-sold-search']))
+					}
 
-				{
-				    $_POST = $_SESSION['webkit-sold-search'];
 
-				}
+					if(isset($atts['address']) && $atts['address'] != '')
 
-				//FERNSIDE STREET,FINLAYSON CRESCENT,NOBLE CRESCENT,noble crescent//19663544
+					{
+
+						$arraddress = explode('|', $atts['address']);
+
+
+						if(is_array($arraddress) && count($arraddress) > 0)
+
+						{
+
+							$_POST['address'] = $arraddress;
+
+						}
+
+					}
+
+					if(isset($_POST['pressed']))
+					{
+						$_POST['is_search'] = true;
+						$search             = $_POST['search'];
+
+						unset($_POST['pressed']);
+
+						$_POST['live-search'] = true;
+
+						$CurrentPage = 1;
+
+						$_POST['offset'] = 0;
+
+						$_SESSION['webkit-sold-search'] = $_POST;
+					}
+					if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-sold-search']))
+
+					{
+						$_POST = $_SESSION['webkit-sold-search'];
+
+					}
+					//FERNSIDE STREET,FINLAYSON CRESCENT,NOBLE CRESCENT,noble crescent//19663544
+
+                }
+
 				if(isset($_POST['srch-term']))
-
 				{
-				    if($_POST['srch-term'] == "openhouse")
+					if($_POST['srch-term'] == "openhouse")
 
 					{
 
@@ -6012,9 +6004,7 @@ function webkits_listings_sc($atts, $content = null)
 
 				}
 
-
-
-				$link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+                $link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
                 $json_feed_url = $dbHost.$link;
 
@@ -6035,7 +6025,7 @@ function webkits_listings_sc($atts, $content = null)
 					return null;
 
 				}
-				if((isset($_POST['input']) && $_POST['input'] != ''))
+				if((isset($_POST['input']) && $_POST['input'] != '') || (isset($_POST['onlyshow']) && $_POST['onlyshow'] != ''))
                 {
 	                $Is_Search = true;
                 }
@@ -6047,7 +6037,7 @@ function webkits_listings_sc($atts, $content = null)
 				if($Is_Search == true){
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-
+                //echo "<pre>";print_r($json);die;
 				$listings = json_decode($json['body']);
 
 			}
@@ -6068,6 +6058,46 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 			break;
+        case 'agent-sold-listings':
+	        if($options['webkits_enable_sold'] == SOLD_PASSWORD)
+	        {
+		        wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+		        wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
+	        }
+	        $link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+
+	        $json_feed_url = $dbHost.$link;
+
+	        global $crawler;
+
+	        if($crawler)
+
+	        {
+
+		        return null;
+
+	        }
+	        $Is_Search = true;
+            $_POST['onlyshow'] = "agent";
+            $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+            echo "<pre>";print_r($json);die;
+            $listings = json_decode($json['body']);
+
+
+
+	        $options   = get_option("webkits");
+
+	        $realurl   = get_post($options['webkits_listings_page']);
+
+	        require "includes/register-login.php";
+
+	        require "inc/listing_sold_page.php";
+
+	        if(isset($search))
+		        $_POST['search'] = $search;
+
+	        break;
 		case 'listings':
 
 			global $_SESSION;

@@ -216,7 +216,7 @@ jQuery('.btn-map-sold').click(function (event) {
 
         if(Is_Search == true)
         {
-            jQuery.post(ajaxurl, {action: "webkits_get_sold_markers"}, function (data) {
+            jQuery.post(ajaxurl, {action: "webkits_get_sold_markers",onlyshow:onlyshow}, function (data) {
                 jQuery.each(data.markers, function (i, marker) {
                     if(searched && found == 0)
                         center =  new google.maps.LatLng(marker.latitude, marker.longitude)
