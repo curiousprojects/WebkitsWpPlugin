@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.067
+ * Version: 3.068
 
  * Author: Curious Projects
 
@@ -3140,10 +3140,14 @@ function webkits_get_sold_markers()
 
 	}
 
+
 	$options = get_option('webkits');
+	if(isset($options['webkits_oreb_id']) && $options['webkits_oreb_id'] != '')
+	{
+        $_POST['agent_id'] = $options['webkits_oreb_id'];
+	}
 
-
-	$link             = "ShowSoldMarkers/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+	$link             = "ShowSoldMarkers/";
 
 	$json_feed_url = $dbHost.$link;
 
@@ -3308,7 +3312,7 @@ function webkits_get_addresses()
 {
 	global $dbHost;
 	$options = get_option('webkits');
-	$link          = "address/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+	$link          = "address/";
 
 	$json_feed_url = $dbHost.$link;
 
@@ -4411,6 +4415,7 @@ function webkits_options()
 			$options['webkits_site_type']        = esc_html($_POST['webkits_site_type']);
 
 			$options['webkits_list_id']          = esc_html(str_replace(",", "|", $_POST['webkits_list_id']));
+			$options['webkits_oreb_id']          = esc_html(str_replace(",", "|", $_POST['webkits_oreb_id']));
 
 			$options['webkits_crea_clientid']    = trim(esc_html($_POST['webkits_crea_clientid']));
 
@@ -4491,6 +4496,7 @@ function webkits_options()
 		$webkits_crea_clientid = isset($options['webkits_crea_clientid'])?$options['webkits_crea_clientid']:'';
 
 		$webkits_list_id       = str_replace("|", ",", $options['webkits_list_id']);
+		$webkits_oreb_id       = str_replace("|", ",", $options['webkits_oreb_id']);
 
 		$webkits_map_zoom      = (isset($options['webkits_map_zoom']))?$options['webkits_map_zoom']:10;
 
@@ -4944,6 +4950,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 			$all  = json_decode($json['body']);
 
 
+			libxml_use_internal_errors(true);
 
 			$show = '';
 
@@ -5867,8 +5874,11 @@ function webkits_listings_sc($atts, $content = null)
 				{
 
 					$_POST['onlyshow'] = $atts['onlyshow'];
-
-					unset($_SESSION['webkit-sold-search']);
+					if(isset($options['webkits_oreb_id']) && $options['webkits_oreb_id'] != '')
+                    {
+	                    $_POST['agent_id'] = $options['webkits_oreb_id'];
+                    }
+                    unset($_SESSION['webkit-sold-search']);
 				}
 				else{
 					if(isset($_POST['input']))
@@ -6004,7 +6014,8 @@ function webkits_listings_sc($atts, $content = null)
 
 				}
 
-                $link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+                //$link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_oreb_id'];
+                $link = "ShowSoldListings/";
 
                 $json_feed_url = $dbHost.$link;
 
@@ -6037,7 +6048,7 @@ function webkits_listings_sc($atts, $content = null)
 				if($Is_Search == true){
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-                //echo "<pre>";print_r($json);die;
+
 				$listings = json_decode($json['body']);
 
 			}
@@ -6058,46 +6069,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 			break;
-        case 'agent-sold-listings':
-	        if($options['webkits_enable_sold'] == SOLD_PASSWORD)
-	        {
-		        wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
-		        wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
-	        }
-	        $link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
-	        $json_feed_url = $dbHost.$link;
-
-	        global $crawler;
-
-	        if($crawler)
-
-	        {
-
-		        return null;
-
-	        }
-	        $Is_Search = true;
-            $_POST['onlyshow'] = "agent";
-            $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-            echo "<pre>";print_r($json);die;
-            $listings = json_decode($json['body']);
-
-
-
-	        $options   = get_option("webkits");
-
-	        $realurl   = get_post($options['webkits_listings_page']);
-
-	        require "includes/register-login.php";
-
-	        require "inc/listing_sold_page.php";
-
-	        if(isset($search))
-		        $_POST['search'] = $search;
-
-	        break;
 		case 'listings':
 
 			global $_SESSION;

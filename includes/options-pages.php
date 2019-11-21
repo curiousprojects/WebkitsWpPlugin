@@ -39,7 +39,10 @@
                 <th scope="row"><label for="webkits_list_id">List IDs<br/><em>(Seperate Multiple with Commas or Brokerage/Agents)</em></label></th>
                 <td><input name="webkits_list_id" id="webkits_list_id" value="<?php echo $webkits_list_id; ?>" class="regular-text" type="text"></td>
             </tr>
-
+            <tr>
+                <th scope="row"><label for="webkits_oreb_id">OREB ID<br/><em>(Seperate Multiple with Commas)</em></label></th>
+                <td><input name="webkits_oreb_id" id="webkits_oreb_id" value="<?php echo $webkits_oreb_id; ?>" class="regular-text" type="text"></td>
+            </tr>
             <hr/>
             <tr>
                 <th scope="row"><label for="listing_page">Search</label></th>
