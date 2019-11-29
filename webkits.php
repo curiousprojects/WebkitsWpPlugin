@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.068
+ * Version: 3.069
 
  * Author: Curious Projects
 
@@ -5136,9 +5136,7 @@ function webkits_agents_shortcode($atts, $content = null)
 
 {
 
-	$args = (shortcode_atts(array('section' => "agents", 'filter' => ''), $atts));
-
-
+	$args = (shortcode_atts(array('section' => "agents", 'filter' => '','show_commercial' => ''), $atts));
 
 	if(!wp_script_is("agents", "enqueued"))
 
@@ -5164,6 +5162,7 @@ function webkits_agents_shortcode($atts, $content = null)
 
 	ob_start();
 
+	$filter = array();
 
 
 	switch($args['section'])
@@ -5179,6 +5178,7 @@ var agent = ".$options['webkits_list_id'].";
 var ajaxurl = '".$scriptUrl."';
 
 var filter = '".$args['filter']."';
+var show_commercial = '".$args['show_commercial']."';
 
 </script>";
 
