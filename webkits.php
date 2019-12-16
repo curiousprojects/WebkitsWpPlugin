@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.069
+ * Version: 3.070
 
  * Author: Curious Projects
 
@@ -35,7 +35,7 @@ $MyUpdateChecker = PucFactory::buildUpdateChecker(
 
 global $crawlers;
 
-global $crawler, $User_Perm,$User_Logged;
+global $crawler, $User_Perm,$User_Logged,$email;
 //echo var_dump($User_Logged);die;
 
 //$dbHost = 'http://159.203.14.115/';
@@ -45,7 +45,11 @@ global $crawler, $User_Perm,$User_Logged;
 //$dbHost = 'http://webkitadmin.project:7700/';
 
 
+
+
+
 define('SOLD_PASSWORD','KiyaCat13#^');
+
 $crawlers = array(
 
 	'.*Java.*outbrain',
@@ -2663,9 +2667,6 @@ $crawler = isCrawler($_SERVER['HTTP_USER_AGENT']);
 //$crawler = true;
 
 
-
-
-
 if(strpos($_SERVER['HTTP_HOST'], 'project') !== false)
 
 {
@@ -2679,6 +2680,7 @@ else{
 	$dbHost = 'https://curiouscloud.ca/';
 
 }
+
 
 add_action( 'wp_loaded', 'webkits_listings_user' );
 
@@ -2777,6 +2779,10 @@ add_action('wp_ajax_webkits_change_view', 'webkits_change_view');
 add_action('wp_ajax_nopriv_webkits_register', 'webkits_register');
 add_action('wp_ajax_webkits_register', 'webkits_register');
 
+add_action('wp_ajax_nopriv_webkits_user_activation', 'webkits_user_activation');
+add_action('wp_ajax_webkits_user_activation', 'webkits_user_activation');
+
+
 add_action('wp_ajax_nopriv_webkits_login', 'webkits_login');
 add_action('wp_ajax_webkits_login', 'webkits_login');
 
@@ -2823,8 +2829,9 @@ add_action('wp_ajax_webkits_get_addresses', 'webkits_get_addresses');
 
 add_action('wp_ajax_nopriv_webkits_get_addresses', 'webkits_get_addresses');
 
-add_action( 'query_vars', 'wpse6891_query_vars' );
-add_action( 'parse_request', 'wpse6891_parse_request' );
+add_action( 'query_vars', 'wpse_query_vars' );
+add_action( 'query_vars', 'account_query_vars' );
+add_action( 'parse_request', 'wpse_parse_request' );
 /*add_action('upgrader_process_complete', 'webkit_plugin_update', 10, 2);
 
 
@@ -4744,7 +4751,14 @@ function webkits_mainpage_shortcode($atts, $content = null)
 				$link = "slider/latest/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
 			//echo $link;die;
+			$_POST = array();
+			if(isset($atts['from-city']) && $atts['from-city'] != '')
 
+			{
+
+				$_POST['from_city'] = $atts['from-city'];
+
+			}
 			$json_feed_url = $dbHost.$link;
 
 
@@ -4761,7 +4775,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
 
 
-			$json = wp_remote_get($json_feed_url, array("body" => array("p" => $_POST)));
+			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$all  = json_decode($json['body']);
 
@@ -4931,7 +4945,13 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
 
 
+			if(isset($atts['from-city']) && $atts['from-city'] != '')
 
+			{
+
+				$_POST['from_city'] = $atts['from-city'];
+
+			}
 
 			$json_feed_url = $dbHost.$link;
 
@@ -4945,7 +4965,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
 			}
 
-			$json = wp_remote_get($json_feed_url, array("body" => array("p" => $_POST)));
+			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$all  = json_decode($json['body']);
 
@@ -5267,25 +5287,10 @@ function webkits_change_view()
 	die();
 
 }
-if(is_array($_GET) && isset($_GET['account']) && $_GET['account'] != '')
-{
-
-	do_shortcode('[user section="activation" account="'.$_GET['account'].'"]');
-}
-
-
 
 function webkits_register()
 {
-	add_rewrite_rule(
-		'^/activation/([^/]+)\$',
-		plugin_dir_url(__FILE__).'webkit.php?param=$1'
 
-	);
-
-
-	//echo "<pre>";print_r($json);
-	//return $json;
 	global $wp,$Action;
 
 
@@ -5294,9 +5299,6 @@ function webkits_register()
 		$link          = "User/register";
 
 		$json_feed_url = $dbHost.$link;
-		//echo $json_feed_url;die;
-
-
 
 		if ($crawler )
 
@@ -5309,10 +5311,6 @@ function webkits_register()
 		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 		$res = json_decode($json['body']);
-
-	//echo "<pre>";print_r($json['body']);die;
-	//echo "<pre>";print_r($res->status);
-	//echo "<pre>";print_r($res['status']);die;
 
 		if($res->status == 'success')
 		{
@@ -5329,7 +5327,6 @@ function webkits_register()
 			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
 			$options                             = get_option('webkits');
-			//"http://webkitadmin-wp.project:7700/activation?account=YToyOntpOjA7czoyNDoiaGlyYWx0aGZha29yNThAZ21haWwuY29tIjtpOjE7aTo2MTt9"
 
 			$mail = wp_mail($options['webkits_register_email'],$subject,$mail_body,$headers);
 			$mail = wp_mail($_POST['user_email'],$user_subject,$user_mail_body,$headers);
@@ -5338,16 +5335,68 @@ function webkits_register()
 	wp_send_json( $res );
 
 }
+function webkits_user_activation($account)
+{
+	global $wp,$crawler,$dbHost;
+
+	$options                             = get_option('webkits');
+	$sold_page = get_post($options['webkits_sold_listings_page']);
+	$details = unserialize(base64_decode($account));
+
+	$POST['user_email'] = $details[0];
+	$POST['user_id'] =  $details[1];
+
+	$keywordArr = array ('service','property','home','listing','dallas',
+	                     'Documents','Hunter','client','search','lender',
+	                     'Club','Vehicles','Neo', 'Morpheus', 'Trinity', 'Cypher', 'Tank');
+
+	$rand_keys 	= array_rand($keywordArr);
+	$rand_digit = mt_rand(10, 99);
+	$keyword    = $keywordArr[$rand_keys];
+	$randstr    = $keyword.$rand_digit;
+
+
+	$POST['user_password'] = $randstr;
+	$link          = "User/activate";
+
+	$json_feed_url = $dbHost.$link;
+
+
+	if ($crawler )
+	{
+		return null;
+	}
+
+	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
+
+
+	$res = json_decode($json['body']);
+
+	if($res->status == 'success')
+	{
+		$login_url = get_permalink($sold_page->ID);
+
+		require('includes/activate_mail.php');
+		$user_subject = 'Your account is successfully activated';
+
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+		$mail = wp_mail($POST['user_email'],$user_subject,$mail_body,$headers);
+		wp_redirect(get_permalink($sold_page->ID).'?success=true');
+
+		exit;
+	}
+	wp_redirect(get_permalink($sold_page->ID).'?error=true');
+	exit;
+}
 function webkits_login()
 {
 	global $dbHost,$crawler,$wp;
-	//echo "<pre>";print_r($_POST);die;
+
 	$link          = "User/login";
 
 	$json_feed_url = $dbHost.$link;
-	//echo $json_feed_url;die;
-
-
 
 	if ($crawler )
 
@@ -5371,9 +5420,6 @@ function webkits_login()
 
 		$resp['status'] = 'success';
 		$resp['login_url'] = home_url( $wp->request ).'/'.get_post($options['webkits_sold_listings_page'])->post_name;
-		// echo home_url( $wp->request ).'/sold-listings';die;
-		//header('Location:'.home_url( $wp->request ).'/sold-listings');
-		//echo "<script>home_url = ".home_url( $wp->request )."</script>";
 
 		wp_send_json( $resp );
 
@@ -5439,7 +5485,7 @@ function GenerateUserAccountActivationLink($user_id,$user_email)
 	$code = serialize(array($user_email,$user_id));
 	$code = base64_encode($code);
 
-	$url = home_url( $wp->request ).'/activation?account='.$code;
+	$url = home_url( $wp->request ).'/activation/'.$code;
 
 	return $url;
 }
@@ -6958,69 +7004,7 @@ function webkits_listings_user($atts,$content = null)
 				return $content;
 			}
 			break;
-        case 'activation':
-
-		    global $wp,$crawler;
-            $details = unserialize(base64_decode($atts['account']));
-		        $POST['user_email'] = $details[0];
-		        $POST['user_id'] =  $details[1];
-
-		        $keywordArr = array ('service','property','home','listing','dallas',
-		                             'Documents','Hunter','client','search','lender',
-		                             'Club','Vehicles','Neo', 'Morpheus', 'Trinity', 'Cypher', 'Tank');
-
-		        $rand_keys 	= array_rand($keywordArr);
-		        $rand_digit = mt_rand(10, 99);
-		        $keyword    = $keywordArr[$rand_keys];
-		        $randstr    = $keyword.$rand_digit;
-
-
-		        $POST['user_password'] = $randstr;
-		        $link          = "User/activate";
-
-		        $json_feed_url = $dbHost.$link;
-		        //echo $json_feed_url;die;
-
-
-
-		        if ($crawler )
-
-		        {
-
-			        return null;
-
-		        }
-
-		        $json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
-
-
-		        $res = json_decode($json['body']);
-
-		        if($res->status == 'success')
-		        {
-			        $login_url = home_url($wp->request).'/'.get_post($options['webkits_sold_listings_page'])->post_name;
-
-			        require('includes/activate_mail.php');
-			        $user_subject = 'Your account is successfully activated';
-			        //dallas90
-			       // add_filter( 'wp_mail_content_type','text/html' );
-			        //require('../../../wp-
-			        $headers = "MIME-Version: 1.0" . "\r\n";
-			        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-
-			        $mail = mail($POST['user_email'],$user_subject,$mail_body,$headers);
-
-			        header('location: '.home_url($wp->request).'/'.get_post($options['webkits_sold_listings_page'])->post_name.'?success=true');
-			        exit;
-		        }
-	        header('location: '.home_url($wp->request).'/'.get_post($options['webkits_sold_listings_page'])->post_name.'?error=true');
-	        exit;
-
-		        //echo "<pre>";print_r($res);die;
-
-            break;
-		default:
+        default:
 			break;
 
 	}
@@ -7049,31 +7033,41 @@ function webkits_register_login()
 
 }
 
-add_action( 'init', 'wpse6891_init' );
-function wpse6891_init() {
+add_action( 'init', 'wpse_init' );
+
+function wpse_init() {
 	add_rewrite_rule( '^logout$', 'index.php?Action=logout', 'top' );
+	add_rewrite_rule(
+		'^activation/?([^/]*)/?',
+		'index.php?account=$matches[1]','top'
+
+	);
 }
 
 // But WordPress has a whitelist of variables it allows, so we must put it on that list
 
-function wpse6891_query_vars( $query_vars )
+function wpse_query_vars( $query_vars )
 {
-	$query_vars[] = 'Action';
+    $query_vars[] = 'Action';
+    return $query_vars;
+}
+function account_query_vars( $query_vars )
+{
+	$query_vars[] = 'account';
 	return $query_vars;
 }
-
 // If this is done, we can access it later
 // This example checks very early in the process:
 // if the variable is set, we include our page and stop execution after it
 
-function wpse6891_parse_request( &$wp )
-{     // echo "<pre>";print_r($wp->query_vars);die;
-	if ( $wp->query_vars['Action'] == 'logout' ) {
+function wpse_parse_request( &$wp )
+{
+	if ( isset($wp->query_vars['Action']) && $wp->query_vars['Action'] == 'logout' ) {
 
 		global $_SESSION;
 
 		session_start();
-		//echo "<pre>";print_r($_GET['Action']);die;
+		//echo "<pre>";print_r($wp->query_vars);die;
 
 
 		unset($_SESSION['User_Logged']);
@@ -7083,11 +7077,15 @@ function wpse6891_parse_request( &$wp )
 		header('location:'.home_url());
 		exit;
 	}
+
+	if(isset($wp->query_vars["account"]) && $wp->query_vars["account"] != '')
+    {
+	    do_action('wp_ajax_webkits_user_activation',$wp->query_vars["account"]);
+    }
 	if(is_array($_GET) && isset($_GET['login']) && $_GET['login'] == true)
 	{
 
 		do_shortcode('[login]');
-
 	}
 }
 
