@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.070
+ * Version: 3.072
 
  * Author: Curious Projects
 
@@ -4213,6 +4213,16 @@ function webkits_agent_shortcode($atts, $content = null)
 		wp_enqueue_script('masonary', plugin_dir_url(__FILE__).'public/js/masonry.min.js', array('jquery'), '', true);
 
 	}
+    if($args['section'] == "image"){
+
+        wp_enqueue_script('fancybox_js', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.js', array('jquery'), '', false);
+        wp_enqueue_style('fancybox_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.css', '', '', false);
+
+        wp_enqueue_style('fancybox_btn_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.css', '', '', false);
+        wp_enqueue_script('fancybox_btn', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.js', array('jquery'), '', false);
+        wp_enqueue_script('fancybox_mdi', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-media.js', array('jquery'), '', false);
+
+    }
 
 
 
@@ -4247,6 +4257,10 @@ function webkits_agent_shortcode($atts, $content = null)
 			echo $agent->agent->awards;
 
 			break;
+
+        case 'image':
+            include("includes/agent_photo.php");
+            break;
 
 		case 'social':
 
@@ -6179,7 +6193,10 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 
-
+            if(isset($atts['listing-days']) && $atts['listing-days'] != '')
+            {
+                $_POST['listing_days']=$atts['listing-days'];
+            }
 
 			if(isset($atts['onlyshow']) && $atts['onlyshow'] != '')
 

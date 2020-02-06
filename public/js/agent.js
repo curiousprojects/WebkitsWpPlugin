@@ -15,7 +15,7 @@ jQuery("#submit").click(function (event) {
     data2.push(filterObj);
     jQuery("#listings").remove();
     jQuery("#ListParent").html('<ul id="listings" class="imageList"></ul>');
-    jQuery.post(ajaxurl, {data: data2, action: "webkits_get_agent", show_commercial: show_commercial}, function (data) {
+    jQuery.post(ajaxurl, {data: data2, action: "webkits_get_agent"}, function (data) {
 
         jQuery.each(data.agents, function (i, marker) {
             addListing(marker);
@@ -32,7 +32,8 @@ jQuery("#submit").click(function (event) {
 });
 
 
-jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent", show_commercial: show_commercial}, function (data) {
+jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent"}, function (data) {
+
     jQuery.each(data.office, function (i, marker) {
         jQuery('#office').append(jQuery('<option>').text(marker.name).attr('value', marker.office));
         addListing(marker);
@@ -54,5 +55,3 @@ jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent", show_commerci
 
     jQuery("#listings").toggle();
 }, "json");
-
-
