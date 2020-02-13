@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.072
+ * Version: 3.073
 
  * Author: Curious Projects
 
@@ -2875,100 +2875,100 @@ function webkit_plugin_update($upgrader_object, $options)
 						/*
 						 * duplicate all post meta just in two SQL queries
 						 */
-						/*$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
-						if (count($post_meta_infos)!=0) {
-							$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-							foreach ($post_meta_infos as $meta_info)
-							{
+/*$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
+if (count($post_meta_infos)!=0) {
+	$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
+	foreach ($post_meta_infos as $meta_info)
+	{
 
-								$meta_key = $meta_info->meta_key;
-								if($meta_info->meta_key == 'brizy') {
-									$b =array();
-									$b['brizy-post']['compiled_html'] = '<!DOCTYPE html><html lang="en"><head></head><body><div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[listings section="sold-search-form"][listings section="sold-listings"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div></body></html>';
-									$val = serialize($b);
-
-
-									$meta_value = addslashes($val);
-								}
-								elseif($meta_info->meta_key == 'brizy_post_uid')
-                                {
-
-	                                $meta_value = addslashes(md5($id.time()));
-                                }
-                                elseif($meta_info->meta_key == 'brizy-bk-Brizy_Admin_Migrations_ShortcodesMobileOneMigration-1.0.39')
-                                {
-	                                $meta_value = '';
-                                }
-								else{
-
-									$meta_value = addslashes($meta_info->meta_value);
-                                }
-
-								$sql_query_sel[]= "SELECT $id, '$meta_key', '$meta_value'";
-							}
-							$sql_query.= implode(" UNION ALL ", $sql_query_sel);
-							$wpdb->query($sql_query);
-						}
-
-						if(empty($option['webkits_sold_listings_page']))
-						{
-							$option['webkits_sold_listings_page'] = $id;
-							update_option('webkits', $option);
-						}
-
-					}
-					if(null === $wpdb->get_row("SELECT post_name,post_title FROM {$wpdb->prefix}posts WHERE post_name = 'change-password' OR post_title = 'Change Password'", 'ARRAY_A'))
-					{
-						$page = array(
-
-							'post_title' => __('Change Password'),
-
-							'post_status' => 'publish',
-
-							'post_author' => $current_user->ID,
-
-							'post_type' => 'page',
-
-							'post_name' => 'change-password',
-
-							'post_content' => '<div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[user section="change-password"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div>',
-
-						);
-						wp_insert_post($page);
-					}
-
-					if(null === $wpdb->get_row("SELECT post_name,post_title FROM {$wpdb->prefix}posts WHERE post_name = 'edit-profile' OR post_title = 'Edit Profile'", 'ARRAY_A'))
-					{
-
-						$page = array(
-
-							'post_title' => __('Edit Profile'),
-
-							'post_status' => 'publish',
-
-							'post_name' => 'edit-profile',
-
-							'post_author' => $current_user->ID,
-
-							'post_type' => 'page',
-
-							'post_content' => '<div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[user section="edit-profile"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div></body>',
+		$meta_key = $meta_info->meta_key;
+		if($meta_info->meta_key == 'brizy') {
+			$b =array();
+			$b['brizy-post']['compiled_html'] = '<!DOCTYPE html><html lang="en"><head></head><body><div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[listings section="sold-search-form"][listings section="sold-listings"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div></body></html>';
+			$val = serialize($b);
 
 
-						);
-						wp_insert_post($page);
-					}
-
-				}
-
-			}
+			$meta_value = addslashes($val);
 		}
+		elseif($meta_info->meta_key == 'brizy_post_uid')
+		{
+
+			$meta_value = addslashes(md5($id.time()));
+		}
+		elseif($meta_info->meta_key == 'brizy-bk-Brizy_Admin_Migrations_ShortcodesMobileOneMigration-1.0.39')
+		{
+			$meta_value = '';
+		}
+		else{
+
+			$meta_value = addslashes($meta_info->meta_value);
+		}
+
+		$sql_query_sel[]= "SELECT $id, '$meta_key', '$meta_value'";
+	}
+	$sql_query.= implode(" UNION ALL ", $sql_query_sel);
+	$wpdb->query($sql_query);
+}
+
+if(empty($option['webkits_sold_listings_page']))
+{
+	$option['webkits_sold_listings_page'] = $id;
+	update_option('webkits', $option);
+}
+
+}
+if(null === $wpdb->get_row("SELECT post_name,post_title FROM {$wpdb->prefix}posts WHERE post_name = 'change-password' OR post_title = 'Change Password'", 'ARRAY_A'))
+{
+$page = array(
+
+	'post_title' => __('Change Password'),
+
+	'post_status' => 'publish',
+
+	'post_author' => $current_user->ID,
+
+	'post_type' => 'page',
+
+	'post_name' => 'change-password',
+
+	'post_content' => '<div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[user section="change-password"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div>',
+
+);
+wp_insert_post($page);
+}
+
+if(null === $wpdb->get_row("SELECT post_name,post_title FROM {$wpdb->prefix}posts WHERE post_name = 'edit-profile' OR post_title = 'Edit Profile'", 'ARRAY_A'))
+{
+
+$page = array(
+
+	'post_title' => __('Edit Profile'),
+
+	'post_status' => 'publish',
+
+	'post_name' => 'edit-profile',
+
+	'post_author' => $current_user->ID,
+
+	'post_type' => 'page',
+
+	'post_content' => '<div class="brz-root__container brz-reset-all"><section id="eqwfrqgodp" class="brz-section css-1c2016y" data-uid="eqwfrqgodp"><div class="brz-section__items"><div class="brz-section__content" data-custom-id="ksbicbtrhr"><div class="brz-bg css-1sqhm9n"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-container__wrap css-16e3gxi"><div class="brz-container css-1ptl1a3"><div class="brz-row__container" data-custom-id="lsesswgvzc"><div class="brz-bg brz-d-xs-flex brz-flex-xs-wrap css-z34uv"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-row css-18qg7sn"><div class="brz-columns css-z4jmud" data-custom-id="szmeyuypyh"><div class="brz-bg brz-d-xs-flex css-1f2z3"><div class="brz-bg-media"><div class="brz-bg-color"></div></div><div class="brz-bg-content"><div class="brz-wrapper css-6fvry1"><div class="brz-d-xs-flex css-laz546"><div class="brz-embed-code css-1t99mi5" data-custom-id="nmxjjqtepo"><div class="">[user section="edit-profile"]</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></section></div></body>',
+
+
+);
+wp_insert_post($page);
+}
+
+}
+
+}
+}
 
 }
 */
 
 function set_content_type(){
-    return 'text/html';
+	return 'text/html';
 }
 function webkits_listing_rewrite()
 
@@ -3151,7 +3151,7 @@ function webkits_get_sold_markers()
 	$options = get_option('webkits');
 	if(isset($options['webkits_oreb_id']) && $options['webkits_oreb_id'] != '')
 	{
-        $_POST['agent_id'] = $options['webkits_oreb_id'];
+		$_POST['agent_id'] = $options['webkits_oreb_id'];
 	}
 
 	$link             = "ShowSoldMarkers/";
@@ -3334,7 +3334,7 @@ function webkits_get_addresses()
 	}
 
 	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-//echo "<pre>";print_r($json);die;
+	//echo "<pre>";print_r($json);die;
 	wp_send_json( json_decode($json['body']) );
 }
 
@@ -3912,10 +3912,10 @@ function webkits_details_shortcode($atts, $content = null)
 
 
 			}
-            if($listing->info->Status == 'Sold')
-            {
-	            include('includes/register-login.php');
-            }
+			if($listing->info->Status == 'Sold')
+			{
+				include('includes/register-login.php');
+			}
 
 			if($args['crea-popup'] == 0 || (isset($_SESSION['webkits-accept']) && $_SESSION['webkits-accept'] == 1))
 
@@ -3928,13 +3928,13 @@ function webkits_details_shortcode($atts, $content = null)
 		case 'price':
 
 			if($listing->content->show_price == 1){
-                if($listing->content->Status == 'Sold')
-                {
-	                echo '<p class="price p-w"><span class="text-red">SOLD</span>&nbsp;<span class="sprice">  $'. $listing->content->sprice.'</span></p>';
-                }
-                else{
-	                echo '<p class="price">$'.number_format((float) $listing->content->mprice).'</p>';
-                }
+				if($listing->content->Status == 'Sold')
+				{
+					echo '<p class="price p-w"><span class="text-red">SOLD</span>&nbsp;<span class="sprice">  $'. $listing->content->sprice.'</span></p>';
+				}
+				else{
+					echo '<p class="price">$'.number_format((float) $listing->content->mprice).'</p>';
+				}
 
 			}
 
@@ -4213,16 +4213,16 @@ function webkits_agent_shortcode($atts, $content = null)
 		wp_enqueue_script('masonary', plugin_dir_url(__FILE__).'public/js/masonry.min.js', array('jquery'), '', true);
 
 	}
-    if($args['section'] == "image"){
+	if($args['section'] == "image"){
 
-        wp_enqueue_script('fancybox_js', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.js', array('jquery'), '', false);
-        wp_enqueue_style('fancybox_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.css', '', '', false);
+		wp_enqueue_script('fancybox_js', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.js', array('jquery'), '', false);
+		wp_enqueue_style('fancybox_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/jquery.fancybox.css', '', '', false);
 
-        wp_enqueue_style('fancybox_btn_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.css', '', '', false);
-        wp_enqueue_script('fancybox_btn', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.js', array('jquery'), '', false);
-        wp_enqueue_script('fancybox_mdi', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-media.js', array('jquery'), '', false);
+		wp_enqueue_style('fancybox_btn_css', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.css', '', '', false);
+		wp_enqueue_script('fancybox_btn', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-buttons.js', array('jquery'), '', false);
+		wp_enqueue_script('fancybox_mdi', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-media.js', array('jquery'), '', false);
 
-    }
+	}
 
 
 
@@ -4258,9 +4258,9 @@ function webkits_agent_shortcode($atts, $content = null)
 
 			break;
 
-        case 'image':
-            include("includes/agent_photo.php");
-            break;
+		case 'image':
+			include("includes/agent_photo.php");
+			break;
 
 		case 'social':
 
@@ -5308,43 +5308,43 @@ function webkits_register()
 	global $wp,$Action;
 
 
-		global $wp,$dbHost,$crawler;
-		$_POST['website_url'] = home_url( $wp->request );
-		$link          = "User/register";
+	global $wp,$dbHost,$crawler;
+	$_POST['website_url'] = home_url( $wp->request );
+	$link          = "User/register";
 
-		$json_feed_url = $dbHost.$link;
+	$json_feed_url = $dbHost.$link;
 
-		if ($crawler )
+	if ($crawler )
 
-		{
+	{
 
-			return null;
+		return null;
 
-		}
+	}
 
-		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-		$res = json_decode($json['body']);
+	$res = json_decode($json['body']);
 
-		if($res->status == 'success')
-		{
-			$subject = get_bloginfo( 'name' ) . ' Lead : New User Registration ';
+	if($res->status == 'success')
+	{
+		$subject = get_bloginfo( 'name' ) . ' Lead : New User Registration ';
 
-			$ActivationLink    =   GenerateUserAccountActivationLink($res->id, $_POST['user_email']);
-			require('includes/register_mail.php');
+		$ActivationLink    =   GenerateUserAccountActivationLink($res->id, $_POST['user_email']);
+		require('includes/register_mail.php');
 
-			$user_subject = 'Thank You for Registering with '.get_bloginfo( 'name' );
-			//echo $user_mail_body;die;
+		$user_subject = 'Thank You for Registering with '.get_bloginfo( 'name' );
+		//echo $user_mail_body;die;
 
 
-			$headers = "MIME-Version: 1.0" . "\r\n";
-			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+		$headers = "MIME-Version: 1.0" . "\r\n";
+		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-			$options                             = get_option('webkits');
+		$options                             = get_option('webkits');
 
-			$mail = wp_mail($options['webkits_register_email'],$subject,$mail_body,$headers);
-			$mail = wp_mail($_POST['user_email'],$user_subject,$user_mail_body,$headers);
-		}
+		$mail = wp_mail($options['webkits_register_email'],$subject,$mail_body,$headers);
+		$mail = wp_mail($_POST['user_email'],$user_subject,$user_mail_body,$headers);
+	}
 
 	wp_send_json( $res );
 
@@ -5441,7 +5441,7 @@ function webkits_login()
 	}
 	else{
 		wp_send_json( $res );
-    }
+	}
 }
 function webkits_forgot(){
 	global $dbHost,$crawler,$wp;
@@ -5452,7 +5452,7 @@ function webkits_forgot(){
 
 	if ($crawler )
 	{
-	    return null;
+		return null;
 	}
 
 	$keywordArr = array ('service','property','home','listing','dallas',
@@ -5644,10 +5644,10 @@ function webkits_listings_sc($atts, $content = null)
 
 	{
 
-	    if(isset($_SESSION['webkit-search']))
-        {
-	        unset($_SESSION['webkit-search']);
-        }
+		if(isset($_SESSION['webkit-search']))
+		{
+			unset($_SESSION['webkit-search']);
+		}
 		if(isset($_SESSION['webkit-sold-search']))
 		{
 			unset($_SESSION['webkit-sold-search']);
@@ -5875,18 +5875,11 @@ function webkits_listings_sc($atts, $content = null)
 
 			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-
-
 			$listings = json_decode($json['body']);
-
-
 
 			$allListings = json_decode($json['body']);
 
-
-
 			require "inc/listing_page.php";
-
 
 			break;
 
@@ -5935,10 +5928,10 @@ function webkits_listings_sc($atts, $content = null)
 
 					$_POST['onlyshow'] = $atts['onlyshow'];
 					if(isset($options['webkits_oreb_id']) && $options['webkits_oreb_id'] != '')
-                    {
-	                    $_POST['agent_id'] = $options['webkits_oreb_id'];
-                    }
-                    unset($_SESSION['webkit-sold-search']);
+					{
+						$_POST['agent_id'] = $options['webkits_oreb_id'];
+					}
+					unset($_SESSION['webkit-sold-search']);
 				}
 				else{
 					if(isset($_POST['input']))
@@ -6060,7 +6053,7 @@ function webkits_listings_sc($atts, $content = null)
 					}
 					//FERNSIDE STREET,FINLAYSON CRESCENT,NOBLE CRESCENT,noble crescent//19663544
 
-                }
+				}
 
 				if(isset($_POST['srch-term']))
 				{
@@ -6074,14 +6067,14 @@ function webkits_listings_sc($atts, $content = null)
 
 				}
 
-                //$link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_oreb_id'];
-                $link = "ShowSoldListings/";
+				//$link = "ShowSoldListings/".$options['webkits_site_type']."/".$options['webkits_oreb_id'];
+				$link = "ShowSoldListings/";
 
-                $json_feed_url = $dbHost.$link;
+				$json_feed_url = $dbHost.$link;
 
 				//echo $json_feed_url;die;
 
-                $_POST['data'] = $_POST;
+				$_POST['data'] = $_POST;
 
 				$_POST['perpage'] = $listingPerPage;
 
@@ -6097,24 +6090,24 @@ function webkits_listings_sc($atts, $content = null)
 
 				}
 				if((isset($_POST['input']) && $_POST['input'] != '') || (isset($_POST['onlyshow']) && $_POST['onlyshow'] != ''))
-                {
-	                $Is_Search = true;
-                }
-                else
-                {
-	                $Is_Search = false;
-                }
+				{
+					$Is_Search = true;
+				}
+				else
+				{
+					$Is_Search = false;
+				}
 
 				if($Is_Search == true){
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 
-				$listings = json_decode($json['body']);
+					$listings = json_decode($json['body']);
 
-			}
-			else{
-				$Is_Search = false;
-            }
+				}
+				else{
+					$Is_Search = false;
+				}
 
 				$options   = get_option("webkits");
 
@@ -6193,10 +6186,14 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 
-            if(isset($atts['listing-days']) && $atts['listing-days'] != '')
-            {
-                $_POST['listing_days']=$atts['listing-days'];
-            }
+			if(isset($atts['listing-days']) && $atts['listing-days'] != '')
+			{
+				$_POST['listing_days']=$atts['listing-days'];
+			}
+			if(isset($atts['sort']) && $atts['sort'] != '')
+			{
+				$_POST['sort']=$atts['sort'];
+			}
 
 			if(isset($atts['onlyshow']) && $atts['onlyshow'] != '')
 
@@ -6406,8 +6403,6 @@ function webkits_listings_sc($atts, $content = null)
 			//echo "<pre>";print_r($_POST);die;
 			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-			//echo "<pre>";print_r($json);die;
-
 			$listings = json_decode($json['body']);
 
 			$link          = "creb/".$options['webkits_site_type']."/".$options['webkits_list_id'];
@@ -6424,14 +6419,14 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 
-			$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+			/*$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-			$result = json_decode($json['body']);
+			//$result = json_decode($json['body']);
 
 			if($result->creb == true)
 			{
 				$creb = true;
-			}
+			}*/
 
 			require "inc/listing_page.php";
 
@@ -6440,7 +6435,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			if(isset($search))
 				$_POST['search'] = $search;
-
+            //die;
 			break;
 
 
@@ -6657,14 +6652,14 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-			$offices = json_decode($json['body']);
+			//$offices = json_decode($json['body']);
 
 			require "inc/listing_search.php";
 
 			break;
 
 		case 'sold-search-form':
-		    global $_SESSION;
+			global $_SESSION;
 			if($options['webkits_enable_sold'] == SOLD_PASSWORD)
 			{
 				wp_enqueue_style('jquery-mob', plugin_dir_url(__FILE__).('public/css/ion.rangeSlider.css'));
@@ -6908,83 +6903,62 @@ function webkits_listings_user($atts,$content = null)
 	$args = (shortcode_atts(array('section' => "change-password",), $atts));
 	ob_start();
 	if(isset($atts) && is_array($atts) && isset($atts['section']))
-	switch($atts['section'])
-	{
-		case 'change-password':
+		switch($atts['section'])
+		{
+			case 'change-password':
 
-			if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-			{
-				wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
-				wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
-				wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
-
-				if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
+				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
 				{
-					$link = "User/change-password";
+					wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+					wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
+					wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
 
-					$json_feed_url = $dbHost.$link;
-
-					global $crawler, $wp;
-
-					if($crawler)
-
+					if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
 					{
+						$link = "User/change-password";
 
-						return null;
+						$json_feed_url = $dbHost.$link;
 
-					}
-					$_POST['user_id'] = $_SESSION['UserId'];
-					$json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+						global $crawler, $wp;
 
-					$result = json_decode($json['body']);
-					//echo home_url($wp->request);die;
-					if($result->status == 'success')
-					{
-						header('location: '.home_url($wp->request).'?update=true');
-						exit(0);
+						if($crawler)
+
+						{
+
+							return null;
+
+						}
+						$_POST['user_id'] = $_SESSION['UserId'];
+						$json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+						$result = json_decode($json['body']);
+						//echo home_url($wp->request);die;
+						if($result->status == 'success')
+						{
+							header('location: '.home_url($wp->request).'?update=true');
+							exit(0);
+						}
+						else
+						{
+							header('location: '.home_url($wp->request).'?update=false');
+							exit(0);
+						}
+						// echo "<pre>";print_r($_POST);die;
 					}
-					else
-					{
-						header('location: '.home_url($wp->request).'?update=false');
-						exit(0);
-					}
-					// echo "<pre>";print_r($_POST);die;
+
+					//require_once "includes/change-password.php";
+					require('includes/change-password.php');
+					$content = ob_get_clean();
+
+
+					return $content;
 				}
-
-				//require_once "includes/change-password.php";
-				require('includes/change-password.php');
-				$content = ob_get_clean();
-
-
-				return $content;
-			}
-			exit;
-			break;
-		case 'edit-profile':
-			if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-			{
-				$link = "User/edit-profile/get";
-
-				$json_feed_url = $dbHost.$link;
-
-				global $crawler, $wp;
-
-				if($crawler)
-
+				exit;
+				break;
+			case 'edit-profile':
+				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
 				{
-
-					return null;
-
-				}
-				$_POST['user_id'] = $_SESSION['UserId'];
-
-				$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-				$result = json_decode($json['body']);
-				$user   = $result->user;
-				if(($_POST['Submit'] == "Save Changes"))
-				{
-					$link = "User/edit-profile/post";
+					$link = "User/edit-profile/get";
 
 					$json_feed_url = $dbHost.$link;
 
@@ -7002,29 +6976,50 @@ function webkits_listings_user($atts,$content = null)
 					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 					$result = json_decode($json['body']);
-					if($result->status == 'success')
+					$user   = $result->user;
+					if(($_POST['Submit'] == "Save Changes"))
 					{
-						header('location: '.home_url($wp->request).'?update=true');
-						exit(0);
+						$link = "User/edit-profile/post";
+
+						$json_feed_url = $dbHost.$link;
+
+						global $crawler, $wp;
+
+						if($crawler)
+
+						{
+
+							return null;
+
+						}
+						$_POST['user_id'] = $_SESSION['UserId'];
+
+						$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+						$result = json_decode($json['body']);
+						if($result->status == 'success')
+						{
+							header('location: '.home_url($wp->request).'?update=true');
+							exit(0);
+						}
+						else
+						{
+							header('location: '.home_url($wp->request).'?update=false');
+							exit(0);
+						}
 					}
-					else
-					{
-						header('location: '.home_url($wp->request).'?update=false');
-						exit(0);
-					}
+					//wp_head();
+					require "includes/edit-profile.php";
+					$content = ob_get_clean();
+
+
+					return $content;
 				}
-				//wp_head();
-				require "includes/edit-profile.php";
-				$content = ob_get_clean();
+				break;
+			default:
+				break;
 
-
-				return $content;
-			}
-			break;
-        default:
-			break;
-
-	}
+		}
 
 	$content .= ob_get_clean();
 
@@ -7036,12 +7031,12 @@ function webkits_register_login()
 	ob_start();
 	$options = get_option("webkits");
 	if($options['webkits_enable_sold'] == SOLD_PASSWORD)
-    {
+	{
 
-	    wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
-	    wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
-	    include_once("includes/register-login.php");
-    }
+		wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+		wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
+		include_once("includes/register-login.php");
+	}
 	$content = ob_get_clean();
 
 
@@ -7065,8 +7060,8 @@ function wpse_init() {
 
 function wpse_query_vars( $query_vars )
 {
-    $query_vars[] = 'Action';
-    return $query_vars;
+	$query_vars[] = 'Action';
+	return $query_vars;
 }
 function account_query_vars( $query_vars )
 {
@@ -7096,9 +7091,9 @@ function wpse_parse_request( &$wp )
 	}
 
 	if(isset($wp->query_vars["account"]) && $wp->query_vars["account"] != '')
-    {
-	    do_action('wp_ajax_webkits_user_activation',$wp->query_vars["account"]);
-    }
+	{
+		do_action('wp_ajax_webkits_user_activation',$wp->query_vars["account"]);
+	}
 	if(is_array($_GET) && isset($_GET['login']) && $_GET['login'] == true)
 	{
 

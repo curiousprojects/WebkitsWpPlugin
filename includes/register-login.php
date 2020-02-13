@@ -134,6 +134,9 @@
                             <input type="hidden" class="mlsNum" value=""/>
                             <span>Don't have an account? </span> <a href="javascript:void(0)" class="popup-modal-sm" data-target="signup">Register</a>
                         </div>
+                        <div>
+                            <a href="<?php echo home_url() ?>">Go Back</a>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -189,6 +192,9 @@
                     <div class="form-group">
                         <div id="success" role="alert" class="success"></div>
                     </div>
+                    <div>
+                        <a href="<?php echo home_url() ?>">Go Back</a>
+                    </div>
                     <!--<div class="row">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 form-group">
                             <a href="javascript:void(0)" class="popup-modal-sm" data-target="login">Login</a></p>
@@ -205,6 +211,7 @@
     <script>
         var IsFullView;
         IsFullView = true;
+        var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
 		<?php if(!isset($_SESSION['User_Logged']) || (isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] != true)){?>
         jQuery('#modal-popup-login').modal({backdrop: 'static', keyboard: false});
         jQuery('#modal-popup-success').modal({backdrop: 'static', keyboard: false});
