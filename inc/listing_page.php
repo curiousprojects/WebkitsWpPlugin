@@ -71,12 +71,30 @@
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                         <div class="grid-box">
                             <div class="grid-overlay">
-                                <?php if ($l->info->ct != '') { ?>
-                                    <img class="grid-banner" src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png">
-                                <?php } ?>
+                               <!-- <?php /*if ($l->info->ct != ''){ */?>
+                                    <img class="grid-banner" src="https://curiouscloud.ca/assets/images/<?php /*echo $l->info->ct; */?>.png">
+                                <?php /*} */?>
                                 <div class="grid-image">
-                                    <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
-                                </div>
+                                <img class="grid-banner" src="https://curiouscloud.ca<?php /*echo $l->info->photo; */?>"/>
+                                </div>-->
+
+                                <?php if (is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto[0]->LargePhotoURL) && $l->info->Photo->PropertyPhoto[0]->LargePhotoURL != ''){ ?>
+                                    <div class="grid-image">
+                                        <img class="grid-banner" src="<?php echo $l->info->Photo->PropertyPhoto[0]->LargePhotoURL; ?>"/>
+                                    </div>
+                                <?php }elseif (!is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto->LargePhotoURL) && $l->info->Photo->PropertyPhoto->LargePhotoURL != ''){ ?>
+                                    <div class="grid-image">
+                                        <img class="grid-banner" src="<?php echo $l->info->Photo->PropertyPhoto->LargePhotoURL; ?>"/>
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="grid-image">
+<!--                                        <img class="grid-banner" src="https://curiouscloud.ca--><?php //echo $l->info->photo; ?><!--"/>-->
+                                        <img class="grid-banner" src="<?php echo $l->info->photo; ?>"/>
+                                    </div>
+                                <?php } ?>
+
+
+
                             </div>
                             <div class="grid-address">
                                 <span><?php if($l->info->ShowPrice == 1) {echo $l->info->ListPrice;} ?></span>
@@ -113,14 +131,27 @@
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                                             <div class="col-sm-5 list-image-box">
                             <div class="list-overlay">
-
-
-                                <div class="list-image">
-                                    <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
-                                </div>
-                                <?php if ($l->info->ct != '') { ?>
-                                <div class="list-banner"><img src="https://curiouscloud.ca/assets/images/<?php echo $l->info->ct; ?>.png" /> </div>
+                                <?php if (is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto[0]->LargePhotoURL) && $l->info->Photo->PropertyPhoto[0]->LargePhotoURL != ''){ ?>
+                                    <div class="list-image">
+                                        <img class="list-banner" src="<?php echo $l->info->Photo->PropertyPhoto[0]->LargePhotoURL; ?>"/>
+                                    </div>
+                                <?php }elseif (!is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto->LargePhotoURL) && $l->info->Photo->PropertyPhoto->LargePhotoURL != ''){ ?>
+                                    <div class="list-image">
+                                        <img class="list-banner" src="<?php echo $l->info->Photo->PropertyPhoto->LargePhotoURL; ?>"/>
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="list-image">
+                                        <!--<img class="grid-banner" src="https://curiouscloud.ca--><?php //echo $l->info->photo; ?><!--"/>-->
+                                        <img src="<?php echo $l->info->photo; ?>"/>
+                                    </div>
                                 <?php } ?>
+
+                                <!--<div class="list-image">
+                                    <img src="https://curiouscloud.ca<?php /*echo $l->info->photo; */?>"/>
+                                </div>
+                                <?php /*if ($l->info->ct != '') { */?>
+                                <div class="list-banner"><img src="https://curiouscloud.ca/assets/images/<?php /*echo $l->info->ct; */?>.png" /> </div>
+                                --><?php /*} */?>
                             </div>
 
                         </div>
@@ -181,9 +212,23 @@
                         $link = ($l->info->UnparsedAddress == '') ? 'none' : (str_replace(" ", "-", $l->info->UnparsedAddress));
                     echo "/property/" . $l->info->ListingKey . '/' . $link . '/' . $l->info->City; ?>">
                                     <div class="col-sm-5">
-                                        <div class="listing-table-image">
-                                            <img src="https://curiouscloud.ca<?php echo $l->info->photo; ?>"/>
-                                        </div>
+                                        <?php if (is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto[0]->LargePhotoURL) && $l->info->Photo->PropertyPhoto[0]->LargePhotoURL != ''){ ?>
+                                            <div class="listing-table-image">
+                                                <img src="<?php echo $l->info->Photo->PropertyPhoto[0]->LargePhotoURL; ?>"/>
+                                            </div>
+                                        <?php }elseif (!is_array($l->info->Photo->PropertyPhoto) && isset($l->info->Photo->PropertyPhoto->LargePhotoURL) && $l->info->Photo->PropertyPhoto->LargePhotoURL != ''){ ?>
+                                            <div class="listing-table-image">
+                                                <img src="<?php echo $l->info->Photo->PropertyPhoto->LargePhotoURL; ?>"/>
+                                            </div>
+                                        <?php }else{ ?>
+                                            <div class="listing-table-image">
+                                                <!--<img class="grid-banner" src="https://curiouscloud.ca--><?php //echo $l->info->photo; ?><!--"/>-->
+                                                <img src="<?php echo $l->info->photo; ?>"/>
+                                            </div>
+                                        <?php } ?>
+                                        <!--<div class="listing-table-image">
+                                            <img src="https://curiouscloud.ca<?php /*echo $l->info->photo; */?>"/>
+                                        </div>-->
                                     </div>
 
                                     <div class="col-sm-7 listing-table-address"> <?php echo strtoupper($l->info->UnparsedAddress); ?></div>

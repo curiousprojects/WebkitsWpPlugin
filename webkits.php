@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.074
+ * Version: 3.076
 
  * Author: Curious Projects
 
@@ -2986,6 +2986,7 @@ function webkits_listing_rewrite()
 
 
 
+	//add_rewrite_rule('property/([0-9]+)-(.*)', 'index.php?page_id='.$page.'&l=$matches[1]', 'top');
 	add_rewrite_rule('property/([0-9]+)/(.*)', 'index.php?page_id='.$page.'&l=$matches[1]', 'top');
 
 	$wp_rewrite->flush_rules(true);
@@ -3414,7 +3415,7 @@ function webkits_title($title)
 			}
 
 			$json_feed            = wp_remote_get($json_feed_url, $args);
-			//echo "<pre>";print_r($json_feed);die;
+			//			echo "<pre>";print_r($json_feed);die;
 			$_SESSION['listings'] = json_decode($json_feed['body']);
 
 			remove_all_actions('wpseo_head');
@@ -3505,6 +3506,7 @@ function webkits_og_tags()
 
 			$listing = $_SESSION['listings'];
 
+
 			?>
 
 
@@ -3521,9 +3523,23 @@ function webkits_og_tags()
 
             <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>"/>
 
-            <meta property="og:image" id="ogimage"
+			<?php
 
-                  content="https://curiouscloud.ca/photos/image-<?php echo $listing->ID; ?>-1.jpg"/>
+			if(is_array($listing->info->Photo->PropertyPhoto) && isset($listing->info->Photo->PropertyPhoto[0]->LargePhotoURL) && $listing->info->Photo->PropertyPhoto[0]->LargePhotoURL != '')
+			{
+				$photo = $listing->info->Photo->PropertyPhoto[0]->LargePhotoURL;
+			}
+            elseif (!is_array($listing->info->Photo->PropertyPhoto) && isset($listing->info->Photo->PropertyPhoto->LargePhotoURL) && $listing->info->Photo->PropertyPhoto->LargePhotoURL != '')
+			{
+				$photo = $listing->info->Photo->PropertyPhoto->LargePhotoURL;
+			}
+			else{
+				$photo = 'https://curiouscloud.ca/assets/images/no-photo.png';
+			}
+			?>
+
+            <!--            <meta property="og:image" id="ogimage" content="https://curiouscloud.ca/photos/image---><?php //echo $listing->ID; ?><!---1.jpg"/>-->
+            <meta property="og:image" id="ogimage" content="<?php echo $photo; ?>"/>
 
             <meta property="og:image:width" content="<?php echo $listing->content->imagewidth; ?>"/>
 
@@ -4352,6 +4368,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 			$json_feed_url    = $dbHost.$link;
 
+
 			$_POST['data']    = $_POST;
 
 			$_POST['perpage'] = $listingPerPage;
@@ -4366,6 +4383,8 @@ function webkits_agent_shortcode($atts, $content = null)
 
 			}
 
+			$_POST['site_type']        = $options['webkits_ssite_type'];
+			$_POST['site_id']          = $options['webkits_slist_id'];
 			$json     = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$listings = json_decode($json['body']);
@@ -5984,12 +6003,7 @@ function webkits_listings_sc($atts, $content = null)
 						$_POST['commercial'] = 1;
 
 					}
-					if(isset($atts['industrial']) && $atts['industrial'] == '1')
-					{
 
-						$_POST['industrial'] = 1;
-
-					}
 					if(isset($atts['lots']) && $atts['lots'] == '1')
 
 					{
@@ -6225,10 +6239,17 @@ function webkits_listings_sc($atts, $content = null)
 			}
 
 			if(isset($atts['commercial']) && $atts['commercial'] == '1')
-
 			{
 
 				$_POST['commercial'] = 1;
+
+			}
+			//echo "<pre>";print_r($atts);die;
+
+			if(isset($atts['industrial']) && $atts['industrial'] == '1')
+			{
+
+				$_POST['industrial'] = 1;
 
 			}
 
@@ -6259,7 +6280,6 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			}
-
 
 
 			if(isset($atts['address']) && $atts['address'] != '')
@@ -6409,7 +6429,7 @@ function webkits_listings_sc($atts, $content = null)
 			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$listings = json_decode($json['body']);
-
+			//            echo "<pre>";print_r($listings);die;
 			$link          = "creb/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
 			$json_feed_url = $dbHost.$link;
@@ -6440,7 +6460,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			if(isset($search))
 				$_POST['search'] = $search;
-            //die;
+			//die;
 			break;
 
 
