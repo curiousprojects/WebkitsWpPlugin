@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.076
+ * Version: 3.078
 
  * Author: Curious Projects
 
@@ -4023,6 +4023,9 @@ function webkits_details_shortcode($atts, $content = null)
 			break;
 		case 'media':
 			echo $listing->content->Media;
+			break;
+		case 'livestream':
+			echo $listing->content->Live;
 			break;
 		case 'floorplans':
 			echo $listing->content->Floorplans;

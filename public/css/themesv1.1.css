@@ -1,3 +1,14 @@
+.join-live
+{
+    padding-top : 15px;
+}
+.btn-live{
+    background: lightgreen;
+    color: white;
+}
+.font-light-blue{
+    color: #5bc0de;
+}
 #advanced-search {
     border: 1px #ccc solid !important;
     padding-top: 9px;
