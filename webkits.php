@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.078
+ * Version: 3.080
 
  * Author: Curious Projects
 
@@ -2694,7 +2694,9 @@ add_action('wp_enqueue_scripts', 'webkits_js'); //JS Files
 add_action('admin_menu', "webkits_options_menu"); //Options Menu - Webkits Options
 
 add_action('init', 'webkits_listing_rewrite');  //Recreates the Link for SEO
-
+remove_action('wp_head', 'rest_output_link_wp_head', 10);
+remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
+remove_action('template_redirect', 'rest_output_link_header', 11);
 add_action('wp_head', 'webkits_og_tags');  //Create OG Meta for SEO
 
 add_action('mp_library', 'extendTemplates', 11, 1); //MOTOPRESS - add new Template
@@ -3404,16 +3406,6 @@ function webkits_title($title)
 
 			$args                 = array('timeout' => 120);
 
-			global $crawler;
-
-			if ($crawler )
-
-			{
-
-				return null;
-
-			}
-
 			$json_feed            = wp_remote_get($json_feed_url, $args);
 			//			echo "<pre>";print_r($json_feed);die;
 			$_SESSION['listings'] = json_decode($json_feed['body']);
@@ -3486,16 +3478,6 @@ function webkits_og_tags()
 
 				$args          = array('timeout' => 120);
 
-				global $crawler;
-
-				if ($crawler )
-
-				{
-
-					return null;
-
-				}
-
 				$json_feed            = wp_remote_get($json_feed_url, $args);
 
 				$_SESSION['listings'] = json_decode($json_feed['body']);
@@ -3510,18 +3492,16 @@ function webkits_og_tags()
 			?>
 
 
+            <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
+            <meta property="og:title" content="<?php echo $listing->basic->UnparsedAddress.", ".$listing->basic->City.' - $'.$listing->content->mprice ?>">
 
-            <meta property="og:title" id="ogtitle"
+            <meta property="og:description"  content="<?php echo $listing->content->Remarks; ?>">
 
-                  content="<?php echo $listing->basic->UnparsedAddress.", ".$listing->basic->City.' - $'.$listing->content->mprice ?>"/>
+            <meta property="og:type" content="website">
 
-            <meta property="og:description" id="ogdescription" content="<?php echo $listing->content->Remarks; ?>"/>
+            <meta property="og:url" content="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>">
 
-            <meta property="og:type" content="website"/>
-
-            <meta property="og:url" content="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
-
-            <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>"/>
+            <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>">
 
 			<?php
 
@@ -3539,11 +3519,11 @@ function webkits_og_tags()
 			?>
 
             <!--            <meta property="og:image" id="ogimage" content="https://curiouscloud.ca/photos/image---><?php //echo $listing->ID; ?><!---1.jpg"/>-->
-            <meta property="og:image" id="ogimage" content="<?php echo $photo; ?>"/>
+            <meta property="og:image" content="<?php echo $photo; ?>">
 
-            <meta property="og:image:width" content="<?php echo $listing->content->imagewidth; ?>"/>
+            <meta property="og:image:width" content="<?php echo $listing->content->imagewidth; ?>">
 
-            <meta property="og:image:height" content="<?php echo $listing->content->imageheight; ?>"/>
+            <meta property="og:image:height" content="<?php echo $listing->content->imageheight; ?>">
 
 			<?php
 
