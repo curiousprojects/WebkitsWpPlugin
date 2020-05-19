@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.080
+ * Version: 3.082
 
  * Author: Curious Projects
 
@@ -2702,7 +2702,7 @@ add_action('wp_head', 'webkits_og_tags');  //Create OG Meta for SEO
 add_action('mp_library', 'extendTemplates', 11, 1); //MOTOPRESS - add new Template
 
 
-
+add_action( 'rank_math/head','remove_og');
 remove_action('wp_head', 'rel_canonical');
 
 
@@ -3433,7 +3433,15 @@ function webkits_title($title)
 }
 
 
-
+function remove_og()
+{
+	global $wp;
+	if(isset($_GET['l']) || isset($wp->query_vars['l']))
+	{
+		remove_all_actions( 'rank_math/opengraph/facebook' );
+		remove_all_actions( 'rank_math/opengraph/twitter' );
+	}
+}
 //ACTION
 
 function webkits_og_tags()
@@ -3509,7 +3517,7 @@ function webkits_og_tags()
 			{
 				$photo = $listing->info->Photo->PropertyPhoto[0]->LargePhotoURL;
 			}
-            elseif (!is_array($listing->info->Photo->PropertyPhoto) && isset($listing->info->Photo->PropertyPhoto->LargePhotoURL) && $listing->info->Photo->PropertyPhoto->LargePhotoURL != '')
+            elseif (is_array($listing->info->Photo->PropertyPhoto) && isset($listing->info->Photo->PropertyPhoto->LargePhotoURL) && $listing->info->Photo->PropertyPhoto->LargePhotoURL != '')
 			{
 				$photo = $listing->info->Photo->PropertyPhoto->LargePhotoURL;
 			}
