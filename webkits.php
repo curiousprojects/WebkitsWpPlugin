@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.082
+ * Version: 3.083
 
  * Author: Curious Projects
 
@@ -2703,6 +2703,15 @@ add_action('mp_library', 'extendTemplates', 11, 1); //MOTOPRESS - add new Templa
 
 
 add_action( 'rank_math/head','remove_og');
+add_filter( 'wpseo_opengraph_url' , 'remove_seo_og' );
+add_filter( 'wpseo_opengraph_desc', 'remove_seo_og' );
+add_filter( 'wpseo_opengraph_title', 'remove_seo_og' );
+add_filter( 'wpseo_opengraph_type', 'remove_seo_og' );
+add_filter( 'wpseo_opengraph_site_name', 'remove_seo_og' );
+add_filter( 'wpseo_opengraph_image' , 'remove_seo_og' );
+add_filter( 'wpseo_og_og_image_width' , 'remove_seo_og' ); // v13.5 or older
+add_filter( 'wpseo_og_og_image_height' , 'remove_seo_og' ); // v13.5 or older
+add_filter( 'wpseo_opengraph_author_facebook' , 'remove_seo_og' );
 remove_action('wp_head', 'rel_canonical');
 
 
@@ -3440,6 +3449,14 @@ function remove_og()
 	{
 		remove_all_actions( 'rank_math/opengraph/facebook' );
 		remove_all_actions( 'rank_math/opengraph/twitter' );
+	}
+}
+function remove_seo_og()
+{
+	global $wp;
+	if(isset($_GET['l']) || isset($wp->query_vars['l']))
+	{
+		return false;
 	}
 }
 //ACTION
