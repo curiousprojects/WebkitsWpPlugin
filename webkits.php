@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.083
+ * Version: 3.084
 
  * Author: Curious Projects
 
@@ -2703,6 +2703,7 @@ add_action('mp_library', 'extendTemplates', 11, 1); //MOTOPRESS - add new Templa
 
 
 add_action( 'rank_math/head','remove_og');
+add_action( 'rank_math/frontend/description','remove_seo_og');
 add_filter( 'wpseo_opengraph_url' , 'remove_seo_og' );
 add_filter( 'wpseo_opengraph_desc', 'remove_seo_og' );
 add_filter( 'wpseo_opengraph_title', 'remove_seo_og' );
@@ -2712,6 +2713,7 @@ add_filter( 'wpseo_opengraph_image' , 'remove_seo_og' );
 add_filter( 'wpseo_og_og_image_width' , 'remove_seo_og' ); // v13.5 or older
 add_filter( 'wpseo_og_og_image_height' , 'remove_seo_og' ); // v13.5 or older
 add_filter( 'wpseo_opengraph_author_facebook' , 'remove_seo_og' );
+add_filter( 'wpseo_metadesc' , 'remove_seo_og' );
 remove_action('wp_head', 'rel_canonical');
 
 
@@ -3516,7 +3518,9 @@ function webkits_og_tags()
 
 			?>
 
-
+			<?php $pos=strpos($listing->content->Remarks, ' ', 160);
+			$desc = substr($listing->content->Remarks,0,$pos ); ?>
+            <meta name="description"  content="<?php echo $desc.'...'; ?>"/>
             <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
             <meta property="og:title" content="<?php echo $listing->basic->UnparsedAddress.", ".$listing->basic->City.' - $'.$listing->content->mprice ?>">
 
@@ -3543,13 +3547,13 @@ function webkits_og_tags()
 			}
 			?>
 
-            <!--            <meta property="og:image" id="ogimage" content="https://curiouscloud.ca/photos/image---><?php //echo $listing->ID; ?><!---1.jpg"/>-->
+
             <meta property="og:image" content="<?php echo $photo; ?>">
 
             <meta property="og:image:width" content="<?php echo $listing->content->imagewidth; ?>">
 
             <meta property="og:image:height" content="<?php echo $listing->content->imageheight; ?>">
-
+            <meta property="og:image:alt" content="<?php echo $listing->basic->UnparsedAddress; ?>"/>
 			<?php
 
 
