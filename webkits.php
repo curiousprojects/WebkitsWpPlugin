@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.084
+ * Version: 3.085
 
  * Author: Curious Projects
 
@@ -4802,6 +4802,16 @@ function webkits_mainpage_shortcode($atts, $content = null)
 			{
 
 				$_POST['from_city'] = $atts['from-city'];
+
+			}
+			if(isset($atts['condo']) && $atts['condo'] != '')
+			{
+				$_POST['condo'] = $atts['condo'];
+
+			}
+			if(isset($atts['address']) && $atts['address'] != '')
+			{
+				$_POST['address'] = $atts['address'];
 
 			}
 			$json_feed_url = $dbHost.$link;
