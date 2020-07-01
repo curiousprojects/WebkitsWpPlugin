@@ -854,3 +854,24 @@ span.agentname {
     position:fixed !important;
 
 }
+@media only screen and (max-width: 414px) {
+
+    .empty-right
+    {
+        padding-top: 7px !important;
+        font-size: 17px !important;
+    }
+    .detail-sec .city-holder
+    {
+        padding-top: 10px !important;
+        font-size: 15px !important;
+    }
+
+    .detail-sec .empty-left i, .detail-sec .empty-left span{
+        font-size: 13px !important;
+    }
+    .ss-holder .user-holder,.ss-holder .time-holder{
+        padding-top: 1px !important;
+    }
+
+}
