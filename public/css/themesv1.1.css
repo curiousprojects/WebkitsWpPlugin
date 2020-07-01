@@ -854,6 +854,9 @@ span.agentname {
     position:fixed !important;
 
 }
+.detail-sec .empty-left i, .detail-sec .empty-left span{
+    font-size: 20px !important;
+}
 @media only screen and (max-width: 414px) {
 
     .empty-right

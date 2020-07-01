@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.087
+ * Version: 3.088
 
  * Author: Curious Projects
 
@@ -5291,7 +5291,7 @@ function webkits_styles()
 
 	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.2'));
 
-	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'));
+	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'));
 
 }
 
