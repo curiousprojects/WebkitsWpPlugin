@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.088
+ * Version: 3.089
 
  * Author: Curious Projects
 
@@ -6245,13 +6245,17 @@ function webkits_listings_sc($atts, $content = null)
 			}
 
 			if(isset($atts['maxprice']))
-
 			{
 
 				$_POST['maxprice'] = $atts['maxprice'];
 
 			}
+			if(isset($atts['minprice']))
+			{
 
+				$_POST['minprice'] = $atts['minprice'];
+
+			}
 			if(isset($atts['postal']))
 
 			{
