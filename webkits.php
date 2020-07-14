@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.089
+ * Version: 3.090
 
  * Author: Curious Projects
 
@@ -3453,13 +3453,16 @@ function remove_og()
 		remove_all_actions( 'rank_math/opengraph/twitter' );
 	}
 }
-function remove_seo_og()
+function remove_seo_og($type)
 {
 	global $wp;
 	if(isset($_GET['l']) || isset($wp->query_vars['l']))
 	{
 		return false;
 	}
+	else{
+	    return $type;
+    }
 }
 //ACTION
 
