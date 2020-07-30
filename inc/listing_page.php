@@ -6,7 +6,7 @@
     <div class="container-fluid container-pad property-listings" id="property-listings">
 
         <input name="viewtype" id="viewtype" value="<?php if (isset($_POST['viewtype'])) echo $_POST['viewtype']; else echo "grid"; ?>" type="hidden">
-	    <?php if($creb == true && $ll_apikey != '')
+	    <?php if(isset($creb) && $creb == true && $ll_apikey != '')
 	    {?>
         <div class="flexible-div width-element" id="ll-lifestyle">
             <button class="submit-search" type="submit" name="pressed" id="local-lifestyle">Life Style <span id="llcount">0</span></button>
@@ -21,13 +21,23 @@
                 <a href="#" id="list" class="list btn btn-default btn-sm">List</a>
                 <a href="#" id="table" class="btn-table btn btn-default btn-sm">Table</a>
                 <a href="#" id="map" class="btn-map btn btn-default btn-sm">Map</a>
+                
                     <?php if($options['webkits_enable_sold'] == SOLD_PASSWORD){?>
 	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true){?>
                     <a href="/<?php echo get_post($options['webkits_sold_listings_page'])->post_name ?>" id="sold" class="btn btn-default btn-sm" >SEARCH RECENT SOLDS</a>
 	            <?php }else{ ?>
                     <a href="javascript:void(0)" id="sold" class="btn btn-default btn-sm popup-modal-sm" data-url="register.php" data-target="login">SEARCH RECENT SOLDS</a>
 	            <?php }}?>
-
+				<div class="width-element" id="sort_by">
+                    <div class="search-select-wrap">
+                        <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
+                        <select class="-form-control search-select btn btn-default btn-sm sort-select " name="wk-input">
+                            <option class="text" value="0" <?php if ($input_sort_by==0 ) echo "selected"; ?>> High to Low ($)</option>
+                            <option class="text" value="1" <?php if ($input_sort_by==1 ) echo "selected"; ?>> Low to High ($) </option>
+                            
+                        </select>
+                    </div>
+                </div>
 	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
 	            {?>
                     <div class="dropdown" id="account">
@@ -43,12 +53,15 @@
                         </ul>
                     </div>
 	            <?php }?>
-            </div>
+             </div>
         </div>
 
         <div class="row listingSelection listings-grid" id="listings-grid">
 	        <?php
-		        session_start();
+		        if(!session_id())
+            {
+                session_start();
+            }
 
 				if(isset($_POST['advanced'])){
 					//print_r($_POST);
@@ -100,7 +113,7 @@
                                 <span><?php if($l->info->ShowPrice == 1) {echo $l->info->ListPrice;} ?></span>
                                 <span><?php echo strtoupper($l->info->UnparsedAddress); ?>
                                 <br/><?php echo strtoupper($l->info->City); ?></span>
-	                            <?php if($creb == true && $ll_apikey != '')
+	                            <?php if(isset($creb) && $creb == true && $ll_apikey != '')
 	                            {
 	                                if($l->info->lat != '' &&  $l->info->lng !='')
 	                                ?>
@@ -305,8 +318,17 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
 ";
     }
     ?>
+        jQuery('.sort-select').on('change',function () {
+            
+               		jQuery('.input-sort-by').val(jQuery(this).val())
+               		jQuery('.input-sort-search').val(true)
+               	    setTimeout(function () {
+                    jQuery('.list-search').trigger('click');
+                 }, 0);
+                    
+            });
 </script>
-<?php if($creb == true && $ll_apikey != '')
+<?php if(isset($creb) && $creb == true && $ll_apikey != '')
     {?>
         <script type="text/javascript">
             var searchWidget;
@@ -349,10 +371,10 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
                 }
 
             });
-
+     		
 
         </script>
-        <?php if($creb == true && $ll_apikey != ''){   ?>
+        <?php if(isset($creb) && $creb == true && $ll_apikey != ''){   ?>
         <script
                 src="https://cdn.locallogic.co/sdk/?token=<?php echo $ll_apikey ?>&callback=initLocallogic">
         </script>

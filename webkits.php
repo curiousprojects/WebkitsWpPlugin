@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.090
+ * Version: 3.092
 
  * Author: Curious Projects
 
@@ -2789,6 +2789,11 @@ add_action('wp_ajax_nopriv_webkits_change_view', 'webkits_change_view'); // Save
 
 add_action('wp_ajax_webkits_change_view', 'webkits_change_view');
 
+
+add_action('wp_ajax_nopriv_webkits_blog', 'every_three_minutes_event_func'); // Save View for Listings
+
+add_action('wp_ajax_webkits_blog', 'every_three_minutes_event_func');
+
 add_action('wp_ajax_nopriv_webkits_register', 'webkits_register');
 add_action('wp_ajax_webkits_register', 'webkits_register');
 
@@ -2845,6 +2850,194 @@ add_action('wp_ajax_nopriv_webkits_get_addresses', 'webkits_get_addresses');
 add_action( 'query_vars', 'wpse_query_vars' );
 add_action( 'query_vars', 'account_query_vars' );
 add_action( 'parse_request', 'wpse_parse_request' );
+wp_schedule_event( time(), 'daily', 'isa_add_every_three_minutes' );
+add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
+
+function every_three_minutes_event_func()
+{
+    global $dbHost;
+	$options = get_option("webkits");
+
+	$domain = $options['webkits_blog_website'];
+
+	if($domain != '')
+    {
+	    $link = 'getBlog';
+	   $json_feed_url = $dbHost.$link;
+	   $POST = array();
+	   $POST['origin'] = get_home_url();
+	   $POST['source'] = $domain;
+ $json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
+        $blog = json_decode($json['body']);
+        $count =1;
+        $offset = 0;
+        while($count >= 1)
+        {
+            if(is_object($blog) && $blog->blog_last_run_date_time != '')
+            {
+           $url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$blog->blog_last_run_date_time); 
+            }
+            else{
+            
+            $full_downlod_datetime = date('Y-m-d H:i:s', strtotime('-6 months'));
+           
+            $url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$full_downlod_datetime);
+           
+            }
+    
+	    $posts = wp_remote_get($url);
+    
+	        $arrPost = json_decode($posts['body']);
+	       
+            $count = count($arrPost);
+           
+            $offset = $offset + 20;
+            
+            if(is_array($arrPost) && count($arrPost) > 0)
+     {
+       foreach($arrPost as $post)
+	   {    
+	       
+	       $cterm = array();
+	       $category = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/categories?post='.$post->id)['body']);
+                   
+					foreach($category as $item)
+					{
+                        if($term = term_exists($item->name,$item->taxonomy))
+                        {
+	                         array_push($cterm,$term['term_id']);
+                        }
+                        else{
+	                       $term =  wp_insert_term(
+		                        $item->name, // the term
+		                        $item->taxonomy, // the taxonomy
+		                        array(
+
+			                        'slug' => $item->slug,
+
+		                        )
+	                        );
+	                       
+	                   array_push($cterm,$term['term_id']);
+                        }
+                    }
+             $featured = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/media/'.$post->featured_media)['body']);      
+		   if ( $c_post = get_page_by_path( $post->slug, OBJECT, $post->type ) )
+		   {
+            
+			   $new = array(
+				   'ID'    => $c_post->ID,
+				   'post_title' => $post->title->rendered,
+				   'post_content' => $post->content->rendered,
+				   'post_status' => $post->status,
+				   'post_excerpt' => $post->excerpt->rendered,
+				   'guid' => $post->link,
+				   'type' => $post->type,
+				   'post_name' => $post->slug,
+				   'post_author' => $options['webkits_blog_author'],
+				   'post_category' =>$cterm,
+			   );
+			   wp_update_post($new);
+			   
+			  
+			   Generate_Featured_Image($featured->guid->rendered, $c_post->ID );
+		   }
+		   else
+		   {
+			   $new = array('post_title' => $post->title->rendered,
+							'post_content' => $post->content->rendered,
+							'post_status' => $post->status,
+							'post_excerpt' => $post->excerpt->rendered,
+							'guid' => $post->link,
+							'type' => $post->type,
+							'post_name' => $post->slug,
+							'post_author' => $options['webkits_blog_author'],
+							'post_category' =>$cterm,
+			   );
+			   $id= wp_insert_post($new);
+			  Generate_Featured_Image($featured->guid->rendered, $id );
+		   }
+
+
+	   }
+    
+	  
+	   }
+    }
+        
+	     $link = 'updateBlog';
+	   $json_feed_url = $dbHost.$link;
+	   
+	   $POST = array();
+	   if(is_object($blog))
+	   {
+	       $POST['id'] = $blog->blog_id;
+	   }
+	   else{
+	   $POST['origin'] = get_home_url();
+	   $POST['source'] = $domain;
+	   }
+	   $POST['last_run_date_time'] = date('Y-m-d H:i:s');
+
+	   $json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST))); 
+     
+	  echo $json['body'];
+
+	 wp_die(); 
+   }  
+ }
+	   
+function Generate_Featured_Image( $image_url, $post_id  ){
+    $upload_dir = wp_upload_dir();
+    $image_data = file_get_contents($image_url);
+    $filename = basename($image_url);
+    if(wp_mkdir_p($upload_dir['path']))
+      $file = $upload_dir['path'] . '/' . $filename;
+    else
+      $file = $upload_dir['basedir'] . '/' . $filename;
+      if(!file_exists($file))
+      {
+          file_put_contents($file, $image_data);
+    
+    $wp_filetype = wp_check_filetype($filename, null );
+    $attachment = array(
+        'post_mime_type' => $wp_filetype['type'],
+        'post_title' => sanitize_file_name($filename),
+        'post_content' => '',
+        'post_status' => 'inherit'
+    );
+    $attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+    $res1= wp_update_attachment_metadata( $attach_id, $attach_data );
+    $res2= set_post_thumbnail( $post_id, $attach_id );
+          
+      }
+    
+}
+function wpse_302620_canonical_url($canonical_url)
+{   
+    global $post;
+    if($post->post_type == 'post')
+    {
+        $canonical_url = $post->guid;
+       
+    }
+     return $canonical_url;
+}
+add_filter( 'wpseo_canonical', 'wpse_302620_canonical_url');
+add_filter( 'rank_math/frontend/canonical', function( $canonical ) {
+        global $post;
+        
+    if($post->post_type == 'post')
+    {
+        $canonical = $post->guid;
+       
+    }
+	return $canonical;
+});
+   //echo "<pre>";print_r($json);die;
+
 /*add_action('upgrader_process_complete', 'webkit_plugin_update', 10, 2);
 
 
@@ -3109,13 +3302,16 @@ function webkits_get_markers()
 
 	global $dbHost;
 
-	session_start();
+	if(!session_id())
+    {
+        session_start();
+    }
 
 	if(isset($_SESSION['webkit-search']))
 
 	{
 
-		$_POST = $_SESSION['webkit-search'];
+	    $_POST = $_SESSION['webkit-search'];
 
 	}
 
@@ -3151,7 +3347,10 @@ function webkits_get_sold_markers()
 {
 	global $dbHost,$_SESSION;
 
-	session_start();
+	if(!session_id())
+    {
+        session_start();
+    }
 
 	if(isset($_SESSION['webkit-sold-search']))
 
@@ -3359,7 +3558,10 @@ function webkits_accept_crea()
 
 	global $dbHost;
 
-	session_start();
+	if(!session_id())
+    {
+        session_start();
+    }
 
 	echo($_SESSION['webkits-accept']);
 
@@ -3397,7 +3599,10 @@ function webkits_title($title)
 
 		{
 
-			session_start();
+			if(!session_id())
+            {
+                session_start();
+            }
 
 			if($_SESSION['listings']->ID == $wp->query_vars['l'])
 
@@ -3607,7 +3812,10 @@ function custom_set_email_value($recipients, $values, $form_id, $args)
 
 	{
 
-		session_start();
+		if(!session_id())
+        {
+            session_start();
+        }
 
 		$listing = $_SESSION['listings'];
 
@@ -4446,7 +4654,7 @@ function webkits_options_menu()
 
 function webkits_options()
 
-{
+{  
 
 	if(!current_user_can('manage_options'))
 
@@ -4508,16 +4716,17 @@ function webkits_options()
 			$options['webkits_agree_msg']        = $_POST['webkits_agree_msg'];
 
 			$options['webkits_feature_template'] = $_POST['webkits_feature_template'];
-
+			
 			$options['webkits_listing_default']  = $_POST['webkits_listing_default'];
-
+			$options['webkits_def_sort']         = $_POST['webkits_def_sort'];
 			$options['webkits_officemlsid']      = esc_html(str_replace(',', '|', $_POST['webkits_officemlsid']));
 			$options['webkits_agentid']          = esc_html(str_replace(',', '|', $_POST['webkits_agentid']));
 			$options['webkits_ll_apikey']          =  $_POST['webkits_ll_apikey'];
 			$options['webkits_ll_neighborhood_apikey']  =  $_POST['webkits_ll_neighborhood_apikey'];
 			$options['webkits_enable_sold']  = $_POST['webkits_enable_sold'];
 			$options['webkits_register_email']  = $_POST['webkits_register_email'];
-
+            $options['webkits_blog_website']  = $_POST['webkits_blog_website'];
+            $options['webkits_blog_author']  = $_POST['webkits_blog_author'];
 			update_option('webkits', $options);
 
 
@@ -4585,7 +4794,7 @@ function webkits_options()
 		$webkits_map_style        = (isset($options['webkits_map_style']))?str_replace('\"', '"', $options['webkits_map_style']):'[]';
 
 		$webkits_listing_default  = (isset($options['webkits_listing_default']))?str_replace('\"', '"', $options['webkits_listing_default']):"grid";
-
+		$webkits_def_sort  = (isset($options['webkits_def_sort']))?str_replace('\"', '"', $options['webkits_def_sort']):"0";
 		$webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
 
 		$webkits_officemlsid      = (isset($options['webkits_officemlsid']))?str_replace('|', ',', $options['webkits_officemlsid']):'';
@@ -4596,6 +4805,8 @@ function webkits_options()
 		//	$webkits_enable_sold          = (isset($options['webkits_enable_sold']))?$options['webkits_enable_sold']:'';
 		$webkits_enable_sold      = (isset($options['webkits_enable_sold']))?$options['webkits_enable_sold']:"";
 		$webkits_register_email      = (isset($options['webkits_register_email']))?$options['webkits_register_email']:"";
+		$webkits_blog_website      = (isset($options['webkits_blog_website']))?$options['webkits_blog_website']:"";
+		$webkits_blog_author      = (isset($options['webkits_blog_author']))?$options['webkits_blog_author']:"";
 	}
 
 	$pages = get_pages();
@@ -4798,7 +5009,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
 				$link = "slider/latest/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
-			//echo $link;die;
+		
 			$_POST = array();
 			if(isset($atts['from-city']) && $atts['from-city'] != '')
 
@@ -5022,7 +5233,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 				return null;
 
 			}
-
+	
 			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$all  = json_decode($json['body']);
@@ -5471,7 +5682,10 @@ function webkits_login()
 	if($res->status == 'success')
 	{
 		global $User_Perm,$User_Logged;
-		session_start();
+    	if(!session_id())
+        {
+            session_start();
+        }
 		$_SESSION['User_Perm']	=	'User';
 		$_SESSION['User_Logged']	=	true;
 		$_SESSION['UserId']	=	$res->id;
@@ -5629,9 +5843,13 @@ function webkits_listings_sc($atts, $content = null)
 {
 
 	global $dbHost;
-
-	session_start();
-
+    
+    if(!session_id())
+    {
+      session_start();
+  
+    }
+	
 
 	//echo "<pre>";print_r($atts);die;
 	if(!wp_script_is("listings", "enqueued"))
@@ -5755,7 +5973,10 @@ function webkits_listings_sc($atts, $content = null)
 	ob_start();
 
 
-
+    if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
+			{
+				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
+			}
 	switch($args['section'])
 
 	{
@@ -6073,7 +6294,7 @@ function webkits_listings_sc($atts, $content = null)
 						}
 
 					}
-
+                  
 					if(isset($_POST['pressed']))
 					{
 						$_POST['is_search'] = true;
@@ -6170,7 +6391,10 @@ function webkits_listings_sc($atts, $content = null)
 		case 'listings':
 
 			global $_SESSION;
-
+            if(!session_id())
+            {
+                session_start();
+            }
 			wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 			wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
 
@@ -6259,6 +6483,12 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST['minprice'] = $atts['minprice'];
 
 			}
+			if(isset($atts['minprice']))
+			{
+
+				$_POST['minprice'] = $atts['minprice'];
+
+			}
 			if(isset($atts['postal']))
 
 			{
@@ -6267,10 +6497,10 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 
-			if(isset($atts['commercial']) && $atts['commercial'] == '1')
+			if(isset($atts['multifamily']) && $atts['multifamily'] == '0')
 			{
 
-				$_POST['commercial'] = 1;
+				$_POST['multifamily'] = 0;
 
 			}
 			//echo "<pre>";print_r($atts);die;
@@ -6367,9 +6597,12 @@ function webkits_listings_sc($atts, $content = null)
 				}*/
 
 			}
-
-
-
+            
+		    if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
+			{
+				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
+			}
+  
 			if(isset($_POST['pressed']))
 
 			{
@@ -6379,15 +6612,17 @@ function webkits_listings_sc($atts, $content = null)
 				$search = $_POST['search'];
 
 				unset($_POST['pressed']);
-
-				$_POST['live-search']      = true;
+                if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
+                {
+                    $_POST['live-search']      = true;
+                }
+				
 
 				$CurrentPage               = 1;
 
 				$_POST['offset']           = 0;
 
 				$_SESSION['webkit-search'] = $_POST;
-
 
 
 				header('Location: '.$_SERVER['REQUEST_URI']);
@@ -6397,10 +6632,8 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			}
-
-
-
-			if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
+           
+           if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
 
 			{
 
@@ -6438,7 +6671,8 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-			$json_feed_url = $dbHost.$link;
+
+            $json_feed_url = $dbHost.$link;
 
 			//echo $json_feed_url;die;
 
@@ -6448,8 +6682,6 @@ function webkits_listings_sc($atts, $content = null)
 
 			$_POST['perpage'] = $listingPerPage;
 
-			//echo "<pre>";print_r($_POST);die;
-
 			global $crawler;
 
 			if ($crawler )
@@ -6459,35 +6691,14 @@ function webkits_listings_sc($atts, $content = null)
 				return null;
 
 			}
-			//echo "<pre>";print_r($_POST);die;
+			
 			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
 			$listings = json_decode($json['body']);
 			//            echo "<pre>";print_r($listings);die;
-			$link          = "creb/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+			
 
-			$json_feed_url = $dbHost.$link;
-
-			global $crawler;
-
-			if ($crawler )
-
-			{
-
-				return null;
-
-			}
-
-			/*$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-			//$result = json_decode($json['body']);
-
-			if($result->creb == true)
-			{
-				$creb = true;
-			}*/
-
-			require "inc/listing_page.php";
+		    require "inc/listing_page.php";
 
 			if($options['webkits_enable_sold'] == SOLD_PASSWORD)
 				require "includes/register-login.php";
@@ -6679,7 +6890,7 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-			if($_POST['input_open_house'] == 1)
+			if(isset($_POST['input_open_house']) && $_POST['input_open_house'] == 1)
 
 			{
 
@@ -6687,7 +6898,10 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 
-
+			if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
+			{
+				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
+			}
 
 			$link          = "GetOffices/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
@@ -6921,7 +7135,7 @@ function webkits_listings_sc($atts, $content = null)
 	}
 
 
-
+$start = '';
 	$content = $start;
 
 	$content .= ob_get_clean();
@@ -6957,7 +7171,10 @@ function webkits_listings_user($atts,$content = null)
 {
 	global $dbHost;
 
-	session_start();
+	if(!session_id())
+    {
+        session_start();
+    }
 	$options = get_option("webkits");
 	$args = (shortcode_atts(array('section' => "change-password",), $atts));
 	ob_start();
@@ -7137,7 +7354,10 @@ function wpse_parse_request( &$wp )
 
 		global $_SESSION;
 
-		session_start();
+		if(!session_id())
+        {
+            session_start();
+        }
 		//echo "<pre>";print_r($wp->query_vars);die;
 
 

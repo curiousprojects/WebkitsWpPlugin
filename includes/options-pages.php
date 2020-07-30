@@ -1,5 +1,5 @@
 <?php
-
+$authors = get_users();
 ?>
 
 <div class="wrap">
@@ -86,7 +86,15 @@
                 <td><input name="webkits_listing_perpage" id="webkits_listing_perpage" value="<?php echo $webkits_listing_perpage; ?>" class="regular-text" type="number"></td>
             </tr>
 
-
+			 <tr>
+                <th scope="row"><label for="webkits_slist_id">Default Sort Option<br/></label></th>
+                <td>
+                    <select id="webkits_def_sort " name="webkits_def_sort">
+                        <option <?php if ($options['webkits_def_sort'] == '0') { ?>selected="selected"<?php } ?> value="0">High to Low ($)</option>
+                        <option <?php if ($options['webkits_def_sort'] == '1') { ?>selected="selected"<?php } ?> value="1">High to Low ($)</option>
+                    </select>
+                </td>
+            </tr>
             <tr>
                 <th scope="row"><label for="listing_page">CREA Agreement Message</label></th>
                 <td>
@@ -233,6 +241,34 @@
                 <td><input name="webkits_register_email" id="webkits_register_email" value="<?php echo $webkits_register_email; ?>" class="regular-text" type="email" placeholder="EMAIL"></td>
 
             </tr>
+             <tr>
+                <td colspan="2"><hr/></td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_blog_website">Content Transfer Website<br/></label></th>
+                <td>
+                    <input name="webkits_blog_website" type="text" value="<?php echo $webkits_blog_website; ?>"/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_blog_author">Default Author<br/></label></th>
+                <td>
+                    
+                    <select name="webkits_blog_author" id="webkits_blog_author">
+			            <?php foreach ($authors as $a) { ?>
+				          
+                            <option value="<?php echo $a->ID; ?>" <?php if ($options['webkits_blog_author'] == $p->ID ) { ?>selected="selected"<?php } ?> ><?php echo $a->data->display_name; ?></option>;
+
+			            <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Import Blog: </th>
+                <td>
+                    <button id="pullblog" name="pull-blog"  value="Pull Now">Pull Now </button><span id="pull" style="display:none;padding-left: 10px;">Fetching Data ...</span>
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -252,3 +288,31 @@
 		<?php submit_button(); ?>
     </form>
 </div>
+<script>
+
+
+    jQuery("#pullblog").click(function(e) {
+
+        e.preventDefault();
+
+        jQuery('#pull').css('display','inline-block');
+
+        jQuery.post('<?= admin_url('admin-ajax.php'); ?>', {data: 1, action: "webkits_blog"}, function (data) {
+
+             jQuery('#pull').css('display','none');
+
+        });
+
+
+    });
+
+</script>
+<style>
+    #pullblog{
+        background: #4bc64b;
+border-radius: 10px;
+border: 1px solid #4bc64b !important;
+padding: 6px;
+color: white;
+    }
+</style>

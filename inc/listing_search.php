@@ -41,6 +41,9 @@
 			</select>
 		</div>
 	</div>
+                    <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
+    <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
+    <input type="hidden" name="wk-input_sort_search" class="input-sort-search" value="false">
 	<div class="flexible-div width-element" id="bedroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bedroom">
@@ -70,8 +73,9 @@
 			<span id="advanced-search" class="btn search-input form-control search-select">Price</span>
 		</div>
 	</div>
+    
 	<div class="flexible-div width-element" id="serch-btn">
-		<button class="submit-search" type="submit" name="pressed">Search</button>
+		<button class="submit-search list-search" type="submit" name="pressed">Search</button>
 	</div>
 	<div class="flexible-div width-element" id="clear-btn">
 		<button class="submit-search" type="submit" name="clear">Clear</button>
@@ -130,7 +134,7 @@ if(isset($_POST['price']))
 		jQuery('.width-element').each(function () {
 			form_element_width += jQuery(this).outerWidth();
 		});
-		jQuery('.flexible-text').width(search_listing - form_element_width - 30 + 'px');
+		jQuery('.flexible-text').width(search_listing - form_element_width - 32 + 'px');
 	});
 	jQuery( document ).ready(function() {
 	jQuery("#range-price").ionRangeSlider({

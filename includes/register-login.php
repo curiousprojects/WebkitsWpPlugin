@@ -207,7 +207,7 @@
     </div>
 
 </div>
-<?php if(($listing->info->Status == 'Sold') || (isset($_GET['login']) && $_GET['login'] == true)){?>
+<?php if((isset($listing->info) && $listing->info->Status == 'Sold') || (isset($_GET['login']) && $_GET['login'] == true)){?>
     <script>
         var IsFullView;
         IsFullView = true;
