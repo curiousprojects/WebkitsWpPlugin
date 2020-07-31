@@ -21,20 +21,20 @@
                 <a href="#" id="list" class="list btn btn-default btn-sm">List</a>
                 <a href="#" id="table" class="btn-table btn btn-default btn-sm">Table</a>
                 <a href="#" id="map" class="btn-map btn btn-default btn-sm">Map</a>
-                
+
                     <?php if($options['webkits_enable_sold'] == SOLD_PASSWORD){?>
 	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true){?>
                     <a href="/<?php echo get_post($options['webkits_sold_listings_page'])->post_name ?>" id="sold" class="btn btn-default btn-sm" >SEARCH RECENT SOLDS</a>
 	            <?php }else{ ?>
                     <a href="javascript:void(0)" id="sold" class="btn btn-default btn-sm popup-modal-sm" data-url="register.php" data-target="login">SEARCH RECENT SOLDS</a>
 	            <?php }}?>
-				<div class="width-element" id="sort_by">
+				<div class="" id="sort_by">
                     <div class="search-select-wrap">
                         <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
                         <select class="-form-control search-select btn btn-default btn-sm sort-select " name="wk-input">
                             <option class="text" value="0" <?php if ($input_sort_by==0 ) echo "selected"; ?>> High to Low ($)</option>
                             <option class="text" value="1" <?php if ($input_sort_by==1 ) echo "selected"; ?>> Low to High ($) </option>
-                            
+
                         </select>
                     </div>
                 </div>
@@ -319,13 +319,13 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
     }
     ?>
         jQuery('.sort-select').on('change',function () {
-            
+
                		jQuery('.input-sort-by').val(jQuery(this).val())
                		jQuery('.input-sort-search').val(true)
                	    setTimeout(function () {
                     jQuery('.list-search').trigger('click');
                  }, 0);
-                    
+
             });
 </script>
 <?php if(isset($creb) && $creb == true && $ll_apikey != '')
@@ -371,7 +371,7 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
                 }
 
             });
-     		
+
 
         </script>
         <?php if(isset($creb) && $creb == true && $ll_apikey != ''){   ?>

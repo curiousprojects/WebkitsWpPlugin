@@ -73,7 +73,7 @@
 			<span id="advanced-search" class="btn search-input form-control search-select">Price</span>
 		</div>
 	</div>
-    
+
 	<div class="flexible-div width-element" id="serch-btn">
 		<button class="submit-search list-search" type="submit" name="pressed">Search</button>
 	</div>
@@ -134,7 +134,7 @@ if(isset($_POST['price']))
 		jQuery('.width-element').each(function () {
 			form_element_width += jQuery(this).outerWidth();
 		});
-		jQuery('.flexible-text').width(search_listing - form_element_width - 32 + 'px');
+		jQuery('.flexible-text').width(search_listing - form_element_width - 30 + 'px');
 	});
 	jQuery( document ).ready(function() {
 	jQuery("#range-price").ionRangeSlider({
