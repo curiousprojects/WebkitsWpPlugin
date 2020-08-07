@@ -91,7 +91,7 @@ $authors = get_users();
                 <td>
                     <select id="webkits_def_sort " name="webkits_def_sort">
                         <option <?php if ($options['webkits_def_sort'] == '0') { ?>selected="selected"<?php } ?> value="0">High to Low ($)</option>
-                        <option <?php if ($options['webkits_def_sort'] == '1') { ?>selected="selected"<?php } ?> value="1">High to Low ($)</option>
+                        <option <?php if ($options['webkits_def_sort'] == '1') { ?>selected="selected"<?php } ?> value="1">Low to High ($)</option>
                     </select>
                 </td>
             </tr>
@@ -178,33 +178,33 @@ $authors = get_users();
                 </td>
             </tr>
 
-            <tr>
+           <!-- <tr>
                 <th scope="row"><label for="webkits_map_style">Snazzy Map Code</label></th>
                 <td>
                     <textarea name="webkits_map_style" id="webkits_map_style" cols="50" rows="8"><?php echo $webkits_map_style; ?></textarea>
                 </td>
-            </tr>
+            </tr>-->
 
-            <tr>
+            <!--<tr>
                 <th scope="row"><label for="webkits_feature_template">Featured Listings Template</label></th>
                 <td>
                     <textarea name="webkits_feature_template" id="webkits_feature_template" cols="50" rows="8"><?php echo $webkits_feature_template; ?></textarea>
                 </td>
-            </tr>
+            </tr>-->
 
-            <tr>
+            <!--<tr>
                 <th scope="row"><label for="webkits_rss_feed">List IDs<br/></label></th>
                 <td>
                     <input name="webkits_rss_feed" id="webkits_rss_feed" value="<?php echo $webkits_rss_feed; ?>" class="regular-text" type="text" placeholder='http://teamrealty.ca'>
                 </td>
-            </tr>
+            </tr>-->
 
-            <tr>
+            <!--<tr>
                 <th scope="row"><label for="webkits_update_feed_now">Update feed now</label></th>
                 <td>
                     <input name="webkits_update_feed_now" type="checkbox" value="Y"/>
                 </td>
-            </tr>
+            </tr>-->
 
             <tr>
                 <th scope="row"><label for="webkits_officemlsid">Office MLSID#<br/><em>(Seperate Multiple with Commas)</em></label></th>
@@ -253,10 +253,10 @@ $authors = get_users();
             <tr>
                 <th scope="row"><label for="webkits_blog_author">Default Author<br/></label></th>
                 <td>
-                    
+
                     <select name="webkits_blog_author" id="webkits_blog_author">
 			            <?php foreach ($authors as $a) { ?>
-				          
+
                             <option value="<?php echo $a->ID; ?>" <?php if ($options['webkits_blog_author'] == $p->ID ) { ?>selected="selected"<?php } ?> ><?php echo $a->data->display_name; ?></option>;
 
 			            <?php } ?>

@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.094
+ * Version: 3.096
 
  * Author: Curious Projects
 
@@ -4287,7 +4287,7 @@ function webkits_details_shortcode($atts, $content = null)
 
 			$options['webkits_map_zoom'] = isset($options['webkits_map_zoom'])?$options['webkits_map_zoom']:10;
 
-			if($options['webkits_map_style'] != '')
+			if(isset($options['webkits_map_style']) && $options['webkits_map_style'] != '')
 
 			{
 
@@ -4712,19 +4712,19 @@ function webkits_options()
 
 			$options['last_updated']             = time();
 
-			$options['webkits_map_style']        = $_POST['webkits_map_style'];
+			//$options['webkits_map_style']        = $_POST['webkits_map_style'];
 
 			$options['webkits_zerofall']         = $_POST['webkits_zerofall'];
 
 			$options['webkits_map_zoom']         = $_POST['webkits_map_zoom'];
 
-			$options['webkits_rss_feed']         = $_POST['webkits_rss_feed'];
+			//$options['webkits_rss_feed']         = $_POST['webkits_rss_feed'];
 
 			$options['webkits_map_zoom2']        = $_POST['webkits_map_zoom2'];
 
 			$options['webkits_agree_msg']        = $_POST['webkits_agree_msg'];
 
-			$options['webkits_feature_template'] = $_POST['webkits_feature_template'];
+			//$options['webkits_feature_template'] = $_POST['webkits_feature_template'];
 
 			$options['webkits_listing_default']  = $_POST['webkits_listing_default'];
 			$options['webkits_def_sort']         = $_POST['webkits_def_sort'];
@@ -4740,7 +4740,7 @@ function webkits_options()
 
 
 
-			if(isset($_POST['webkits_update_feed_now']) && $_POST['webkits_update_feed_now'] == 'Y')
+			/*if(isset($_POST['webkits_update_feed_now']) && $_POST['webkits_update_feed_now'] == 'Y')
 
 			{
 
@@ -4748,7 +4748,7 @@ function webkits_options()
 
 				$update_feed_now_result = 'success';
 
-			}
+			}*/
 
 		}
 
@@ -4786,7 +4786,7 @@ function webkits_options()
 		$webkits_listings_page = $options['webkits_listings_page'];
 		$webkits_sold_listings_page = $options['webkits_sold_listings_page'];
 
-		$webkits_rss_feed      = isset($options['webkits_rss_feed'])?$options['webkits_rss_feed']:'';
+		//$webkits_rss_feed      = isset($options['webkits_rss_feed'])?$options['webkits_rss_feed']:'';
 
 		$webkits_hide_agents   = (isset($options['webkits_hide_agents']) && $options['webkits_hide_agents'] == 1)?'checked':"";
 
@@ -4800,11 +4800,11 @@ function webkits_options()
 
 		$webkits_agent_page       = $options['webkits_agent_page'];
 
-		$webkits_map_style        = (isset($options['webkits_map_style']))?str_replace('\"', '"', $options['webkits_map_style']):'[]';
+		//$webkits_map_style        = (isset($options['webkits_map_style']))?str_replace('\"', '"', $options['webkits_map_style']):'[]';
 
 		$webkits_listing_default  = (isset($options['webkits_listing_default']))?str_replace('\"', '"', $options['webkits_listing_default']):"grid";
 		$webkits_def_sort  = (isset($options['webkits_def_sort']))?str_replace('\"', '"', $options['webkits_def_sort']):"0";
-		$webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
+		//$webkits_feature_template = str_replace('\"', '"', $options['webkits_feature_template']);
 
 		$webkits_officemlsid      = (isset($options['webkits_officemlsid']))?str_replace('|', ',', $options['webkits_officemlsid']):'';
 

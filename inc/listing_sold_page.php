@@ -298,7 +298,7 @@
 
     markers = <?php echo json_encode($listings->markers) . ";";?>
 	<?php
-	if ($options['webkits_map_style'] != '') {
+	if (isset($options['webkits_map_style']) && $options['webkits_map_style'] != '') {
 		echo "var styler = " . str_replace('\"', '"', $options['webkits_map_style']) . ";
 ";
 	} else {
