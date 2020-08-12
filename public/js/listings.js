@@ -51,14 +51,17 @@ jQuery('.btn-map').each(function (i,v) {
     }
 
 });
-jQuery.post( ajaxurl,{data:{},action:"webkits_get_offices"},function(data) {
-    data = JSON.parse(data);
-    jQuery.each( data.office, function(i, marker) {
-         jQuery('#input_office').append(jQuery('<option>').text(marker.name).attr('value', marker.office));
+if (jQuery("#counted").length > 0)
+{
+    jQuery.post( ajaxurl,{data:{},action:"webkits_get_offices"},function(data) {
+        data = JSON.parse(data);
+        jQuery.each( data.office, function(i, marker) {
+            jQuery('#input_office').append(jQuery('<option>').text(marker.name).attr('value', marker.office));
 
-    })
-    jQuery("#counted").html(data.totals.Found)
-});
+        })
+        jQuery("#counted").html(data.totals.Found)
+    });
+}
 
 //jQuery('.listingSelection').addClass("hide");
 
@@ -376,7 +379,10 @@ jQuery('.btn-map-2').click(function (event) {
     jQuery.post(ajaxurl, {view: "map", action: "webkits_change_view"});
 
 });
-jQuery("." + viewd).trigger('click');
+if(viewd !='grid')
+{
+    jQuery("." + viewd).trigger('click');
+}
 
 jQuery('#clear').click(function (event) {
     event.preventDefault();
