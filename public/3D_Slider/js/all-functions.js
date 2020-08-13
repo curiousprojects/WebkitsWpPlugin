@@ -51,7 +51,7 @@ jQuery(document).ready(function ($) {
 					//For touch devices
 					//==================================================
 					jQuery(document).ready(function($){
-						$('a').live('touchend', function(e) {
+						$('a').on('touchend', function(e) {
 							var el = $(this);
 							var link = el.attr('href');
 						});
@@ -540,7 +540,7 @@ jQuery(document).ready(function ($) {
 //For touch devices
 //==================================================
 jQuery(document).ready(function($){
-	$('a').live('touchend', function(e) {
+	$('a').on('touchend', function(e) {
 		var el = $(this);
 		var link = el.attr('href');
 	});
