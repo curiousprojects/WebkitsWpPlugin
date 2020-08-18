@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 3.098
+ * Version: 3.099
 
  * Author: Curious Projects
 
@@ -7180,131 +7180,135 @@ function webkits_listings_user($atts,$content = null)
 {
 	global $dbHost;
 
-	if(!session_id())
-    {
-        session_start();
-    }
+
 	$options = get_option("webkits");
 	$args = (shortcode_atts(array('section' => "change-password",), $atts));
 	ob_start();
 	if(isset($atts) && is_array($atts) && isset($atts['section']))
-		switch($atts['section'])
-		{
-			case 'change-password':
+    {
+	    if(!session_id())
+	    {
+		    session_start();
+	    }
+	    switch($atts['section'])
+	    {
+		    case 'change-password':
 
-				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-				{
-					wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
-					wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
-					wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
+			    if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
+			    {
+				    wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+				    wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
+				    wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
 
-					if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
-					{
-						$link = "User/change-password";
+				    if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
+				    {
+					    $link = "User/change-password";
 
-						$json_feed_url = $dbHost.$link;
+					    $json_feed_url = $dbHost.$link;
 
-						global $crawler, $wp;
+					    global $crawler, $wp;
 
-						if($crawler)
+					    if($crawler)
 
-						{
+					    {
 
-							return null;
+						    return null;
 
-						}
-						$_POST['user_id'] = $_SESSION['UserId'];
-						$json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+					    }
+					    $_POST['user_id'] = $_SESSION['UserId'];
+					    $json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-						$result = json_decode($json['body']);
-						//echo home_url($wp->request);die;
-						if($result->status == 'success')
-						{
-							header('location: '.home_url($wp->request).'?update=true');
-							exit(0);
-						}
-						else
-						{
-							header('location: '.home_url($wp->request).'?update=false');
-							exit(0);
-						}
-						// echo "<pre>";print_r($_POST);die;
-					}
+					    $result = json_decode($json['body']);
+					    //echo home_url($wp->request);die;
+					    if($result->status == 'success')
+					    {
+						    header('location: '.home_url($wp->request).'?update=true');
+						    exit(0);
+					    }
+					    else
+					    {
+						    header('location: '.home_url($wp->request).'?update=false');
+						    exit(0);
+					    }
+					    // echo "<pre>";print_r($_POST);die;
+				    }
 
-					//require_once "includes/change-password.php";
-					require('includes/change-password.php');
-					$content = ob_get_clean();
-
-
-					return $content;
-				}
-				exit;
-				break;
-			case 'edit-profile':
-				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-				{
-					$link = "User/edit-profile/get";
-
-					$json_feed_url = $dbHost.$link;
-
-					global $crawler, $wp;
-
-					if($crawler)
-
-					{
-
-						return null;
-
-					}
-					$_POST['user_id'] = $_SESSION['UserId'];
-
-					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-					$result = json_decode($json['body']);
-					$user   = $result->user;
-					if(($_POST['Submit'] == "Save Changes"))
-					{
-						$link = "User/edit-profile/post";
-
-						$json_feed_url = $dbHost.$link;
-
-						global $crawler, $wp;
-
-						if($crawler)
-
-						{
-
-							return null;
-
-						}
-						$_POST['user_id'] = $_SESSION['UserId'];
-
-						$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-						$result = json_decode($json['body']);
-						if($result->status == 'success')
-						{
-							header('location: '.home_url($wp->request).'?update=true');
-							exit(0);
-						}
-						else
-						{
-							header('location: '.home_url($wp->request).'?update=false');
-							exit(0);
-						}
-					}
-					//wp_head();
-					require "includes/edit-profile.php";
-					$content = ob_get_clean();
+				    //require_once "includes/change-password.php";
+				    require('includes/change-password.php');
+				    $content = ob_get_clean();
 
 
-					return $content;
-				}
-				break;
-			default:
-				break;
+				    return $content;
+			    }
+			    exit;
+			    break;
+		    case 'edit-profile':
+			    if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
+			    {
+				    $link = "User/edit-profile/get";
 
-		}
+				    $json_feed_url = $dbHost.$link;
+
+				    global $crawler, $wp;
+
+				    if($crawler)
+
+				    {
+
+					    return null;
+
+				    }
+				    $_POST['user_id'] = $_SESSION['UserId'];
+
+				    $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+				    $result = json_decode($json['body']);
+				    $user   = $result->user;
+				    if(($_POST['Submit'] == "Save Changes"))
+				    {
+					    $link = "User/edit-profile/post";
+
+					    $json_feed_url = $dbHost.$link;
+
+					    global $crawler, $wp;
+
+					    if($crawler)
+
+					    {
+
+						    return null;
+
+					    }
+					    $_POST['user_id'] = $_SESSION['UserId'];
+
+					    $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+					    $result = json_decode($json['body']);
+					    if($result->status == 'success')
+					    {
+						    header('location: '.home_url($wp->request).'?update=true');
+						    exit(0);
+					    }
+					    else
+					    {
+						    header('location: '.home_url($wp->request).'?update=false');
+						    exit(0);
+					    }
+				    }
+				    //wp_head();
+				    require "includes/edit-profile.php";
+				    $content = ob_get_clean();
+
+
+				    return $content;
+			    }
+			    break;
+		    default:
+			    break;
+
+	    }
+    }
+
 
 	$content .= ob_get_clean();
 
