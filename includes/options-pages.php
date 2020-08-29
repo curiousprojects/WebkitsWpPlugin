@@ -124,10 +124,7 @@ $authors = get_users();
                 <td><input name="webkits_map_zoom2" id="webkits_map_zoom2" value="<?php if (!isset($webkits_map_zoom2)) echo '5'; else echo $webkits_map_zoom2; ?>" class="regular-text" type="text"></td>
             </tr>
 
-            <tr>
-                <th scope="row"><label for="webkits_hide_agents">Hide Agent Name<br/><em></em></label></th>
-                <td><input name="webkits_hide_agents" id="webkits_hide_agents" value="1" class="regular-text" type="checkbox" <?php echo $webkits_hide_agents; ?> ></td>
-            </tr>
+
 
             <tr>
                 <th scope="row"><label for="webkits_bc_agent">BC Agent?<br/><em></em></label></th>

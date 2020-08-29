@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.0
+ * Version: 4.1.3
 
  * Author: Curious Projects
 
@@ -4544,7 +4544,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 
 
-			$hideAgent = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+			//$hideAgent = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 			$bcAgent   = isset($options['webkits_bc_agent'])?$options['webkits_bc_agent']:0;
 
@@ -4704,7 +4704,7 @@ function webkits_options()
 
 			$options['webkits_listing_perpage']  = esc_html($_POST['webkits_listing_perpage']);
 
-			$options['webkits_hide_agents']      = esc_html($_POST['webkits_hide_agents']);
+			//$options['webkits_hide_agents']      = esc_html($_POST['webkits_hide_agents']);
 
 			$options['webkits_bc_agent']         = esc_html($_POST['webkits_bc_agent']);
 
@@ -4790,7 +4790,7 @@ function webkits_options()
 
 		//$webkits_rss_feed      = isset($options['webkits_rss_feed'])?$options['webkits_rss_feed']:'';
 
-		$webkits_hide_agents   = (isset($options['webkits_hide_agents']) && $options['webkits_hide_agents'] == 1)?'checked':"";
+		//$webkits_hide_agents   = (isset($options['webkits_hide_agents']) && $options['webkits_hide_agents'] == 1)?'checked':"";
 
 		$webkits_bc_agent      = (isset($options['webkits_bc_agent']) && $options['webkits_bc_agent'] == 1)?'checked':"";
 
@@ -6016,7 +6016,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			$listingPerPage = $options['webkits_listing_perpage'];
 
-			$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+			//$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 
 
@@ -6172,7 +6172,7 @@ function webkits_listings_sc($atts, $content = null)
 				$Is_Search   = false;
 				$listingpage = get_post($options['webkits_listing_page'])->guid."&l=";
 
-				$hideAgent = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+				//$hideAgent = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 
 				if(isset($_GET['listing-page']) && is_numeric($_GET['listing-page']))
@@ -6413,7 +6413,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			$listingpage    = get_post($options['webkits_listing_page'])->guid."&l=";
 
-			$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+			//nt      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 
 
@@ -6739,7 +6739,7 @@ function webkits_listings_sc($atts, $content = null)
 
 				$listingpage    = get_post($options['webkits_listing_page'])->guid."&l=";
 
-				$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+				//$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 
 
@@ -6869,7 +6869,7 @@ function webkits_listings_sc($atts, $content = null)
 
 			$listingpage    = get_post($options['webkits_listing_page'])->guid."&l=";
 
-			$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
+			//$hideAgent      = isset($options['webkits_hide_agents'])?$options['webkits_hide_agents']:0;
 
 
 

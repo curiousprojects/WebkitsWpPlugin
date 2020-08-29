@@ -31,8 +31,17 @@ foreach ($listings->listing as $l) {
             <span><?php echo $l->info->ListPrice; ?></span>
       <?php echo strtoupper($l->info->UnparsedAddress); ?><br /><?php echo strtoupper($l->info->City); ?>
       </div>
-      <div class="grid-broker">
-      <?php if(!$hideAgent) echo $l->info->agent; ?>
+      <div class="text-center p-t">
+	      <?php if((strpos($l->info->AlternateURL->VideoLink, 'youriguide.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'matterport.com') != false))
+	      {
+		      ?>
+              <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/360.png "/>
+	      <?php }
+	      else if((strpos($l->info->AlternateURL->VideoLink, 'www.youtube.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'youtu.be') != false))
+	      {
+		      ?>
+              <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/Youtube.png "/>
+	      <?php } ?>
       </div>
     </div></a>
   </div>
@@ -74,7 +83,18 @@ foreach ($listings->listing as $l) {
          </div>
         <div class="col-sm-12 list-text">
           <?php echo $l->info->excerpt; ?><br />
-          <div class="list-broker">            <?php if(!$hideAgent) echo $l->info->agent; ?>
+          <div class="list-broker p-t text-center">
+
+	          <?php if((strpos($l->info->AlternateURL->VideoLink, 'youriguide.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'matterport.com') != false))
+	          {
+		          ?>
+                  <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/360.png "/>
+	          <?php }
+	          else if((strpos($l->info->AlternateURL->VideoLink, 'www.youtube.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'youtu.be') != false))
+	          {
+		          ?>
+                  <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/Youtube.png "/>
+	          <?php } ?>
 </div>
          </div>
        </div>
