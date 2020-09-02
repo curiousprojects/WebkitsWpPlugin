@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.3
+ * Version: 4.1.4
 
  * Author: Curious Projects
 
@@ -3714,20 +3714,17 @@ function webkits_og_tags()
 
 				$options = get_option('webkits');
 
-				$link    = "listing/".$options['webkits_site_type']."/".$options['webkits_list_id']."/".$_GET['l'];
-
+				$link = "listing/".$options['webkits_site_type']."/".$options['webkits_list_id']."/".$_GET['l'];
 
 
 				$json_feed_url = $dbHost.$link;
 
 
+				$args = array('timeout' => 120);
 
-				$args          = array('timeout' => 120);
-
-				$json_feed            = wp_remote_get($json_feed_url, $args);
+				$json_feed = wp_remote_get($json_feed_url, $args);
 
 				$_SESSION['listings'] = json_decode($json_feed['body']);
-
 
 
 			}
@@ -3737,8 +3734,18 @@ function webkits_og_tags()
 
 			?>
 
-			<?php $pos=strpos($listing->content->Remarks, ' ', 160);
-			$desc = substr($listing->content->Remarks,0,$pos ); ?>
+			<?php
+			if($listing->content->Remarks != '' && strlen($listing->content->Remarks) > 160)
+            {
+	            $pos=strpos($listing->content->Remarks, ' ', 160);
+	            $desc = substr($listing->content->Remarks,0,$pos );
+            }
+            else{
+	            $desc =  $listing->content->Remarks;
+            }
+
+
+			?>
             <meta name="description"  content="<?php echo $desc.'...'; ?>"/>
             <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
             <meta property="og:title" content="<?php echo $listing->basic->UnparsedAddress.", ".$listing->basic->City.' - $'.$listing->content->mprice ?>">
