@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.4
+ * Version: 4.1.6
 
  * Author: Curious Projects
 
@@ -4316,9 +4316,10 @@ function webkits_details_shortcode($atts, $content = null)
 
 			echo "<script>noCluster = true;</script>";
 
-			require("includes/listing_map.php");
+			//require("includes/listing_map.php");
 			//require("includes/listing_local_logic_map.php");
-
+			$iframe = "<iframe src='https://maps.google.com/maps?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k&q=".$listing->latitude.",".$listing->longitude."&output=embed' scrolling='no' width='100%' height='500' frameborder='0'></iframe>";
+			echo $iframe;
 
 
 			break;
