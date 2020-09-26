@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.6
+ * Version: 4.1.7
 
  * Author: Curious Projects
 
@@ -6262,7 +6262,6 @@ function webkits_listings_sc($atts, $content = null)
 					}
 
 					if(isset($atts['commercial']) && $atts['commercial'] == '1')
-
 					{
 
 						$_POST['commercial'] = 1;
@@ -6515,7 +6514,12 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST['postal'] = strtoupper($atts['postal']);
 
 			}
+			if(isset($atts['commercial']) && $atts['commercial'] == '1')
+			{
 
+				$_POST['commercial'] = 1;
+
+			}
 			if(isset($atts['multifamily']) && $atts['multifamily'] == '0')
 			{
 
