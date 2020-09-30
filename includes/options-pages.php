@@ -266,6 +266,12 @@ $authors = get_users();
                     <button id="pullblog" name="pull-blog"  value="Pull Now">Pull Now </button><span id="pull" style="display:none;padding-left: 10px;">Fetching Data ...</span>
                 </td>
             </tr>
+            <tr>
+                <th>Blog Import Time: </th>
+                <td>
+                    <input id="datepicker" name="webkits_blog_time" type="text" value="<?php echo $webkits_blog_time; ?>"/>
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -287,7 +293,9 @@ $authors = get_users();
 </div>
 <script>
 
-
+    jQuery( function() {
+        jQuery('#datepicker').timepicker();
+    });
     jQuery("#pullblog").click(function(e) {
 
         e.preventDefault();
@@ -304,6 +312,8 @@ $authors = get_users();
     });
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/timepicker@1.13.15/jquery.timepicker.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.13.15/jquery.timepicker.css">
 <style>
     #pullblog{
         background: #4bc64b;

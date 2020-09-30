@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.7
+ * Version: 4.1.8
 
  * Author: Curious Projects
 
@@ -2852,7 +2852,12 @@ add_action( 'query_vars', 'account_query_vars' );
 add_action( 'parse_request', 'wpse_parse_request' );
 add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
 if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
-	wp_schedule_event( time(), 'daily', 'isa_add_every_three_minutes' );
+	$options = get_option("webkits");
+	$date = date("Y-m-d")." ".str_replace(array('pm','am'),array(':00 PM', ':00 AM'),$options['webkits_blog_time']);
+	if($date != '')
+	{
+		wp_schedule_event( strtotime($date), 'daily', 'isa_add_every_three_minutes');
+	}
 
 }
 function every_three_minutes_event_func()
@@ -4745,6 +4750,7 @@ function webkits_options()
 			$options['webkits_enable_sold']  = $_POST['webkits_enable_sold'];
 			$options['webkits_register_email']  = $_POST['webkits_register_email'];
             $options['webkits_blog_website']  = $_POST['webkits_blog_website'];
+			$options['webkits_blog_time']  = $_POST['webkits_blog_time'];
             $options['webkits_blog_author']  = $_POST['webkits_blog_author'];
 			update_option('webkits', $options);
 
@@ -4825,6 +4831,7 @@ function webkits_options()
 		$webkits_enable_sold      = (isset($options['webkits_enable_sold']))?$options['webkits_enable_sold']:"";
 		$webkits_register_email      = (isset($options['webkits_register_email']))?$options['webkits_register_email']:"";
 		$webkits_blog_website      = (isset($options['webkits_blog_website']))?$options['webkits_blog_website']:"";
+		$webkits_blog_time      = (isset($options['webkits_blog_time']))?$options['webkits_blog_time']:"";
 		$webkits_blog_author      = (isset($options['webkits_blog_author']))?$options['webkits_blog_author']:"";
 	}
 
@@ -6106,7 +6113,24 @@ function webkits_listings_sc($atts, $content = null)
 						}
 
 						break;
+					case 'virtual-open-house':
+						$link = "Show/VirtualOpenHouse/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+						if(isset($_POST['pressed']))
 
+						{
+
+							unset($_POST['pressed']);
+
+
+
+							$_POST['offset'] = 0;
+
+
+
+							header('Location: '.$_SERVER['REQUEST_URI']);
+
+						}
+						break;
 					case 'commercial':
 
 						$link = "Show/Commercial/".$options['webkits_site_type']."/".$options['webkits_list_id'];
