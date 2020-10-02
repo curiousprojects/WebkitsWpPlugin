@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.8
+ * Version: 4.1.3
 
  * Author: Curious Projects
 
@@ -2852,12 +2852,7 @@ add_action( 'query_vars', 'account_query_vars' );
 add_action( 'parse_request', 'wpse_parse_request' );
 add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
 if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
-	$options = get_option("webkits");
-	$date = date("Y-m-d")." ".str_replace(array('pm','am'),array(':00 PM', ':00 AM'),$options['webkits_blog_time']);
-	if($date != '')
-	{
-		wp_schedule_event( strtotime($date), 'daily', 'isa_add_every_three_minutes');
-	}
+	wp_schedule_event( time(), 'daily', 'isa_add_every_three_minutes' );
 
 }
 function every_three_minutes_event_func()
@@ -3719,17 +3714,20 @@ function webkits_og_tags()
 
 				$options = get_option('webkits');
 
-				$link = "listing/".$options['webkits_site_type']."/".$options['webkits_list_id']."/".$_GET['l'];
+				$link    = "listing/".$options['webkits_site_type']."/".$options['webkits_list_id']."/".$_GET['l'];
+
 
 
 				$json_feed_url = $dbHost.$link;
 
 
-				$args = array('timeout' => 120);
 
-				$json_feed = wp_remote_get($json_feed_url, $args);
+				$args          = array('timeout' => 120);
+
+				$json_feed            = wp_remote_get($json_feed_url, $args);
 
 				$_SESSION['listings'] = json_decode($json_feed['body']);
+
 
 
 			}
@@ -3739,18 +3737,8 @@ function webkits_og_tags()
 
 			?>
 
-			<?php
-			if($listing->content->Remarks != '' && strlen($listing->content->Remarks) > 160)
-            {
-	            $pos=strpos($listing->content->Remarks, ' ', 160);
-	            $desc = substr($listing->content->Remarks,0,$pos );
-            }
-            else{
-	            $desc =  $listing->content->Remarks;
-            }
-
-
-			?>
+			<?php $pos=strpos($listing->content->Remarks, ' ', 160);
+			$desc = substr($listing->content->Remarks,0,$pos ); ?>
             <meta name="description"  content="<?php echo $desc.'...'; ?>"/>
             <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
             <meta property="og:title" content="<?php echo $listing->basic->UnparsedAddress.", ".$listing->basic->City.' - $'.$listing->content->mprice ?>">
@@ -4321,10 +4309,9 @@ function webkits_details_shortcode($atts, $content = null)
 
 			echo "<script>noCluster = true;</script>";
 
-			//require("includes/listing_map.php");
+			require("includes/listing_map.php");
 			//require("includes/listing_local_logic_map.php");
-			$iframe = "<iframe src='https://maps.google.com/maps?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k&q=".$listing->latitude.",".$listing->longitude."&output=embed' scrolling='no' width='100%' height='500' frameborder='0'></iframe>";
-			echo $iframe;
+
 
 
 			break;
@@ -4750,7 +4737,6 @@ function webkits_options()
 			$options['webkits_enable_sold']  = $_POST['webkits_enable_sold'];
 			$options['webkits_register_email']  = $_POST['webkits_register_email'];
             $options['webkits_blog_website']  = $_POST['webkits_blog_website'];
-			$options['webkits_blog_time']  = $_POST['webkits_blog_time'];
             $options['webkits_blog_author']  = $_POST['webkits_blog_author'];
 			update_option('webkits', $options);
 
@@ -4831,7 +4817,6 @@ function webkits_options()
 		$webkits_enable_sold      = (isset($options['webkits_enable_sold']))?$options['webkits_enable_sold']:"";
 		$webkits_register_email      = (isset($options['webkits_register_email']))?$options['webkits_register_email']:"";
 		$webkits_blog_website      = (isset($options['webkits_blog_website']))?$options['webkits_blog_website']:"";
-		$webkits_blog_time      = (isset($options['webkits_blog_time']))?$options['webkits_blog_time']:"";
 		$webkits_blog_author      = (isset($options['webkits_blog_author']))?$options['webkits_blog_author']:"";
 	}
 
@@ -6113,24 +6098,7 @@ function webkits_listings_sc($atts, $content = null)
 						}
 
 						break;
-					case 'virtual-open-house':
-						$link = "Show/VirtualOpenHouse/".$options['webkits_site_type']."/".$options['webkits_list_id'];
-						if(isset($_POST['pressed']))
 
-						{
-
-							unset($_POST['pressed']);
-
-
-
-							$_POST['offset'] = 0;
-
-
-
-							header('Location: '.$_SERVER['REQUEST_URI']);
-
-						}
-						break;
 					case 'commercial':
 
 						$link = "Show/Commercial/".$options['webkits_site_type']."/".$options['webkits_list_id'];
@@ -6286,6 +6254,7 @@ function webkits_listings_sc($atts, $content = null)
 					}
 
 					if(isset($atts['commercial']) && $atts['commercial'] == '1')
+
 					{
 
 						$_POST['commercial'] = 1;
@@ -6390,11 +6359,8 @@ function webkits_listings_sc($atts, $content = null)
 				global $crawler;
 
 				if($crawler)
-
 				{
-
 					return null;
-
 				}
 				if((isset($_POST['input']) && $_POST['input'] != '') || (isset($_POST['onlyshow']) && $_POST['onlyshow'] != ''))
 				{
@@ -6538,12 +6504,7 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST['postal'] = strtoupper($atts['postal']);
 
 			}
-			if(isset($atts['commercial']) && $atts['commercial'] == '1')
-			{
 
-				$_POST['commercial'] = 1;
-
-			}
 			if(isset($atts['multifamily']) && $atts['multifamily'] == '0')
 			{
 
