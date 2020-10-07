@@ -294,7 +294,15 @@
         </div>
     </div>
 </div>
+<?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
+<div id="sort-div">
+    <form id="sort" action="" method="post" class="d-none">
+        <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
+        <input type="hidden" name="wk-input_sort_search" class="input-sort-search" value="false">
 
+        <input  class="submit-search list-search" type="submit" name="sort_search" >Search</button>
+    </form>
+</div>
 
 <script>
 
@@ -336,6 +344,10 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
 ";
     }
     ?>
+        if(jQuery('#search').length > 0)
+        {
+            jQuery('#sort-div').html('');
+        }
         jQuery('.sort-select').on('change',function () {
 
                		jQuery('.input-sort-by').val(jQuery(this).val())
