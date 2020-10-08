@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.10
+ * Version: 4.1.11
 
  * Author: Curious Projects
 
@@ -5967,7 +5967,7 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,), $atts));
+	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,"postal" => '',"from-city"=>''), $atts));
 
 
 
@@ -6089,8 +6089,17 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
+			if(isset($args['postal']) && $args['postal'] != '')
+			{
+				$_POST['postal'] = $args['postal'];
+			}
 
+			if(isset($args['from-city']) && $args['from-city'] != '')
+			{
 
+				$_POST['from_city'] = $args['from-city'];
+
+			}
 			//echo "<pre>";print_r($_POST);die;
 
 			if(isset($args['filter']))
