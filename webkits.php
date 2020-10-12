@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.11
+ * Version: 4.1.12
 
  * Author: Curious Projects
 
@@ -5460,7 +5460,7 @@ function webkits_agents_shortcode($atts, $content = null)
 
 {
 
-	$args = (shortcode_atts(array('section' => "agents", 'filter' => '','show_commercial' => ''), $atts));
+	$args = (shortcode_atts(array('section' => "agents", 'filter' => '','show_commercial' => '','office' => ''), $atts));
 
 	if(!wp_script_is("agents", "enqueued"))
 
@@ -5502,6 +5502,7 @@ var agent = ".$options['webkits_list_id'].";
 var ajaxurl = '".$scriptUrl."';
 
 var filter = '".$args['filter']."';
+var office = '".$args['office']."';
 var show_commercial = '".$args['show_commercial']."';
 
 </script>";
@@ -5967,7 +5968,7 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,"postal" => '',"from-city"=>''), $atts));
+	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,'postal' =>'','from-city' => ''), $atts));
 
 
 
@@ -6086,20 +6087,19 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST['AgentId'] = $agentId;
 
 			}
-
-
-
 			if(isset($args['postal']) && $args['postal'] != '')
-			{
-				$_POST['postal'] = $args['postal'];
-			}
+            {
+	            $_POST['postal'] = $args['postal'];
+            }
 
 			if(isset($args['from-city']) && $args['from-city'] != '')
-			{
+            {
 
 				$_POST['from_city'] = $args['from-city'];
 
-			}
+            }
+
+
 			//echo "<pre>";print_r($_POST);die;
 
 			if(isset($args['filter']))
@@ -6662,12 +6662,13 @@ function webkits_listings_sc($atts, $content = null)
 				}*/
 
 			}
-
+//echo "<pre>";print_r($_POST);die;
 		    if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
 			{
 				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
 			}
 
+           // echo "<pre>";print_r($_POST);die;
 			if(isset($_POST['pressed']))
 
 			{
@@ -6697,13 +6698,14 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			}
-			if(isset($_POST['sort_search']))
-			{
+            if(isset($_POST['sort_search']))
+            {
 
-				unset($_POST['sort_search']);
-				$_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
-				$_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
-			}
+	            unset($_POST['sort_search']);
+	            $_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
+	            $_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
+            }
+
            if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
 
 			{

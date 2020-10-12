@@ -1,3 +1,4 @@
+var office;
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
@@ -12,6 +13,7 @@ jQuery("#submit").click(function (event) {
         name: "filter",
         value: filter
     };
+
     data2.push(filterObj);
     jQuery("#listings").remove();
     jQuery("#ListParent").html('<ul id="listings" class="imageList"></ul>');
@@ -31,8 +33,14 @@ jQuery("#submit").click(function (event) {
     }, "json");
 });
 
+var fdata = [];
+var fObj = {
+        name: "office",
+        value: office
+    };
+fdata.push(fObj);
 
-jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent"}, function (data) {
+jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent",data: fdata}, function (data) {
 
     jQuery.each(data.office, function (i, marker) {
         jQuery('#office').append(jQuery('<option>').text(marker.name).attr('value', marker.office));
