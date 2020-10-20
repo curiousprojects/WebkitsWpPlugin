@@ -95,7 +95,7 @@ jQuery('.btn-table').click(function (event) {
     jQuery(this).parent().parent().siblings('#listings-table').removeClass("hide");
     jQuery(this).parent().parent().siblings('.topadd').find('#listings_pagination').removeClass("hide");
     listing = "btn-table";
-    jQuery.post(ajaxurl, {view: "table", action: "webkits_change_view"});
+    jQuery.post(ajaxurl, {view: "btn-table", action: "webkits_change_view"});
     jQuery(this).parent().parent().siblings('#radios').hide();
 });
 
@@ -186,7 +186,7 @@ jQuery('.btn-map-1').click(function (event) {
     jQuery(this).parent().parent().siblings('#listings-map').removeClass("hide");
     jQuery('#property-listings #listings_pagination').addClass("hide");
     listing = "btn-map-1";
-    jQuery.post(ajaxurl, {view: "map", action: "webkits_change_view"});
+    jQuery.post(ajaxurl, {view: "btn-map-1", action: "webkits_change_view"});
 
 });
 jQuery('.btn-map-sold').click(function (event) {

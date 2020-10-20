@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.13
+ * Version: 4.1.17
 
  * Author: Curious Projects
 
@@ -5586,6 +5586,11 @@ function extendTemplates($motopressCELibrary)
 function webkits_change_view()
 
 {
+	if(!session_id())
+	{
+		session_start();
+
+	}
 
 	$_SESSION['webkits-view'] = $_POST['view'];
 
@@ -5968,7 +5973,7 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,'postal' =>'','from-city' => ''), $atts));
+	$args = (shortcode_atts(array('section' => "listings", 'filter' => '', 'show' => 0, "all" => 1, "all_agent" => 1,'postal' =>'','from-city' => '','minprice' => '', 'maxprice' => ''), $atts));
 
 
 
@@ -6133,6 +6138,15 @@ function webkits_listings_sc($atts, $content = null)
 						break;
 					case 'virtual-open-house':
 						$link = "Show/VirtualOpenHouse/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+						if(isset($args['minprice']) && $args['minprice'] != '')
+						{
+							$_POST['minprice'] = $args['minprice'];
+						}
+						if(isset($args['maxprice']) && $args['maxprice'] != '')
+						{
+							$_POST['maxprice'] = $args['maxprice'];
+						}
+
 						if(isset($_POST['pressed']))
 
 						{
@@ -6178,8 +6192,18 @@ function webkits_listings_sc($atts, $content = null)
 			}
 
 
-
+           
 			$json_feed_url = $dbHost.$link;
+			if(isset($_POST['sort_search']))
+            {
+				unset($_POST['sort_search']);
+                $_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
+	            
+            }
+			if(isset($_SESSION['webkit-search']))
+            {
+            	$_POST['input_sort_by'] = $_SESSION['webkit-search']['input_sort_by'];
+            }
 
 
 
