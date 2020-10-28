@@ -128,12 +128,12 @@
                             </div>
 
                             <div class="text-center p-t">
-		                        <?php if((strpos($l->info->AlternateURL->VideoLink, 'youriguide.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'matterport.com') != false))
+		                        <?php if((strpos($l->info->AlternateURL->VideoLink, 'youriguide.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'matterport.com') != false) || (strpos($l->info->MultiMediaLinkURL, 'youriguide.com') != false) || (strpos($l->info->MultiMediaLinkURL, 'matterport.com') != false))
 		                        {
 			                        ?>
                                     <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/360.png "/>
 		                        <?php }
-		                        else if((strpos($l->info->AlternateURL->VideoLink, 'www.youtube.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'youtu.be') != false))
+		                        else if((strpos($l->info->AlternateURL->VideoLink, 'www.youtube.com') != false) || (strpos($l->info->AlternateURL->VideoLink, 'youtu.be') != false) || (strpos($l->info->MultiMediaLinkURL, 'www.youtube.com') != false) || (strpos($l->info->MultiMediaLinkURL, 'youtu.be') != false))
 		                        {
 			                        ?>
                                     <img src="<?php echo plugin_dir_url(__FILE__) ?>../public/img/Youtube.png "/>
@@ -295,15 +295,14 @@
     </div>
 </div>
 <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
-<div id="sort-div">
-    <form id="sort" action="" method="post" class="d-none">
-        <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
-        <input type="hidden" name="wk-input_sort_search" class="input-sort-search" value="false">
+    <div id="sort-div">
+<form id="sort" action="" method="post" class="d-none">
+    <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
+    <input type="hidden" name="wk-input_sort_search" class="input-sort-search" value="false">
 
-        <input  class="submit-search list-search" type="submit" name="sort_search" >Search</button>
-    </form>
+   <input  class="submit-search list-search" type="submit" name="sort_search" >Search</button>
+</form>
 </div>
-
 <script>
 
     realurl = '<?php echo get_post($options['webkits_listing_page'])->guid; ?>';
@@ -345,9 +344,9 @@ if(isset($_POST['input_main']) && !empty($_POST['input_main']))
     }
     ?>
         if(jQuery('#search').length > 0)
-        {
-            jQuery('#sort-div').html('');
-        }
+                    {
+                    	jQuery('#sort-div').html('');
+                    }
         jQuery('.sort-select').on('change',function () {
 
                		jQuery('.input-sort-by').val(jQuery(this).val())

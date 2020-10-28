@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.17
+ * Version: 4.1.18
 
  * Author: Curious Projects
 
@@ -6192,13 +6192,13 @@ function webkits_listings_sc($atts, $content = null)
 			}
 
 
-           
+
 			$json_feed_url = $dbHost.$link;
 			if(isset($_POST['sort_search']))
             {
 				unset($_POST['sort_search']);
                 $_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
-	            
+
             }
 			if(isset($_SESSION['webkit-search']))
             {
