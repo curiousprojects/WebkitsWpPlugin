@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.18
+ * Version: 4.1.21
 
  * Author: Curious Projects
 
@@ -2694,6 +2694,7 @@ add_action('wp_enqueue_scripts', 'webkits_js'); //JS Files
 add_action('admin_menu', "webkits_options_menu"); //Options Menu - Webkits Options
 
 add_action('init', 'webkits_listing_rewrite');  //Recreates the Link for SEO
+add_action('init', 'webkits_agent_rewrite');  //Recreates the Link for SEO
 remove_action('wp_head', 'rest_output_link_wp_head', 10);
 remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
 remove_action('template_redirect', 'rest_output_link_header', 11);
@@ -2862,96 +2863,79 @@ if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
 }
 function every_three_minutes_event_func()
 {
-    global $dbHost;
+	global $dbHost;
 	$options = get_option("webkits");
 
 	$domain = $options['webkits_blog_website'];
 
 	if($domain != '')
-    {
-	    $link = 'getBlog';
-	   $json_feed_url = $dbHost.$link;
-	   $POST = array();
-	   $POST['origin'] = get_home_url();
-	   $POST['source'] = $domain;
- $json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
-        $blog = json_decode($json['body']);
-        $count =1;
-        $offset = 0;
-        while($count >= 1)
-        {
-            if(is_object($blog) && $blog->blog_last_run_date_time != '')
-            {
-           $url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$blog->blog_last_run_date_time);
-            }
-            else{
+	{
+		$link = 'getBlog';
+		$json_feed_url = $dbHost.$link;
+		$POST = array();
+		$POST['origin'] = get_home_url();
+		$POST['source'] = $domain;
+		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
+		$blog = json_decode($json['body']);
+		$count =1;
+		$offset = 0;
+		while($count >= 1)
+		{
+			if(is_object($blog) && $blog->blog_last_run_date_time != '')
+			{
+				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$blog->blog_last_run_date_time);
+			}
+			else{
 
-            $full_downlod_datetime = date('Y-m-d H:i:s', strtotime('-6 months'));
+				$full_downlod_datetime = date('Y-m-d H:i:s', strtotime('-6 months'));
 
-            $url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$full_downlod_datetime);
+				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$full_downlod_datetime);
 
-            }
+			}
 
-	    $posts = wp_remote_get($url);
+			$posts = wp_remote_get($url);
 
-	        $arrPost = json_decode($posts['body']);
+			$arrPost = json_decode($posts['body']);
 
-            $count = count($arrPost);
+			$count = count($arrPost);
 
-            $offset = $offset + 20;
+			$offset = $offset + 20;
 
-            if(is_array($arrPost) && count($arrPost) > 0)
-     {
-       foreach($arrPost as $post)
-	   {
+			if(is_array($arrPost) && count($arrPost) > 0)
+			{
+				foreach($arrPost as $post)
+				{
 
-	       $cterm = array();
-	       $category = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/categories?post='.$post->id)['body']);
+					$cterm = array();
+					$category = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/categories?post='.$post->id)['body']);
 
 					foreach($category as $item)
 					{
-                        if($term = term_exists($item->name,$item->taxonomy))
-                        {
-	                         array_push($cterm,$term['term_id']);
-                        }
-                        else{
-	                       $term =  wp_insert_term(
-		                        $item->name, // the term
-		                        $item->taxonomy, // the taxonomy
-		                        array(
+						if($term = term_exists($item->name,$item->taxonomy))
+						{
+							array_push($cterm,$term['term_id']);
+						}
+						else{
+							$term =  wp_insert_term(
+								$item->name, // the term
+								$item->taxonomy, // the taxonomy
+								array(
 
-			                        'slug' => $item->slug,
+									'slug' => $item->slug,
 
-		                        )
-	                        );
+								)
+							);
 
-	                   array_push($cterm,$term['term_id']);
-                        }
-                    }
-             $featured = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/media/'.$post->featured_media)['body']);
-		   if ( $c_post = get_page_by_path( $post->slug, OBJECT, $post->type ) )
-		   {
+							array_push($cterm,$term['term_id']);
+						}
+					}
+					$featured = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/media/'.$post->featured_media)['body']);
+					if ( $c_post = get_page_by_path( $post->slug, OBJECT, $post->type ) )
+					{
 
-			   $new = array(
-				   'ID'    => $c_post->ID,
-				   'post_title' => $post->title->rendered,
-				   'post_content' => $post->content->rendered,
-				   'post_status' => $post->status,
-				   'post_excerpt' => $post->excerpt->rendered,
-				   'guid' => $post->link,
-				   'type' => $post->type,
-				   'post_name' => $post->slug,
-				   'post_author' => $options['webkits_blog_author'],
-				   'post_category' =>$cterm,
-			   );
-			   wp_update_post($new);
-
-
-			   Generate_Featured_Image($featured->guid->rendered, $c_post->ID );
-		   }
-		   else
-		   {
-			   $new = array('post_title' => $post->title->rendered,
+						$new = array(
+							'ID'    => $c_post->ID,
+							'post_title' => $post->title->rendered,
 							'post_content' => $post->content->rendered,
 							'post_status' => $post->status,
 							'post_excerpt' => $post->excerpt->rendered,
@@ -2960,99 +2944,116 @@ function every_three_minutes_event_func()
 							'post_name' => $post->slug,
 							'post_author' => $options['webkits_blog_author'],
 							'post_category' =>$cterm,
-			   );
-			   $id= wp_insert_post($new);
-			  Generate_Featured_Image($featured->guid->rendered, $id );
-		   }
+						);
+						wp_update_post($new);
 
 
-	   }
+						Generate_Featured_Image($featured->guid->rendered, $c_post->ID );
+					}
+					else
+					{
+						$new = array('post_title' => $post->title->rendered,
+						             'post_content' => $post->content->rendered,
+						             'post_status' => $post->status,
+						             'post_excerpt' => $post->excerpt->rendered,
+						             'guid' => $post->link,
+						             'type' => $post->type,
+						             'post_name' => $post->slug,
+						             'post_author' => $options['webkits_blog_author'],
+						             'post_category' =>$cterm,
+						);
+						$id= wp_insert_post($new);
+						Generate_Featured_Image($featured->guid->rendered, $id );
+					}
 
 
-	   }
-    }
+				}
 
-	     $link = 'updateBlog';
-	   $json_feed_url = $dbHost.$link;
 
-	   $POST = array();
-	   if(is_object($blog))
-	   {
-	       $POST['id'] = $blog->blog_id;
-	   }
-	   else{
-	   $POST['origin'] = get_home_url();
-	   $POST['source'] = $domain;
-	   }
-	   $POST['last_run_date_time'] = date('Y-m-d H:i:s');
+			}
+		}
 
-	   $json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
+		$link = 'updateBlog';
+		$json_feed_url = $dbHost.$link;
 
-	  echo $json['body'];
+		$POST = array();
+		if(is_object($blog))
+		{
+			$POST['id'] = $blog->blog_id;
+		}
+		else{
+			$POST['origin'] = get_home_url();
+			$POST['source'] = $domain;
+		}
+		$POST['last_run_date_time'] = date('Y-m-d H:i:s');
 
-	 wp_die();
-   }
- }
+		$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $POST)));
+
+		echo $json['body'];
+
+		wp_die();
+	}
+}
 
 function Generate_Featured_Image( $image_url, $post_id  ){
 
-    $upload_dir = wp_upload_dir();
-    //$image_data = file_get_contents($image_url);
-    $response = wp_remote_get( $image_url, array( 'timeout' => 120, 'httpversion' => '1.1' ) );
-if( is_array($response) ) {
-  $header = $response['headers']; // array of http header lines
-  $image_data = $response['body']; // use the content
-}
+	$upload_dir = wp_upload_dir();
+	//$image_data = file_get_contents($image_url);
+	$response = wp_remote_get( $image_url, array( 'timeout' => 120, 'httpversion' => '1.1' ) );
+	if( is_array($response) ) {
+		$header = $response['headers']; // array of http header lines
+		$image_data = $response['body']; // use the content
+	}
 
 
 
-    $filename = basename($image_url);
-    if(wp_mkdir_p($upload_dir['path']))
-      $file = $upload_dir['path'] . '/' . $filename;
-    else
-      $file = $upload_dir['basedir'] . '/' . $filename;
-      if(!file_exists($file))
-      {
-          file_put_contents($file, $image_data);
+	$filename = basename($image_url);
+	if(wp_mkdir_p($upload_dir['path']))
+		$file = $upload_dir['path'] . '/' . $filename;
+	else
+		$file = $upload_dir['basedir'] . '/' . $filename;
+	if(!file_exists($file))
+	{
+		file_put_contents($file, $image_data);
 
-    $wp_filetype = wp_check_filetype($filename, null );
-    $attachment = array(
-        'post_mime_type' => $wp_filetype['type'],
-        'post_title' => sanitize_file_name($filename),
-        'post_content' => '',
-        'post_status' => 'inherit'
-    );
+		$wp_filetype = wp_check_filetype($filename, null );
+		$attachment = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title' => sanitize_file_name($filename),
+			'post_content' => '',
+			'post_status' => 'inherit'
+		);
 
-       $attach_id = wp_insert_attachment( $attachment, $file, $post_id );
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
-    $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-    $res1= wp_update_attachment_metadata( $attach_id, $attach_data );
-    $res2= set_post_thumbnail( $post_id, $attach_id );
-      }
+		$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+		$res1= wp_update_attachment_metadata( $attach_id, $attach_data );
+		$res2= set_post_thumbnail( $post_id, $attach_id );
+	}
 
 }
 function wpse_302620_canonical_url($canonical_url)
 {
 	global $post,$wp;
-    if(!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == ''))
-    {
-        $canonical_url = $post->guid;
-	    return $canonical_url;
-    }
+	if((!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == '')) && (!isset($wp->query_vars['aid']) || (isset($wp->query_vars['aid']) && $wp->query_vars['aid'] == '')))
+	{
+		$canonical_url = $post->guid;
+		return $canonical_url;
+	}
 
 }
 add_filter( 'wpseo_canonical', 'wpse_302620_canonical_url');
 add_filter( 'rank_math/frontend/canonical', function( $canonical ) {
-        global $post,$wp;
+	global $post,$wp;
 
-	if(!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == ''))
-    {
-        $canonical = $post->guid;
-	    return $canonical;
-    }
+	if((!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == '')) && (!isset($wp->query_vars['aid']) || (isset($wp->query_vars['aid']) && $wp->query_vars['aid'] == '')))
+	{
+		$canonical = $post->guid;
+		return $canonical;
+	}
 
 });
-   //echo "<pre>";print_r($json);die;
+//echo "<pre>";print_r($json);die;
 
 /*add_action('upgrader_process_complete', 'webkit_plugin_update', 10, 2);
 
@@ -3205,6 +3206,7 @@ function webkits_listing_rewrite()
 	$wp->add_query_var('l');
 	$wp->add_query_var('Action');
 
+	$realurl   = get_post($options['webkits_agent_page']);
 
 
 
@@ -3214,7 +3216,24 @@ function webkits_listing_rewrite()
 	$wp_rewrite->flush_rules(true);
 
 }
+function webkits_agent_rewrite()
 
+{
+
+	global $wp, $wp_rewrite, $dbHost;
+
+	$options = get_option('webkits');
+
+	$page    = $options['webkits_agent_page'];
+	$relurl = get_post($options['webkits_agent_page']);
+
+	$wp->add_query_var('aid');
+
+	add_rewrite_rule($relurl->post_name.'/([0-9]+)/(.*)', 'index.php?page_id='.$page.'&aid=$matches[1]', 'top');
+
+	$wp_rewrite->flush_rules(true);
+
+}
 
 
 
@@ -3319,15 +3338,15 @@ function webkits_get_markers()
 	global $dbHost;
 
 	if(!session_id())
-    {
-        session_start();
-    }
+	{
+		session_start();
+	}
 
 	if(isset($_SESSION['webkit-search']))
 
 	{
 
-	    $_POST = $_SESSION['webkit-search'];
+		$_POST = $_SESSION['webkit-search'];
 
 	}
 
@@ -3364,9 +3383,9 @@ function webkits_get_sold_markers()
 	global $dbHost,$_SESSION;
 
 	if(!session_id())
-    {
-        session_start();
-    }
+	{
+		session_start();
+	}
 
 	if(isset($_SESSION['webkit-sold-search']))
 
@@ -3575,9 +3594,9 @@ function webkits_accept_crea()
 	global $dbHost;
 
 	if(!session_id())
-    {
-        session_start();
-    }
+	{
+		session_start();
+	}
 
 	echo($_SESSION['webkits-accept']);
 
@@ -3616,9 +3635,9 @@ function webkits_title($title)
 		{
 
 			if(!session_id())
-            {
-                session_start();
-            }
+			{
+				session_start();
+			}
 
 			if($_SESSION['listings']->ID == $wp->query_vars['l'])
 
@@ -3657,7 +3676,32 @@ function webkits_title($title)
 		}
 
 	}
+    elseif(isset($wp->query_vars['aid']))
+	{
+		if(!session_id())
 
+		{
+			session_start();
+
+		}
+		if(!isset($_SESSION['agent']) || $_SESSION['agent']->agent->aid != $wp->query_vars['aid'])
+
+		{
+			$options = get_option('webkits');
+
+			$link = "agents/".$options['webkits_list_id']."/".$wp->query_vars['aid'];
+
+			$json_feed_url = $dbHost.$link;
+
+			$args = array('timeout' => 120);
+
+			$json_feed         = wp_remote_post($json_feed_url, $args);
+			$_SESSION['agent'] = json_decode($json_feed['body']);
+		}
+		$agent = $_SESSION['agent'];
+
+		return strip_tags($agent->agent->firstname." ".$agent->agent->lastname).get_bloginfo();
+	}
 	else
 
 		return get_the_title();
@@ -3682,8 +3726,8 @@ function remove_seo_og($type)
 		return false;
 	}
 	else{
-	    return $type;
-    }
+		return $type;
+	}
 }
 //ACTION
 
@@ -3741,13 +3785,13 @@ function webkits_og_tags()
 
 			<?php
 			if($listing->content->Remarks != '' && strlen($listing->content->Remarks) > 160)
-            {
-	            $pos=strpos($listing->content->Remarks, ' ', 160);
-	            $desc = substr($listing->content->Remarks,0,$pos );
-            }
-            else{
-	            $desc =  $listing->content->Remarks;
-            }
+			{
+				$pos=strpos($listing->content->Remarks, ' ', 160);
+				$desc = substr($listing->content->Remarks,0,$pos );
+			}
+			else{
+				$desc =  $listing->content->Remarks;
+			}
 
 
 			?>
@@ -3793,6 +3837,41 @@ function webkits_og_tags()
 
 	}
 
+	if(isset($_GET['aid']) || isset($wp->query_vars['aid']))
+	{
+		$_GET['aid'] = isset($_GET['aid'])?$_GET['aid']:$wp->query_vars['aid'];
+
+
+		if(isset($_GET['aid']) && is_numeric($_GET['aid']))
+
+		{
+
+			if(!isset($_SESSION['agent']) || $_SESSION['agent']->agent->aid != $_GET['aid'])
+
+			{
+
+				$options = get_option('webkits');
+				$link    = "agents/".$options['webkits_list_id']."/".$_GET['aid'];
+
+				$json_feed_url = $dbHost.$link;
+
+
+				$args = array('timeout' => 120);
+
+				$json_feed = wp_remote_post($json_feed_url, $args);
+
+				$_SESSION['agent'] = json_decode($json_feed['body']);
+
+			}
+			$agent = $_SESSION['agent'];
+
+			?>
+            <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
+			<?php
+
+		}
+	}
+
 }
 
 
@@ -3836,9 +3915,9 @@ function custom_set_email_value($recipients, $values, $form_id, $args)
 	{
 
 		if(!session_id())
-        {
-            session_start();
-        }
+		{
+			session_start();
+		}
 
 		$listing = $_SESSION['listings'];
 
@@ -4420,17 +4499,17 @@ function webkits_agent_shortcode($atts, $content = null)
 
 {
 
-	global $dbHost;
+	global $dbHost,$wp;
 
 	$options = get_option('webkits');
-
-	if(!isset($_SESSION['agent']) || $_SESSION['agent']->agent->aid != $_GET['l'])
+	$_GET['aid'] = $wp->query_vars['aid'];
+	if(!isset($_SESSION['agent']) || $_SESSION['agent']->agent->aid != $_GET['aid'])
 
 	{
 
 		$options       = get_option('webkits');
 
-		$link          = "agents/".$options['webkits_list_id']."/".$_GET['l'];
+		$link          = "agents/".$options['webkits_list_id']."/".$_GET['aid'];
 
 		$json_feed_url = $dbHost.$link;
 
@@ -4758,9 +4837,9 @@ function webkits_options()
 			$options['webkits_ll_neighborhood_apikey']  =  $_POST['webkits_ll_neighborhood_apikey'];
 			$options['webkits_enable_sold']  = $_POST['webkits_enable_sold'];
 			$options['webkits_register_email']  = $_POST['webkits_register_email'];
-            $options['webkits_blog_website']  = $_POST['webkits_blog_website'];
+			$options['webkits_blog_website']  = $_POST['webkits_blog_website'];
 			$options['webkits_blog_time']  = $_POST['webkits_blog_time'];
-            $options['webkits_blog_author']  = $_POST['webkits_blog_author'];
+			$options['webkits_blog_author']  = $_POST['webkits_blog_author'];
 			update_option('webkits', $options);
 
 
@@ -5328,7 +5407,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
                     <div class="ss-row gglass go-anim"><!-- greensea is the class for the color scheme(there are 19) go-anim is for slide up animation on roll over -->
 
-                        
+
 
                         <div class="-hover-effect h-style img-block">
 
@@ -5362,7 +5441,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
                         </div>-->
 
-                        
+
 
                         <div class="ss-container">
 
@@ -5374,7 +5453,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
                             </div>
 
-                            
+
 
                             <!-- START INFO HOLDER -->
 
@@ -5410,7 +5489,7 @@ function webkits_mainpage_shortcode($atts, $content = null)
 
             <div class="empty-right">'.$s->info->ListPrice.'</div>
 
-            
+
 
             <!-- END SHARE BUTTON -->
 
@@ -5495,7 +5574,7 @@ function webkits_agents_shortcode($atts, $content = null)
 
 		case 'agents':
 
-			echo "<script> var realurl = '".$realurl->guid."&l=';
+			echo "<script> var realurl = '".get_home_url().'/'.$realurl->post_name."';
 
 var agent = ".$options['webkits_list_id'].";
 
@@ -5723,10 +5802,10 @@ function webkits_login()
 	if($res->status == 'success')
 	{
 		global $User_Perm,$User_Logged;
-    	if(!session_id())
-        {
-            session_start();
-        }
+		if(!session_id())
+		{
+			session_start();
+		}
 		$_SESSION['User_Perm']	=	'User';
 		$_SESSION['User_Logged']	=	true;
 		$_SESSION['UserId']	=	$res->id;
@@ -5885,11 +5964,11 @@ function webkits_listings_sc($atts, $content = null)
 
 	global $dbHost;
 
-    if(!session_id())
-    {
-      session_start();
+	if(!session_id())
+	{
+		session_start();
 
-    }
+	}
 
 
 	//echo "<pre>";print_r($atts);die;
@@ -6014,10 +6093,10 @@ function webkits_listings_sc($atts, $content = null)
 	ob_start();
 
 
-    if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
-			{
-				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
-			}
+	if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
+	{
+		$_POST['input_sort_by'] =  $options['webkits_def_sort'];
+	}
 	switch($args['section'])
 
 	{
@@ -6093,16 +6172,16 @@ function webkits_listings_sc($atts, $content = null)
 
 			}
 			if(isset($args['postal']) && $args['postal'] != '')
-            {
-	            $_POST['postal'] = $args['postal'];
-            }
+			{
+				$_POST['postal'] = $args['postal'];
+			}
 
 			if(isset($args['from-city']) && $args['from-city'] != '')
-            {
+			{
 
 				$_POST['from_city'] = $args['from-city'];
 
-            }
+			}
 
 
 			//echo "<pre>";print_r($_POST);die;
@@ -6195,15 +6274,15 @@ function webkits_listings_sc($atts, $content = null)
 
 			$json_feed_url = $dbHost.$link;
 			if(isset($_POST['sort_search']))
-            {
+			{
 				unset($_POST['sort_search']);
-                $_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
+				$_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
 
-            }
+			}
 			if(isset($_SESSION['webkit-search']))
-            {
-            	$_POST['input_sort_by'] = $_SESSION['webkit-search']['input_sort_by'];
-            }
+			{
+				$_POST['input_sort_by'] = $_SESSION['webkit-search']['input_sort_by'];
+			}
 
 
 
@@ -6475,10 +6554,10 @@ function webkits_listings_sc($atts, $content = null)
 		case 'listings':
 
 			global $_SESSION;
-            if(!session_id())
-            {
-                session_start();
-            }
+			if(!session_id())
+			{
+				session_start();
+			}
 			wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 			wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
 
@@ -6686,13 +6765,22 @@ function webkits_listings_sc($atts, $content = null)
 				}*/
 
 			}
-//echo "<pre>";print_r($_POST);die;
-		    if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
+
+			$officeMlsId = (isset($options['webkits_officemlsid']) && !empty($options['webkits_officemlsid']))?explode('|', $options['webkits_officemlsid']):'';
+			if(isset($officeMlsId) && !empty($officeMlsId) && is_array($officeMlsId) && count($officeMlsId) > 0 && isset($atts['all']) && ($atts['all'] == false || $atts['all'] == '0' || $atts['all'] == 0))
+
+			{
+
+				$_POST['officeMlsId'] = $officeMlsId;
+
+			}
+			//echo "<pre>";print_r($_POST);die;
+			if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
 			{
 				$_POST['input_sort_by'] =  $options['webkits_def_sort'];
 			}
 
-           // echo "<pre>";print_r($_POST);die;
+			// echo "<pre>";print_r($_POST);die;
 			if(isset($_POST['pressed']))
 
 			{
@@ -6702,10 +6790,10 @@ function webkits_listings_sc($atts, $content = null)
 				$search = $_POST['search'];
 
 				unset($_POST['pressed']);
-                if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
-                {
-                    $_POST['live-search']      = true;
-                }
+				if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
+				{
+					$_POST['live-search']      = true;
+				}
 
 
 				$CurrentPage               = 1;
@@ -6722,15 +6810,15 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			}
-            if(isset($_POST['sort_search']))
-            {
+			if(isset($_POST['sort_search']))
+			{
 
-	            unset($_POST['sort_search']);
-	            $_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
-	            $_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
-            }
+				unset($_POST['sort_search']);
+				$_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
+				$_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
+			}
 
-           if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
+			if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
 
 			{
 
@@ -6769,7 +6857,7 @@ function webkits_listings_sc($atts, $content = null)
 
 
 
-            $json_feed_url = $dbHost.$link;
+			$json_feed_url = $dbHost.$link;
 
 			//echo $json_feed_url;die;
 
@@ -6795,7 +6883,7 @@ function webkits_listings_sc($atts, $content = null)
 			//            echo "<pre>";print_r($listings);die;
 
 
-		    require "inc/listing_page.php";
+			require "inc/listing_page.php";
 
 			if($options['webkits_enable_sold'] == SOLD_PASSWORD)
 				require "includes/register-login.php";
@@ -7232,7 +7320,7 @@ function webkits_listings_sc($atts, $content = null)
 	}
 
 
-$start = '';
+	$start = '';
 	$content = $start;
 
 	$content .= ob_get_clean();
@@ -7254,7 +7342,7 @@ function wti_loginout_menu_link( $items, $args ) {
 		$items .= '<li class="menu-item menu-item-type-post_type menu-item-object-page"><a title="Account" href="'.home_url().'?Action=logout"><img src="'.plugin_dir_url(__FILE__).'public/img/webkits-icon1.png" height="22"/> &nbsp;'. __("ACCOUNT") .'</a>';
 		$items .= '
             <ul class="sub-menu">
-                
+
                 <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1496"><a title="Change Password" href="'.home_url().'/change-password/">CHANGE PASSWORD</a></li>
                 <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1495"><a title="Edit Profile" href="'.home_url().'/edit-profile/">EDIT PROFILE</a></li>
                 <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1499"><a title="Logout" href="'.home_url().'/logout/">LOGOUT</a></li>
@@ -7273,129 +7361,129 @@ function webkits_listings_user($atts,$content = null)
 	$args = (shortcode_atts(array('section' => "change-password",), $atts));
 	ob_start();
 	if(isset($atts) && is_array($atts) && isset($atts['section']))
-    {
-	    if(!session_id())
-	    {
-		    session_start();
-	    }
-	    switch($atts['section'])
-	    {
-		    case 'change-password':
+	{
+		if(!session_id())
+		{
+			session_start();
+		}
+		switch($atts['section'])
+		{
+			case 'change-password':
 
-			    if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-			    {
-				    wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
-				    wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
-				    wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
+				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
+				{
+					wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+					wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
+					wp_enqueue_script('listings', plugin_dir_url(__FILE__).'public/js/myaccount.js', array('jquery'), '', true);
 
-				    if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
-				    {
-					    $link = "User/change-password";
+					if(isset($_POST['Update']) && $_POST['Update'] == "Change Password")
+					{
+						$link = "User/change-password";
 
-					    $json_feed_url = $dbHost.$link;
+						$json_feed_url = $dbHost.$link;
 
-					    global $crawler, $wp;
+						global $crawler, $wp;
 
-					    if($crawler)
+						if($crawler)
 
-					    {
+						{
 
-						    return null;
+							return null;
 
-					    }
-					    $_POST['user_id'] = $_SESSION['UserId'];
-					    $json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+						}
+						$_POST['user_id'] = $_SESSION['UserId'];
+						$json             = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
 
-					    $result = json_decode($json['body']);
-					    //echo home_url($wp->request);die;
-					    if($result->status == 'success')
-					    {
-						    header('location: '.home_url($wp->request).'?update=true');
-						    exit(0);
-					    }
-					    else
-					    {
-						    header('location: '.home_url($wp->request).'?update=false');
-						    exit(0);
-					    }
-					    // echo "<pre>";print_r($_POST);die;
-				    }
+						$result = json_decode($json['body']);
+						//echo home_url($wp->request);die;
+						if($result->status == 'success')
+						{
+							header('location: '.home_url($wp->request).'?update=true');
+							exit(0);
+						}
+						else
+						{
+							header('location: '.home_url($wp->request).'?update=false');
+							exit(0);
+						}
+						// echo "<pre>";print_r($_POST);die;
+					}
 
-				    //require_once "includes/change-password.php";
-				    require('includes/change-password.php');
-				    $content = ob_get_clean();
-
-
-				    return $content;
-			    }
-			    exit;
-			    break;
-		    case 'edit-profile':
-			    if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
-			    {
-				    $link = "User/edit-profile/get";
-
-				    $json_feed_url = $dbHost.$link;
-
-				    global $crawler, $wp;
-
-				    if($crawler)
-
-				    {
-
-					    return null;
-
-				    }
-				    $_POST['user_id'] = $_SESSION['UserId'];
-
-				    $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-				    $result = json_decode($json['body']);
-				    $user   = $result->user;
-				    if(($_POST['Submit'] == "Save Changes"))
-				    {
-					    $link = "User/edit-profile/post";
-
-					    $json_feed_url = $dbHost.$link;
-
-					    global $crawler, $wp;
-
-					    if($crawler)
-
-					    {
-
-						    return null;
-
-					    }
-					    $_POST['user_id'] = $_SESSION['UserId'];
-
-					    $json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
-
-					    $result = json_decode($json['body']);
-					    if($result->status == 'success')
-					    {
-						    header('location: '.home_url($wp->request).'?update=true');
-						    exit(0);
-					    }
-					    else
-					    {
-						    header('location: '.home_url($wp->request).'?update=false');
-						    exit(0);
-					    }
-				    }
-				    //wp_head();
-				    require "includes/edit-profile.php";
-				    $content = ob_get_clean();
+					//require_once "includes/change-password.php";
+					require('includes/change-password.php');
+					$content = ob_get_clean();
 
 
-				    return $content;
-			    }
-			    break;
-		    default:
-			    break;
+					return $content;
+				}
+				exit;
+				break;
+			case 'edit-profile':
+				if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
+				{
+					$link = "User/edit-profile/get";
 
-	    }
-    }
+					$json_feed_url = $dbHost.$link;
+
+					global $crawler, $wp;
+
+					if($crawler)
+
+					{
+
+						return null;
+
+					}
+					$_POST['user_id'] = $_SESSION['UserId'];
+
+					$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+					$result = json_decode($json['body']);
+					$user   = $result->user;
+					if(($_POST['Submit'] == "Save Changes"))
+					{
+						$link = "User/edit-profile/post";
+
+						$json_feed_url = $dbHost.$link;
+
+						global $crawler, $wp;
+
+						if($crawler)
+
+						{
+
+							return null;
+
+						}
+						$_POST['user_id'] = $_SESSION['UserId'];
+
+						$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+						$result = json_decode($json['body']);
+						if($result->status == 'success')
+						{
+							header('location: '.home_url($wp->request).'?update=true');
+							exit(0);
+						}
+						else
+						{
+							header('location: '.home_url($wp->request).'?update=false');
+							exit(0);
+						}
+					}
+					//wp_head();
+					require "includes/edit-profile.php";
+					$content = ob_get_clean();
+
+
+					return $content;
+				}
+				break;
+			default:
+				break;
+
+		}
+	}
 
 
 	$content .= ob_get_clean();
@@ -7456,9 +7544,9 @@ function wpse_parse_request( &$wp )
 		global $_SESSION;
 
 		if(!session_id())
-        {
-            session_start();
-        }
+		{
+			session_start();
+		}
 		//echo "<pre>";print_r($wp->query_vars);die;
 
 
