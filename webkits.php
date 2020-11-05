@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.21
+ * Version: 4.1.22
 
  * Author: Curious Projects
 
@@ -6773,6 +6773,10 @@ function webkits_listings_sc($atts, $content = null)
 
 				$_POST['officeMlsId'] = $officeMlsId;
 
+			}
+			if(isset($atts['office_id']) && $atts['office_id'] != '')
+			{
+				$_POST['officeid']        = $atts['office_id'];
 			}
 			//echo "<pre>";print_r($_POST);die;
 			if(!isset($_POST['input_sort_by']) && isset($options['webkits_def_sort']) && $options['webkits_def_sort'] != '')
