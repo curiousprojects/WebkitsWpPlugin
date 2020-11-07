@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.22
+ * Version: 4.1.26
 
  * Author: Curious Projects
 
@@ -5618,7 +5618,7 @@ function webkits_styles()
 
 	wp_enqueue_style('bootstrap-theme', plugin_dir_url(__FILE__).('public/css/bootstrap-theme.min.css'));
 
-	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.2'));
+	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.3'));
 
 	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'));
 
@@ -6233,12 +6233,40 @@ function webkits_listings_sc($atts, $content = null)
 							unset($_POST['pressed']);
 
 
+							if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
+							{
+								$_POST['live-search']      = true;
+							}
 
-							$_POST['offset'] = 0;
 
+							$CurrentPage               = 1;
+
+							$_POST['offset']           = 0;
+
+							$_SESSION['webkit-search'] = $_POST;
 
 
 							header('Location: '.$_SERVER['REQUEST_URI']);
+
+							//$_POST['offset'] = 0;
+
+
+
+							//header('Location: '.$_SERVER['REQUEST_URI']);
+
+						}
+						if(isset($_POST['sort_search']))
+						{
+
+							unset($_POST['sort_search']);
+							$_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
+							$_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
+						}
+
+						if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
+						{
+
+							$_POST = $_SESSION['webkit-search'];
 
 						}
 						break;
@@ -6273,17 +6301,6 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			$json_feed_url = $dbHost.$link;
-			if(isset($_POST['sort_search']))
-			{
-				unset($_POST['sort_search']);
-				$_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
-
-			}
-			if(isset($_SESSION['webkit-search']))
-			{
-				$_POST['input_sort_by'] = $_SESSION['webkit-search']['input_sort_by'];
-			}
-
 
 
 			$_POST['data']    = $_POST;

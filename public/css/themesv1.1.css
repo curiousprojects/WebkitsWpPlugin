@@ -858,6 +858,12 @@ span.agentname {
     top: 22px;
     z-index: 1000;
 }
+#listings_pagination, .ln-letters,.listNavShow,.grid2,.grid1{
+    font-size: initial !important;
+}
+.brz .brz-row__container{
+    font-size: initial !important;
+}
 #messageModal.mm-slideout,.modal-backdrop.mm-slideout{
 
     -webkit-transition: none !important;
