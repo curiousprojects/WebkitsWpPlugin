@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.26
+ * Version: 4.1.27
 
  * Author: Curious Projects
 
@@ -3665,15 +3665,13 @@ function webkits_title($title)
 
 			remove_all_actions('wpseo_opengraph');
 
-			$listing = $_SESSION['listings'];
-
-
-
-			return strip_tags($listing->basic->UnparsedAddress." - ".$listing->basic->City." - ".$listing->basic->StateOrProvince." &raquo; ".$listing->content->MLS." &raquo; ").get_bloginfo();
-
-
 
 		}
+		$listing = $_SESSION['listings'];
+		return strip_tags($listing->basic->UnparsedAddress." - ".$listing->basic->City." - ".$listing->basic->StateOrProvince." &raquo; ".$listing->content->MLS." &raquo; ").get_bloginfo();
+
+
+
 
 	}
     elseif(isset($wp->query_vars['aid']))
@@ -3700,7 +3698,7 @@ function webkits_title($title)
 		}
 		$agent = $_SESSION['agent'];
 
-		return strip_tags($agent->agent->firstname." ".$agent->agent->lastname).get_bloginfo();
+		return strip_tags($agent->agent->firstname." ".$agent->agent->lastname)." - ".get_bloginfo();
 	}
 	else
 
@@ -3712,7 +3710,7 @@ function webkits_title($title)
 function remove_og()
 {
 	global $wp;
-	if(isset($_GET['l']) || isset($wp->query_vars['l']))
+	if(isset($_GET['l']) || isset($wp->query_vars['l']) ||  isset($wp->query_vars['aid']))
 	{
 		remove_all_actions( 'rank_math/opengraph/facebook' );
 		remove_all_actions( 'rank_math/opengraph/twitter' );
@@ -3721,7 +3719,7 @@ function remove_og()
 function remove_seo_og($type)
 {
 	global $wp;
-	if(isset($_GET['l']) || isset($wp->query_vars['l']))
+	if(isset($_GET['l']) || isset($wp->query_vars['l']) || isset($wp->query_vars['aid']))
 	{
 		return false;
 	}
@@ -3867,6 +3865,37 @@ function webkits_og_tags()
 
 			?>
             <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
+            <meta property="og:title" content="<?php echo $agent->agent->firstname." ".$agent->agent->lastname.', '.$agent->agent->title ?>">
+
+            <meta property="og:description"  content="<?php echo $agent->agent->bio; ?>">
+
+            <meta property="og:type" content="website">
+
+            <meta property="og:url" content="https://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>">
+
+            <meta property="og:site_name" content="<?php echo get_bloginfo(); ?>">
+
+			<?php
+
+			if($agent->agent->photo != '')
+			{
+				$photo = "https://curiouscloud.ca/agents/" . $agent->agent->photo;
+			}
+			else{
+				$photo = 'https://curiouscloud.ca/assets/images/no-photo.png';
+			}
+			$image = array();
+			list($image['imagewidth'], $image['imageheight']) = getimagesize("./" . $photo);
+			?>
+
+
+            <meta property="og:image" content="<?php echo $photo; ?>">
+
+            <meta property="og:image:width" content="<?php echo $image['imagewidth']; ?>">
+
+            <meta property="og:image:height" content="<?php echo $image['imageheight']; ?>">
+            <meta property="og:image:alt" content="<?php echo $agent->agent->firstname." ".$agent->agent->lastname ?>"/>
+
 			<?php
 
 		}
@@ -6106,6 +6135,18 @@ function webkits_listings_sc($atts, $content = null)
 			require "includes/listing_counter.php";
 
 			break;
+		case 'count':
+			global $dbHost;
+			$link = "TotalListingsCount/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+			$json_feed_url = $dbHost.$link;
+
+
+
+			$json = wp_remote_post($json_feed_url);
+			$result = json_decode($json['body']);
+			echo '<span class="total-count">'.$result->totals.'</span>';
+
+			break;
 
 		case 'sold-button':
 
@@ -6233,40 +6274,12 @@ function webkits_listings_sc($atts, $content = null)
 							unset($_POST['pressed']);
 
 
-							if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
-							{
-								$_POST['live-search']      = true;
-							}
 
+							$_POST['offset'] = 0;
 
-							$CurrentPage               = 1;
-
-							$_POST['offset']           = 0;
-
-							$_SESSION['webkit-search'] = $_POST;
 
 
 							header('Location: '.$_SERVER['REQUEST_URI']);
-
-							//$_POST['offset'] = 0;
-
-
-
-							//header('Location: '.$_SERVER['REQUEST_URI']);
-
-						}
-						if(isset($_POST['sort_search']))
-						{
-
-							unset($_POST['sort_search']);
-							$_SESSION['webkit-search']['input_sort_by'] = $_POST['input_sort_by'];
-							$_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
-						}
-
-						if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
-						{
-
-							$_POST = $_SESSION['webkit-search'];
 
 						}
 						break;
@@ -6301,6 +6314,17 @@ function webkits_listings_sc($atts, $content = null)
 
 
 			$json_feed_url = $dbHost.$link;
+			if(isset($_POST['sort_search']))
+			{
+				unset($_POST['sort_search']);
+				$_SESSION['webkit-search']['input_sort_by'] =  $_POST['input_sort_by'];
+
+			}
+			if(isset($_SESSION['webkit-search']))
+			{
+				$_POST['input_sort_by'] = $_SESSION['webkit-search']['input_sort_by'];
+			}
+
 
 
 			$_POST['data']    = $_POST;
