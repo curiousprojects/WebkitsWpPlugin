@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.27
+ * Version: 4.1.28
 
  * Author: Curious Projects
 
@@ -6835,9 +6835,14 @@ function webkits_listings_sc($atts, $content = null)
 				$search = $_POST['search'];
 
 				unset($_POST['pressed']);
-				if(isset($_POST['input_sort_search']) && $_POST['input_sort_search'] == false)
+				if(isset($_POST['input_sort_search']) && ($_POST['input_sort_search'] == false || $_POST['input_sort_search'] == 'false'))
 				{
 					$_POST['live-search']      = true;
+
+				}
+				else{
+
+					$_POST['live-search']  = $_SESSION['webkit-search']['live-search'];
 				}
 
 
@@ -6863,7 +6868,7 @@ function webkits_listings_sc($atts, $content = null)
 				$_SESSION['webkit-search']['input_sort_search'] = $_POST['input_sort_search'];
 			}
 
-			if(!isset($_POST['condo_search']) && !isset($_POST['input_main']) && isset($_SESSION['webkit-search']))
+			if(!isset($_POST['condo_search']) && (!isset($_POST['input_main']) || (isset($_POST['input_main']) && $_POST['input_main'] == ''))&& isset($_SESSION['webkit-search']))
 
 			{
 
