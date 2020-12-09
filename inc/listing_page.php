@@ -28,16 +28,18 @@
 	            <?php }else{ ?>
                     <a href="javascript:void(0)" id="sold" class="btn btn-default btn-sm popup-modal-sm" data-url="register.php" data-target="login">SEARCH RECENT SOLDS</a>
 	            <?php }}?>
-				<div class="" id="sort_by">
-                    <div class="search-select-wrap">
-                        <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
-                        <select class="-form-control search-select btn btn-default btn-sm sort-select " name="wk-input">
-                            <option class="text" value="0" <?php if ($input_sort_by==0 ) echo "selected"; ?>> High to Low ($)</option>
-                            <option class="text" value="1" <?php if ($input_sort_by==1 ) echo "selected"; ?>> Low to High ($) </option>
+	            <?php if(!isset($isSimilar) || isset($isSimilar) && $isSimilar == false){ ?>
+                    <div class="" id="sort_by">
+                        <div class="search-select-wrap">
+				            <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
+                            <select class="-form-control search-select btn btn-default btn-sm sort-select " name="wk-input">
+                                <option class="text" value="0" <?php if ($input_sort_by==0 ) echo "selected"; ?>> High to Low ($)</option>
+                                <option class="text" value="1" <?php if ($input_sort_by==1 ) echo "selected"; ?>> Low to High ($) </option>
 
-                        </select>
+                            </select>
+                        </div>
                     </div>
-                </div>
+	            <?php } ?>
 	            <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
 	            {?>
                     <div class="dropdown" id="account">
@@ -74,7 +76,8 @@
 
 	        ?>
 
-            <?php foreach ($listings->listing as $l) { ?>
+            <?php  if(is_object($listings) && is_array($listings->listing))
+                { foreach ($listings->listing as $l) { ?>
             <?php //if($l->info->Building->Type != 'Apartment') continue; ?>
             <?php //echo '>>' . $l->info->PropertyType; ?>
 
@@ -142,11 +145,11 @@
                         </div>
                     </a>
                 </div>
-            <?php } ?>
+            <?php } }?>
         </div>
 
         <div class="row listingSelection hide" id="listings-list">
-            <?php foreach ($listings->listing as $l) { ?>
+            <?php if(is_object($listings) && is_array($listings->listing)) { foreach ($listings->listing as $l) { ?>
                 <div class="row list-row">
                 <a href="<?php
                         $link = ($l->info->UnparsedAddress == '') ? 'none' : (str_replace(" ", "-", $l->info->UnparsedAddress));
@@ -203,7 +206,7 @@
                         </div>
                     </a>
                 </div>
-            <?php } ?>
+            <?php } }?>
         </div>
 
         <div class="row listingSelection hide" id="listings-map">
@@ -236,7 +239,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($listings->listing as $l) { ?>
+                    <?php  if(is_object($listings) && is_array($listings->listing)) { foreach ($listings->listing as $l) { ?>
                         <tr>
                             <td>
                             <a href="<?php
@@ -281,7 +284,7 @@
                                 ?>
                             </td>
                         </tr>
-                    <?php } ?>
+                    <?php } } ?>
                     </tbody>
                 </table>
             </div>

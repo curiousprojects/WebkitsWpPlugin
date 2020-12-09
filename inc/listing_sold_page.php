@@ -28,7 +28,7 @@
                 <?php if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
                 {?>
                     <div class="dropdown" id="account">
-                        <img src="<?php echo plugin_dir_url(__FILE__)?>../public/img/webkits-icon1.png" height="22"/> <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                         <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             Account
                             <span class="caret"></span>
                         </button>

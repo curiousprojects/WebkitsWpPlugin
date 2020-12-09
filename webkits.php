@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.28
+ * Version: 4.1.31
 
  * Author: Curious Projects
 
@@ -2840,6 +2840,9 @@ add_action('wp_ajax_webkits_get_markers', 'webkits_get_markers'); //
 
 add_action('wp_ajax_nopriv_webkits_get_markers', 'webkits_get_markers'); //G
 
+add_action('wp_ajax_webkits_get_similar_markers', 'webkits_get_similar_markers'); //
+
+add_action('wp_ajax_nopriv_webkits_get_similar_markers', 'webkits_get_similar_markers'); //G
 add_action('wp_ajax_webkits_get_sold_markers', 'webkits_get_sold_markers'); //
 
 add_action('wp_ajax_nopriv_webkits_get_sold_markers', 'webkits_get_sold_markers'); //Get Markers for Map with Search
@@ -3377,6 +3380,52 @@ function webkits_get_markers()
 	die();
 
 }
+function webkits_get_similar_markers()
+{
+
+	global $dbHost;
+
+	if(!session_id())
+	{
+		session_start();
+	}
+	$_POST = array();
+	if(isset($_SESSION['listings']))
+
+	{
+		foreach($_SESSION['listings']->content->Similar->listing as $l)
+		{
+			$_POST[$l->ID]['ListingKey'] = $l->ID;
+			$_POST[$l->ID]['lat'] = $l->latitude;
+			$_POST[$l->ID]['lng'] = $l->longitude;
+			$_POST[$l->ID]['ListingId'] = $l->info->ListingId;
+			$_POST[$l->ID]['Type'] = $l->info->PropertyType;
+			$_POST[$l->ID]['UnparsedAddress'] = $l->info->UnparsedAddress;
+			$_POST[$l->ID]['City'] = $l->info->Address->City;
+			$_POST[$l->ID]['price'] = $l->price;
+			$_POST[$l->ID]['status'] = 'Active';
+			$_POST[$l->ID]['info'] = $l->information;
+		}
+
+
+
+	}
+
+	$options          = get_option('webkits');
+
+	$link             = "ShowSimilarMarkers/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+
+	$json_feed_url    = $dbHost.$link;
+
+
+
+	$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+	echo $json['body'];
+
+	die();
+
+}
 function webkits_get_sold_markers()
 
 {
@@ -3885,7 +3934,16 @@ function webkits_og_tags()
 				$photo = 'https://curiouscloud.ca/assets/images/no-photo.png';
 			}
 			$image = array();
-			list($image['imagewidth'], $image['imageheight']) = getimagesize("./" . $photo);
+
+
+			if(@getimagesize($photo))
+			{
+				list($image['imagewidth'], $image['imageheight']) = getimagesize( $photo);
+			}
+			else{
+				$image['imagewidth'] = 200;
+				$image['imageheight'] = 200;
+			}
 			?>
 
 
@@ -4070,13 +4128,30 @@ function webkits_details_shortcode($atts, $content = null)
 
 	$_GET['l'] = $wp->query_vars['l'];
 
+	if(!wp_script_is("listings", "enqueued"))
+
+	{
+	    wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
+
+		wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
+
+		wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
+
+		wp_enqueue_script('cluster', plugin_dir_url(__FILE__).'public/js/marker.js', array('jquery'), '', true);
+
+		wp_enqueue_script('listings-detail', plugin_dir_url(__FILE__).'public/js/listing-details.js', array('jquery'), '', true);
+
+		wp_enqueue_script('common', plugin_dir_url(__FILE__).'public/js/common.js', array('jquery'), '', true);
+
+		wp_enqueue_script('masonary', plugin_dir_url(__FILE__).'public/js/masonry.min.js', array('jquery'), '', true);
+
+		wp_enqueue_script('search', plugin_dir_url(__FILE__).'public/js/search.js', array('jquery'), '', true);
+
+	}
 	wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 	wp_enqueue_script('login', plugin_dir_url(__FILE__).('public/js/login.js'));
 	//if(isset($_GET['ac']) && $_GET['ac'] == 0) unset($_SESSION['webkits-accept']);
-
-
-
-	if(!isset($_GET['l']) || !is_numeric($_GET['l']))
+    if(!isset($_GET['l']) || !is_numeric($_GET['l']))
 
 	{
 
@@ -4366,7 +4441,11 @@ function webkits_details_shortcode($atts, $content = null)
 			echo $listing->content->Agent;
 
 			break;
-
+		case 'Similar':
+			$listings = $listing->content->Similar;
+			$isSimilar = true;
+			require "inc/listing_page.php";
+			break;
 		case 'Links':
 
 			echo $listing->content->Links;
@@ -7389,7 +7468,7 @@ function wti_loginout_menu_link( $items, $args ) {
 	if(isset($_SESSION['User_Logged']) && $_SESSION['User_Logged'] == true)
 	{
 
-		$items .= '<li class="menu-item menu-item-type-post_type menu-item-object-page"><a title="Account" href="'.home_url().'?Action=logout"><img src="'.plugin_dir_url(__FILE__).'public/img/webkits-icon1.png" height="22"/> &nbsp;'. __("ACCOUNT") .'</a>';
+		$items .= '<li class="menu-item menu-item-type-post_type menu-item-object-page"><a title="Account" href="'.home_url().'?Action=logout">'. __("ACCOUNT") .'</a>';
 		$items .= '
             <ul class="sub-menu">
 
