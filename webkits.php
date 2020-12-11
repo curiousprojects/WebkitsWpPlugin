@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.32
+ * Version: 4.1.33
 
  * Author: Curious Projects
 
@@ -3916,7 +3916,7 @@ function webkits_og_tags()
             <link rel="canonical" href="http://<?php echo $_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"] ?>"/>
             <meta property="og:title" content="<?php echo $agent->agent->firstname." ".$agent->agent->lastname.', '.$agent->agent->title ?>">
 
-            <meta property="og:description"  content="<?php echo $agent->agent->bio; ?>">
+            <meta property="og:description"  content="<?php echo $agent->agent->desc; ?>">
 
             <meta property="og:type" content="website">
 

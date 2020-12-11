@@ -103,7 +103,7 @@ $login_url = get_permalink($sold_page->ID); ?>
 
                     </span>
                         <a href="javascript:void(0)" class="popup-modal-sm btn btn-danger btn-reg" data-target="signup">Register</a>
-                        <small class="small-text text-center">To ensure delivery of registration email, please whitelist..........</small>
+                        <small class="small-text text-center">To ensure delivery of registration email, please whitelist email <?php echo $options['webkits_register_email'] ?></small>
                     </div>
 
 
