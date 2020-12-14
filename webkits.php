@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.33
+ * Version: 4.1.34
 
  * Author: Curious Projects
 
@@ -2625,41 +2625,44 @@ function isCrawler($userAgent = null)
 {
 
 	global $data , $crawlers;
+	if(is_array($data))
+	{
+		$compiledExclusions =  '('.implode('|', $data).')';
 
-	$compiledExclusions =  '('.implode('|', $data).')';
-
-	$compiledRegex = '('.implode('|', $crawlers).')';
+		$compiledRegex = '('.implode('|', $crawlers).')';
 
 
 
-	$agent = trim(preg_replace(
+		$agent = trim(preg_replace(
 
-		              "/{$compiledExclusions}/i",
+			              "/{$compiledExclusions}/i",
 
-		              '',
+			              '',
 
-		              $userAgent
+			              $userAgent
 
-	              ));
+		              ));
 
-	if ($agent == '') {
+		if ($agent == '') {
 
-		return false;
+			return false;
 
+		}
+
+		$result = preg_match("/{$compiledRegex}/i", $agent, $matches);
+
+
+
+		//$result = preg_match($compiledRegex, $_SERVER['HTTP_USER_AGENT']);
+
+
+
+		return (bool) $result;
 	}
+	return false;
 
-	$result = preg_match("/{$compiledRegex}/i", $agent, $matches);
-
-
-
-	//$result = preg_match($compiledRegex, $_SERVER['HTTP_USER_AGENT']);
-
-
-
-	return (bool) $result;
 
 }
-
 //$crawler = crawlerDetect();
 
 $crawler = isCrawler($_SERVER['HTTP_USER_AGENT']);
