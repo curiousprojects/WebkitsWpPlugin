@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.34
+ * Version: 4.1.35
 
  * Author: Curious Projects
 
@@ -5742,12 +5742,14 @@ function webkits_styles()
 function webkits_js()
 
 {
+	wp_deregister_script('jquery-core');
+	wp_deregister_script('jquery-migrate');
+	wp_enqueue_script('jquery-core', plugin_dir_url(__FILE__).'public/js/jquery.js', '', false);
 
+	wp_enqueue_script('jquery-migrate', plugin_dir_url(__FILE__).'public/js/jquery-migrate.js', '', false);
 	wp_enqueue_script('bootstrapjs', plugin_dir_url(__FILE__).'public/js/bootstrap.min.js', array('jquery'), '', false);
 
-
 }
-
 
 
 //ACTION - MOTOPRESS
