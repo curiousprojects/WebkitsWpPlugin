@@ -61,7 +61,7 @@ $login_url = get_permalink($sold_page->ID); ?>
                                 </select>
                             </div>
                             <div class="col-md-6 col-sm-6 form-group">
-                                <label for="user_relator">Are you currently under contract with a REALTOR<sup>速</sup>?</label>
+                                <label for="user_relator">Are you currently under contract with a REALTOR<sup>®</sup>?</label>
                                 <select class="form-control" name="user_relator" id="user_relator">
                                     <option>No</option>
                                     <option>Yes</option>

@@ -2,7 +2,7 @@ jQuery(document).ready(function () {
     login();
     register();
     forgotpassword();
-    jQuery('#account').on('click',function () {
+    /*jQuery('#account').on('click',function () {
         if(jQuery(this).hasClass('open'))
         {
             jQuery(this).removeClass('open');
@@ -11,7 +11,7 @@ jQuery(document).ready(function () {
             jQuery(this).addClass('open');
         }
 
-    });
+    });*/
     if(jQuery("#frmChangePassword").length)
     {
         jQuery("#frmChangePassword").validate({
