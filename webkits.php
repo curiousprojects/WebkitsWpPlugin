@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.37
+ * Version: 4.1.38
 
  * Author: Curious Projects
 
@@ -2889,13 +2889,13 @@ function every_three_minutes_event_func()
 		{
 			if(is_object($blog) && $blog->blog_last_run_date_time != '')
 			{
-				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$blog->blog_last_run_date_time);
+				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$blog->blog_last_run_date_time).'&order=asc';
 			}
 			else{
 
 				$full_downlod_datetime = date('Y-m-d H:i:s', strtotime('-6 months'));
 
-				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$full_downlod_datetime);
+				$url = $domain.'/wp-json/wp/v2/posts?offset='.$offset.'&per_page=20&after='.str_replace(' ','T',$full_downlod_datetime).'&order=asc';
 
 			}
 
@@ -2936,6 +2936,8 @@ function every_three_minutes_event_func()
 						}
 					}
 					$featured = json_decode(wp_remote_get($domain.'/wp-json/wp/v2/media/'.$post->featured_media)['body']);
+
+
 					if ( $c_post = get_page_by_path( $post->slug, OBJECT, $post->type ) )
 					{
 
@@ -3011,31 +3013,32 @@ function Generate_Featured_Image( $image_url, $post_id  ){
 		$image_data = $response['body']; // use the content
 	}
 
-
-
 	$filename = basename($image_url);
+
 	if(wp_mkdir_p($upload_dir['path']))
 		$file = $upload_dir['path'] . '/' . $filename;
 	else
 		$file = $upload_dir['basedir'] . '/' . $filename;
+
+
 	if(!file_exists($file))
 	{
 		file_put_contents($file, $image_data);
-
-		$wp_filetype = wp_check_filetype($filename, null );
-		$attachment = array(
-			'post_mime_type' => $wp_filetype['type'],
-			'post_title' => sanitize_file_name($filename),
-			'post_content' => '',
-			'post_status' => 'inherit'
-		);
-
-		$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
-		require_once(ABSPATH . 'wp-admin/includes/image.php');
-		$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-		$res1= wp_update_attachment_metadata( $attach_id, $attach_data );
-		$res2= set_post_thumbnail( $post_id, $attach_id );
 	}
+	$wp_filetype = wp_check_filetype($filename, null );
+	$attachment = array(
+		'post_mime_type' => $wp_filetype['type'],
+		'post_title' => sanitize_file_name($filename),
+		'post_content' => '',
+		'post_status' => 'inherit'
+	);
+
+	$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+
+	require_once(ABSPATH . 'wp-admin/includes/image.php');
+	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+	$res1= wp_update_attachment_metadata( $attach_id, $attach_data );
+	$res2= set_post_thumbnail( $post_id, $attach_id );
 
 }
 function wpse_302620_canonical_url($canonical_url)
