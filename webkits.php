@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.38
+ * Version: 4.1.40
 
  * Author: Curious Projects
 
@@ -2857,8 +2857,8 @@ add_action('wp_ajax_nopriv_webkits_get_addresses', 'webkits_get_addresses');
 add_action( 'query_vars', 'wpse_query_vars' );
 add_action( 'query_vars', 'account_query_vars' );
 add_action( 'parse_request', 'wpse_parse_request' );
-add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
-if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
+//add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
+/*if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
 	$options = get_option("webkits");
 	$date = date("Y-m-d")." ".str_replace(array('pm','am'),array(':00 PM', ':00 AM'),$options['webkits_blog_time']);
 	if($date != '')
@@ -2866,7 +2866,7 @@ if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
 		wp_schedule_event( strtotime($date), 'daily', 'isa_add_every_three_minutes');
 	}
 
-}
+}*/
 function every_three_minutes_event_func()
 {
 	global $dbHost;
