@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.40
+ * Version: 4.1.43
 
  * Author: Curious Projects
 
@@ -4139,7 +4139,7 @@ function webkits_details_shortcode($atts, $content = null)
 	{
 	    wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
-		wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
+		wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
 		wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
@@ -4486,7 +4486,7 @@ function webkits_details_shortcode($atts, $content = null)
 
 			wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
-			wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
+			wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
 			wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
@@ -4667,7 +4667,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 		wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
-		wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
+		wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
 		wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
@@ -6096,7 +6096,7 @@ function webkits_listings_sc($atts, $content = null)
 
 		wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
-		wp_enqueue_script('mpce-gma-google-maps-api', 'http://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
+		wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
 		wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
