@@ -1,3 +1,129 @@
+/* Grid Slider */
+
+#main-slider-2{
+    padding-right: 2px;
+    background: white;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+#main-slider-2 img{
+    position: relative !important;
+    height: 100%;
+    margin: auto;
+    width: 100%;
+    object-fit: cover;
+
+}
+#main-slider-2 .list_info {
+    position: absolute;
+    bottom: 0;
+
+    background: linear-gradient(0deg, rgba(0,0,0,0.8407738095238095) 0%, rgba(0,0,0,0.4598214285714286) 46%, rgba(0,0,0,0) 100%);
+    height: 80px;
+    padding: 28px 6px 6px 15px;
+    margin:0;
+    width: 100%;
+}
+.col-slider{
+    padding:2px;
+    display:none;
+}
+#main-slider-2 .list_address{
+    color: white !important;
+    font-size: 15px !important;
+    line-height: 0.9;
+}
+#main-slider-2 .list_price{
+
+    color: white !important;
+    font-size: 18px !important;
+}
+#main-slider-2 .block
+{
+    height: 300px;
+}
+.m-0{
+    margin:0;
+}
+.p-relative{
+    position:relative;
+}
+/* */
+
+.agentmini{
+
+    max-height: 450px;
+    overflow: hidden;
+    padding: 3px;
+    border: 1px solid #d2d2d2;
+    margin: 10px;
+    margin-top: 10px;
+    margin-top: 10px;
+    text-align: center;
+    font-family: lato,arial,sans-serif;
+    box-shadow: 3px 3px 3px #efefef;
+    background-color: #ffffff;
+}
+.agentmini img{
+    max-height: 200px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 10px;
+}
+.image-award{
+    width: 70px !important;
+    display: inline;
+}
+li.col-sm-3.agentsbox img.img-responsive {
+    max-height: 200px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 10px;
+}
+li.col-sm-3.agentsbox {
+
+    max-height: 400px;
+    overflow: hidden;
+    padding: 3px;
+    border: 1px solid #d2d2d2;
+    margin: 10px;
+    text-align: center;
+    font-family: lato,arial,sans-serif;
+    box-shadow: 3px 3px 3px #efefef;
+    background-color: #ffffff;
+}
+
+li.col-sm-3.agentsbox.listNavShow {
+    margin-top: 34px;
+}
+li.col-sm-4.agentsbox img.img-responsive {
+    max-height: 200px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 10px;
+}
+li.col-sm-4.agentsbox {
+
+    max-height: 400px;
+    overflow: hidden;
+    padding: 3px;
+    border: 1px solid #d2d2d2;
+    margin: 10px;
+    text-align: center;
+    font-family: lato,arial,sans-serif;
+    box-shadow: 3px 3px 3px #efefef;
+    background-color: #ffffff;
+}
+
+li.col-sm-4.agentsbox.listNavShow {
+    margin-top: 34px;
+}
 .join-live
 {
     padding-top : 15px;

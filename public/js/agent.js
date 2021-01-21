@@ -1,9 +1,31 @@
 var office;
+var imgurl;
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
-        jQuery("#listings").append("<li class='col-sm-3 agentsbox' style='height:250px;'><a href='" + realurl + marker.aid + "'><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></a></li>")
+        var a_html = "<li class='col-sm-3 agentsbox' style='height:350px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small>";
+
+        if (marker.award_winner.length > 0) {
+            a_html += '<div>';
+            jQuery.each(marker.award_winner , function (i, award)
+            {
+                if(award == "National Chairman's Club")
+                {
+                    a_html += "<img class='img-responsive image-award lazyloaded' src='"+ imgurl +"awards/" + award +".png'>";
+                }
+                else{
+                    a_html += "<img class='img-responsive image-award lazyloaded' src='"+ imgurl +"awards/" + award +".jpg'>";
+                }
+
+            });
+            a_html += "</div>";
+        }
+
+
+        a_html += "</a></li>";
+        jQuery("#listings").append(a_html);
     }
+
 }
 
 jQuery("#submit").click(function (event) {
@@ -14,7 +36,12 @@ jQuery("#submit").click(function (event) {
         value: filter
     };
 
+    var faw = {
+        name: "award",
+        value: award
+    };
     data2.push(filterObj);
+    data2.push(faw);
     jQuery("#listings").remove();
     jQuery("#ListParent").html('<ul id="listings" class="imageList"></ul>');
     jQuery.post(ajaxurl, {data: data2, action: "webkits_get_agent"}, function (data) {
@@ -38,7 +65,12 @@ var fObj = {
         name: "office",
         value: office
     };
+var faw = {
+    name: "award",
+    value: award
+};
 fdata.push(fObj);
+fdata.push(faw);
 
 jQuery.post(ajaxurl, {filter: filter, action: "webkits_get_agent",data: fdata}, function (data) {
 

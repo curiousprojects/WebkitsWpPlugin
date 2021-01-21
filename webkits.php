@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.43
+ * Version: 4.1.46
 
  * Author: Curious Projects
 
@@ -2857,8 +2857,8 @@ add_action('wp_ajax_nopriv_webkits_get_addresses', 'webkits_get_addresses');
 add_action( 'query_vars', 'wpse_query_vars' );
 add_action( 'query_vars', 'account_query_vars' );
 add_action( 'parse_request', 'wpse_parse_request' );
-//add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
-/*if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
+add_action( 'isa_add_every_three_minutes', 'every_three_minutes_event_func' );
+if ( ! wp_next_scheduled( 'isa_add_every_three_minutes' ) ) {
 	$options = get_option("webkits");
 	$date = date("Y-m-d")." ".str_replace(array('pm','am'),array(':00 PM', ':00 AM'),$options['webkits_blog_time']);
 	if($date != '')
@@ -2866,7 +2866,7 @@ add_action( 'parse_request', 'wpse_parse_request' );
 		wp_schedule_event( strtotime($date), 'daily', 'isa_add_every_three_minutes');
 	}
 
-}*/
+}
 function every_three_minutes_event_func()
 {
 	global $dbHost;
@@ -5634,7 +5634,136 @@ function webkits_mainpage_shortcode($atts, $content = null)
 			require("includes/new_main_slider.php");
 
 			break;
+		case 'grid_slider':
+			if($args['type'] == 'random')
 
+				$link = "slider/random/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+
+			else
+
+				$link = "slider/latest/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+
+
+
+
+
+			if(isset($atts['from-city']) && $atts['from-city'] != '')
+
+			{
+
+				$_POST['from_city'] = $atts['from-city'];
+
+			}
+
+			$json_feed_url = $dbHost.$link;
+
+			global $crawler;
+
+			if ($crawler )
+
+			{
+
+				return null;
+
+			}
+
+			$json = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+			$all  = json_decode($json['body']);
+
+
+			libxml_use_internal_errors(true);
+
+			$show = '';
+
+			foreach($all->listing as $s)
+
+			{
+
+				$dom = new DOMDocument;
+
+				$dom->loadHTML($s->listing);
+
+				$img = null;
+
+				$a   = null;
+
+				//echo "<pre>";print_r($s);
+
+				foreach($dom->getElementsByTagName('img') as $node)
+
+				{
+
+					$img[] = $dom->saveHTML($node);
+
+				}
+
+				foreach($dom->getElementsByTagName('a') as $node)
+
+				{
+
+					$link = $node->getAttribute('href');
+
+				}
+
+				foreach($dom->getElementsByTagName('span') as $node)
+
+				{
+
+					if($node->getAttribute('class') == 'agentslider')
+
+						$agent = $dom->saveHTML($node);
+
+				}
+				if(isset($s->info->ShowPrice) && $s->info->ShowPrice == 1)
+				{
+					$price = $s->info->ListPrice;
+				}
+				else{
+					$price = '';
+				}
+
+
+				$section = '
+
+                        <div class="col-md-4 col-slider">
+
+                            <a href="'.$link.'" target="_parent">
+
+                                <div class="block  img-responsive">'.$img[0].'</div>
+
+                                <div class="p-relative">
+
+                                 <div class="list_info">
+                                    <p class="list_price">'.$price.'</p>
+                                 <p class="list_address list_street" >'.$s->info->UnparsedAddress.', '.$s->info->City.' </p>
+
+                               
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        </div>
+
+                    ';
+
+				$show .= $section;
+
+			}
+
+			$realurl2 = get_post($options['webkits_listing_page']);
+
+
+
+			$show = str_replace("{{CHANGEURL}}", $realurl2->guid."&l=", $show);
+
+
+
+			require("includes/main_slider2.php");
+
+			break;
 	}
 
 	$content .= ob_get_clean();
@@ -5652,8 +5781,8 @@ function webkits_mainpage_shortcode($atts, $content = null)
 function webkits_agents_shortcode($atts, $content = null)
 
 {
-
-	$args = (shortcode_atts(array('section' => "agents", 'filter' => '','show_commercial' => '','office' => ''), $atts));
+    global $dbHost;
+	$args = (shortcode_atts(array('section' => "agents", 'filter' => '','show_commercial' => '','office' => '',"award" => ''), $atts));
 
 	if(!wp_script_is("agents", "enqueued"))
 
@@ -5693,11 +5822,11 @@ function webkits_agents_shortcode($atts, $content = null)
 var agent = ".$options['webkits_list_id'].";
 
 var ajaxurl = '".$scriptUrl."';
-
+var imgurl = '".$dbHost."';
 var filter = '".$args['filter']."';
 var office = '".$args['office']."';
 var show_commercial = '".$args['show_commercial']."';
-
+var award = '".$args['award']."';
 </script>";
 
 			require("includes/agent_page.php");
