@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.46
+ * Version: 4.1.48
 
  * Author: Curious Projects
 
@@ -3046,9 +3046,10 @@ function wpse_302620_canonical_url($canonical_url)
 	global $post,$wp;
 	if((!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == '')) && (!isset($wp->query_vars['aid']) || (isset($wp->query_vars['aid']) && $wp->query_vars['aid'] == '')))
 	{
-		$canonical_url = $post->guid;
+
 		return $canonical_url;
 	}
+
 
 }
 add_filter( 'wpseo_canonical', 'wpse_302620_canonical_url');
@@ -3057,7 +3058,7 @@ add_filter( 'rank_math/frontend/canonical', function( $canonical ) {
 
 	if((!isset($wp->query_vars['l']) || (isset($wp->query_vars['l']) && $wp->query_vars['l'] == '')) && (!isset($wp->query_vars['aid']) || (isset($wp->query_vars['aid']) && $wp->query_vars['aid'] == '')))
 	{
-		$canonical = $post->guid;
+
 		return $canonical;
 	}
 
