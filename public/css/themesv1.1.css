@@ -1,6 +1,6 @@
 /* Grid Slider */
 .a_info{
-    bottom: 20px;position: absolute;left: 0;right: 0;
+    bottom: 10px;position: absolute;left: 0;right: 0;
 }
 .a_year{
 
@@ -79,7 +79,12 @@
     top: 10px;
 }
 .image-award{
-    width: 70px !important;
+    width: 100px !important;
+    display: inline;
+    top: unset !important;
+}
+.main-award{
+    width: 130px !important;
     display: inline;
     top: unset !important;
 }
@@ -1112,7 +1117,7 @@ span.agentname {
 @media only screen and (min-width: 768px)
 {
     li.col-sm-3.agentsbox{
-         width: 30%;
-     }
+        width: 30%;
+    }
 
 }

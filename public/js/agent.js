@@ -1,21 +1,29 @@
 var office;
 var imgurl;
+var a_class;
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
 
-        var a_html = "<li class='col-sm-3 agentsbox' style='height:370px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
+        var a_html = "<li class='col-sm-3 agentsbox' style='height:400px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
 
         if (marker.award_winner.length > 0) {
             a_html += '<div class="a_info">';
             jQuery.each(marker.award_winner , function (i, award)
             {
-                if(award == "National Chairman's Club")
+                if(award == "Sales Achievement Award" || award == "President's Gold Award" )
                 {
-                    a_html += '<img class="img-responsive image-award lazyloaded" src="'+ imgurl +'awards/' + award +'.png">';
+                    a_class = 'main-award';
                 }
                 else{
-                    a_html += '<img class="img-responsive image-award lazyloaded" src="'+ imgurl +'awards/' + award +'.jpg">';
+                    a_class = 'image-award';
+                }
+                if(award == "National Chairman's Club")
+                {
+                    a_html += '<img class="img-responsive '+ a_class +'  lazyloaded" src="'+ imgurl +'awards/' + award +'.png">';
+                }
+                else{
+                    a_html += '<img class="img-responsive '+ a_class +'  lazyloaded" src="'+ imgurl +'awards/' + award +'.jpg">';
                 }
 
             });
@@ -64,9 +72,9 @@ jQuery("#submit").click(function (event) {
 
 var fdata = [];
 var fObj = {
-        name: "office",
-        value: office
-    };
+    name: "office",
+    value: office
+};
 var faw = {
     name: "award",
     value: award
