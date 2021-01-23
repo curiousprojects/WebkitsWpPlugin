@@ -1091,6 +1091,12 @@ span.agentname {
     .p-t{
         padding-top:10px;
     }
+    #listings{
+        margin: 0;
+    }
+    li.col-sm-3.agentsbox{
+        width: 100%;
+    }
 
 }
 
@@ -1100,4 +1106,11 @@ span.agentname {
         font-size: 13px;
         height: 57px;
     }
+}
+@media only screen and (min-width: 768px)
+{
+    li.col-sm-3.agentsbox{
+        width: 30%;
+    }
+
 }
