@@ -3,29 +3,24 @@ var imgurl;
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
-        var a_html = "<li class='col-sm-3 agentsbox' style='height:370px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small>";
+
+        var a_html = "<li class='col-sm-3 agentsbox' style='height:370px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
 
         if (marker.award_winner.length > 0) {
-            a_html += '<div>';
+            a_html += '<div class="a_info">';
             jQuery.each(marker.award_winner , function (i, award)
             {
-                if(award != '')
+                if(award == "National Chairman's Club")
                 {
-                    if(award == "National Chairman's Club")
-                    {
-                        a_html += "<img class='img-responsive image-award lazyloaded' src='"+ imgurl +"awards/" + award +".png'>";
-                    }
-                    else{
-                        a_html += "<img class='img-responsive image-award lazyloaded' src='"+ imgurl +"awards/" + award +".jpg'>";
-                    }
+                    a_html += '<img class="img-responsive image-award lazyloaded" src="'+ imgurl +'awards/' + award +'.png">';
+                }
+                else{
+                    a_html += '<img class="img-responsive image-award lazyloaded" src="'+ imgurl +'awards/' + award +'.jpg">';
                 }
 
             });
+            a_html +="<div class='a_year'><small>"+marker.award_year+"</small></div>";
             a_html += "</div>";
-            if(marker.award_year != '')
-            {
-                a_html +="<div class='a_year'><small>"+marker.award_year+"</small></div";
-            }
 
         }
 
@@ -33,7 +28,6 @@ function addListing(marker) {
         a_html += "</a></li>";
         jQuery("#listings").append(a_html);
     }
-
 }
 
 jQuery("#submit").click(function (event) {

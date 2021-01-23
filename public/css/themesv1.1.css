@@ -1,6 +1,9 @@
 /* Grid Slider */
+.a_info{
+    bottom: 20px;position: absolute;left: 0;right: 0;
+}
 .a_year{
-    padding-top:5px;
+
     color:black;
 }
 #main-slider-2{
@@ -78,6 +81,7 @@
 .image-award{
     width: 70px !important;
     display: inline;
+    top: unset !important;
 }
 li.col-sm-3.agentsbox img.img-responsive {
     max-height: 200px;
@@ -123,7 +127,10 @@ li.col-sm-4.agentsbox {
     box-shadow: 3px 3px 3px #efefef;
     background-color: #ffffff;
 }
-
+#listings-nav{
+    display: table;
+    margin:0 auto;
+}
 li.col-sm-4.agentsbox.listNavShow {
     margin-top: 34px;
 }
