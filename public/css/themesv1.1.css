@@ -130,6 +130,7 @@ li.col-sm-4.agentsbox {
 #listings-nav{
     display: table;
     margin:0 auto;
+    padding-top: 10px;
 }
 li.col-sm-4.agentsbox.listNavShow {
     margin-top: 34px;
@@ -1096,6 +1097,7 @@ span.agentname {
     }
     li.col-sm-3.agentsbox{
         width: 100%;
+        margin:10px 0;
     }
 
 }
@@ -1110,7 +1112,7 @@ span.agentname {
 @media only screen and (min-width: 768px)
 {
     li.col-sm-3.agentsbox{
-        width: 30%;
-    }
+         width: 30%;
+     }
 
 }
