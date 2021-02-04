@@ -34,6 +34,9 @@
     padding:2px;
     display:none;
 }
+.col-slider:hover .list_info {
+    background: linear-gradient(0deg, rgba(0,0,0,0.8407738095238095) 0%, rgba(0,0,0,0.4598214285714286) 36%, rgba(0,0,0,0) 100%) !important;
+}
 #main-slider-2 .list_address{
     color: white !important;
     font-size: 15px !important;
@@ -79,7 +82,7 @@
     top: 10px;
 }
 .image-award{
-    width: 100px !important;
+    height: 75px !important;
     display: inline;
     top: unset !important;
 }
@@ -87,6 +90,10 @@
     width: 130px !important;
     display: inline;
     top: unset !important;
+}
+.image-award:nth-child(2n), .main-award:nth-child(2n)
+{
+    padding-left:10px;
 }
 li.col-sm-3.agentsbox img.img-responsive {
     max-height: 200px;

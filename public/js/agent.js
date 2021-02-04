@@ -1,17 +1,24 @@
 var office;
 var imgurl;
 var a_class;
+var b =  broker.split('|');
 function addListing(marker) {
     //marker = marker.replace(/{{CHANGEURL}}/g, realurl);
     if (marker.firstname) {
-
-        var a_html = "<li class='col-sm-3 agentsbox' style='height:400px;'><a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
-
+         if(jQuery.inArray("3", b) !== -1)
+         {
+            var a_html = "<li class='col-sm-3 agentsbox' style='height:400px;'>";
+         }
+         else{
+              var a_html = "<li class='col-sm-3 agentsbox' style='height:290px;'>";
+         }
+     
+            a_html += "<a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
         if (marker.award_winner.length > 0) {
             a_html += '<div class="a_info">';
             jQuery.each(marker.award_winner , function (i, award)
             {
-                if(award == "Sales Achievement Award" || award == "President's Gold Award" )
+                if(award == "Sales Achievement Award" || award == "President's Gold Award" || award == "Master Sales Award")
                 {
                     a_class = 'main-award';
                 }

@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.52
+ * Version: 4.1.56
 
  * Author: Curious Projects
 
@@ -5655,6 +5655,26 @@ function webkits_mainpage_shortcode($atts, $content = null)
 				$_POST['from_city'] = $atts['from-city'];
 
 			}
+			if(isset($atts['maxprice']) && $atts['maxprice'] != '')
+			{
+
+				$_POST['maxprice'] = $atts['maxprice'];
+
+			}
+
+			if(isset($atts['minprice']) && $atts['minprice'] !='')
+			{
+
+				$_POST['minprice'] = $atts['minprice'];
+
+			}
+			if(isset($atts['postal']) && $atts['postal'] != '')
+
+			{
+
+				$_POST['postal'] = strtoupper($atts['postal']);
+
+			}
 
 			$json_feed_url = $dbHost.$link;
 
@@ -5810,8 +5830,7 @@ function webkits_agents_shortcode($atts, $content = null)
 	ob_start();
 
 	$filter = array();
-
-
+ $brokers = explode('/',$options['webkits_list_id']);
 	switch($args['section'])
 
 	{
@@ -5820,8 +5839,8 @@ function webkits_agents_shortcode($atts, $content = null)
 
 			echo "<script> var realurl = '".get_home_url().'/'.$realurl->post_name."';
 
-var agent = ".$options['webkits_list_id'].";
-
+var agent = '".$options['webkits_list_id']."';
+var broker = '".$brokers[0]."';
 var ajaxurl = '".$scriptUrl."';
 var imgurl = '".$dbHost."';
 var filter = '".$args['filter']."';
