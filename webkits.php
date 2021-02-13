@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.56
+ * Version: 4.1.58
 
  * Author: Curious Projects
 
@@ -4140,11 +4140,15 @@ function webkits_details_shortcode($atts, $content = null)
 	{
 	    wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
+		wp_enqueue_style('lightslider-css', plugin_dir_url(__FILE__).('public/js/lightslider-master/src/css/lightslider.css'));
+
 		wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
 		wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
 		wp_enqueue_script('cluster', plugin_dir_url(__FILE__).'public/js/marker.js', array('jquery'), '', true);
+
+		wp_enqueue_script('lightslider', plugin_dir_url(__FILE__).'public/js/lightslider-master/src/js/lightslider.js', array('jquery'), '', true);
 
 		wp_enqueue_script('listings-detail', plugin_dir_url(__FILE__).'public/js/listing-details.js', array('jquery'), '', true);
 
@@ -4398,6 +4402,12 @@ function webkits_details_shortcode($atts, $content = null)
 		case 'pictures':
 
 			echo $listing->content->pictures;
+
+			break;
+
+        case 'light_slider':
+
+            echo $listing->content->pictures2;
 
 			break;
 
@@ -6910,11 +6920,22 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST['onlyshow'] = $atts['onlyshow'];
 
 			}
+			if(isset($atts['neighbourhood']) && $atts['neighbourhood'] != '')
+			{
 
+				$_POST['neighbourhood'] = $atts['neighbourhood'];
+
+			}
 			if(isset($atts['maxprice']))
 			{
 
 				$_POST['maxprice'] = $atts['maxprice'];
+
+			}
+			if(isset($atts['minprice']))
+			{
+
+				$_POST['minprice'] = $atts['minprice'];
 
 			}
 			if(isset($atts['minprice']))
