@@ -6,27 +6,75 @@
 
     color:black;
 }
+/* start calculator */
+.mort-div
+{
+    width: 100%;
+    display: flex;
+
+    position: relative;
+
+    padding-top: 10px;
+}
+.flex-column .mort_mhalf_right{
+
+    padding-left: 15px;
+
+}
+.mort_mhalf_right{
+
+    padding-left: 5px;
+    white-space: nowrap;
+
+}
+.amt-div .mort_mhalf_right, .amt-div .mhalf_left
+{
+    padding-left:0 !important;
+    padding-right:0 !important;
+}
+
+.mort-div .mort_mhalf_right input[type="search"]
+{
+    height: 20px;
+}
+.w-50{
+    width: 50% !important;
+}
+.d-block{
+    display:block;
+}
+.mort_mhalf_right select
+{
+    padding: 11px;
+}
+
+.amt-div{
+    padding: 15px 0;
+}
+/* end calculator */
 /* Start Light Slider */
 ul#lightSlider {
     list-style: none outside none;
     padding-left: 0;
     margin-bottom:0;
+
 }
 #lightSlider li {
     display: block;
     float: left;
     margin-right: 6px;
     cursor: pointer;
+    height: inherit;
 }
 #lightSlider img {
     display: block;
-    /* height: auto;*/
+    position: relative;
     max-width: 100%;
     width: auto;
-    height: 100%;
+    height: inherit;
     margin: auto;
 }
-#carousel-bounding-box{
+#carousel-bounding{
     width: 1024px;
 }
 
@@ -129,7 +177,7 @@ ul#lightSlider {
 {
     padding-left:10px;
 }
-li.col-sm-3.agentsbox img.img-responsive {
+li.col-sm-3.award-box img.img-responsive {
     max-height: 200px;
     width: auto;
     margin-left: auto;
@@ -139,7 +187,7 @@ li.col-sm-3.agentsbox img.img-responsive {
 }
 li.col-sm-3.agentsbox {
 
-    max-height: 400px;
+    max-height: 400px !important;
     overflow: hidden;
     padding: 3px;
     border: 1px solid #d2d2d2;
@@ -150,10 +198,10 @@ li.col-sm-3.agentsbox {
     background-color: #ffffff;
 }
 
-li.col-sm-3.agentsbox.listNavShow {
-    margin-top: 34px;
+li.col-sm-3.award-box.listNavShow {
+    margin-top: 34px !important;
 }
-li.col-sm-4.agentsbox img.img-responsive {
+li.col-sm-4.award-box img.img-responsive {
     max-height: 200px;
     width: auto;
     margin-left: auto;
@@ -161,7 +209,7 @@ li.col-sm-4.agentsbox img.img-responsive {
     position: relative;
     top: 10px;
 }
-li.col-sm-4.agentsbox {
+li.col-sm-4.award-box {
 
     max-height: 400px;
     overflow: hidden;
@@ -178,8 +226,8 @@ li.col-sm-4.agentsbox {
     margin:0 auto;
     padding-top: 10px;
 }
-li.col-sm-4.agentsbox.listNavShow {
-    margin-top: 34px;
+li.col-sm-4.award-box.listNavShow {
+    margin-top: 34px !important;
 }
 .join-live
 {
@@ -1094,8 +1142,21 @@ span.agentname {
 .detail-sec .empty-left i, .detail-sec .empty-left span{
     font-size: 20px !important;
 }
+.flex-column{
+    flex-direction: column;
+}
+
+.flex-column .mort_unit{
+    position: relative;
+    top: 25%;
+    padding-top:0;
+}
+.mort_unit{
+    padding-top: 10px;
+}
+
 @media only screen and (max-width: 1024px){
-    #carousel-bounding-box
+    #carousel-bounding
     {
         width :100%;
 
@@ -1112,6 +1173,11 @@ span.agentname {
     .grid-address{
         height:78px;
     }
+    li.col-sm-3.award-box{
+        margin: 10px 6px !important;
+    }
+
+
 }
 @media only screen and (max-width: 480px)
 {
@@ -1151,10 +1217,12 @@ span.agentname {
     #listings{
         margin: 0;
     }
-    li.col-sm-3.agentsbox{
-        width: 100%;
-        margin:10px 0;
+    li.col-sm-3.award-box{
+        width: 100% !important;
+        margin:10px 0 !important;
     }
+
+
 
 }
 
@@ -1167,8 +1235,8 @@ span.agentname {
 }
 @media only screen and (min-width: 768px)
 {
-    li.col-sm-3.agentsbox{
-        width: 30%;
+    li.col-sm-3.award-box{
+        width: 30% !important;
     }
 
 }

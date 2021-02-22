@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.58
+ * Version: 4.1.62
 
  * Author: Curious Projects
 

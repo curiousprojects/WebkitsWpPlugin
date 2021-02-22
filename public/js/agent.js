@@ -7,12 +7,12 @@ function addListing(marker) {
     if (marker.firstname) {
          if(jQuery.inArray("3", b) !== -1)
          {
-            var a_html = "<li class='col-sm-3 agentsbox' style='height:400px;'>";
+            var a_html = "<li class='col-sm-3 agentsbox award-box' style='height:400px;'>";
          }
          else{
               var a_html = "<li class='col-sm-3 agentsbox' style='height:290px;'>";
          }
-     
+
             a_html += "<a href='" + realurl + "/" + marker.aid + "/" + jQuery.trim(marker.firstname.toLowerCase()) + "-" + jQuery.trim(marker.lastname.toLowerCase()) + "'><div class=''><img class='img-responsive' src='https://curiouscloud.ca/agents/" + marker.photo + "' /><br />" + marker.firstname + " <span class='last-name'>" + marker.lastname + "</span><br /><small>" + marker.title + "</small></div>";
         if (marker.award_winner.length > 0) {
             a_html += '<div class="a_info">';

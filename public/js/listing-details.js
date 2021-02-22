@@ -5,7 +5,14 @@ var home_url;
 //var listing = "grid";
 //TEMP
 var IsFullView;
-viewd = listing;
+if(typeof listing !== "undefiened" )
+{
+    viewd = listing;
+}
+else{
+    viewd = "";
+}
+
 
 jQuery('.tooltip').tooltip('destroy')
 
