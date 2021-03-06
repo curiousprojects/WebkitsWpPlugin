@@ -11,10 +11,8 @@
 {
     width: 100%;
     display: flex;
-
     position: relative;
-
-    padding-top: 10px;
+    padding-top: 20px;
 }
 .flex-column .mort_mhalf_right{
 
@@ -37,19 +35,83 @@
 {
     height: 20px;
 }
+.flex-column{
+    flex-direction: column;
+}
+
+.flex-column .mort_unit{
+    position: relative;
+    top: 25%;
+    padding-top:0;
+}
+.mort_unit{
+    padding-top: 10px;
+}
+.calc-center{
+        text-align: center;
+}
+
+.res-clac .calc-center,.res-sm-clac .calc-center{
+    text-align: left !important;
+}
 .w-50{
     width: 50% !important;
 }
 .d-block{
     display:block;
 }
-.mort_mhalf_right select
+.flex-column .mort_mhalf_right select
 {
     padding: 11px;
 }
-
+.mort-div input, .mort-div select{
+    padding: 11px !important;
+}
+.clac .mhalf_left{
+    width: 24%;
+    margin-left:26%;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding-left: 15px;
+}
+.clac .mort_mhalf_right
+{
+   width: 22%;
+    margin-right:25%; 
+}
 .amt-div{
     padding: 15px 0;
+    
+}
+.res-clac .mhalf_left,.res-clac .mort_mhalf_right{
+    width: 100%;
+    padding-left:15px;
+}
+.res-md-clac{
+  width: 45%;
+  margin:auto;
+      
+}
+
+.res-sm-clac input[type="text"],.res-sm-clac select{
+     width: 60% !important;
+}
+.res-clac input[type="text"],.res-clac select
+{
+    width: 45% !important;
+}
+
+.res-md-clac .mhalf_left,.res-md-clac .mort_mhalf_right,.res-sm-clac .mhalf_left,.res-sm-clac .mort_mhalf_right{
+
+    padding-left:15px;
+}
+.offset-lg-3
+{
+    margin-left:26%;
+}
+.clac input[type="text"], .res-md-clac input[type="text"],.clac select, .res-md-clac select{
+    clear: both;
+width: 100% !important;
 }
 /* end calculator */
 /* Start Light Slider */
@@ -1142,18 +1204,7 @@ span.agentname {
 .detail-sec .empty-left i, .detail-sec .empty-left span{
     font-size: 20px !important;
 }
-.flex-column{
-    flex-direction: column;
-}
 
-.flex-column .mort_unit{
-    position: relative;
-    top: 25%;
-    padding-top:0;
-}
-.mort_unit{
-    padding-top: 10px;
-}
 
 @media only screen and (max-width: 1024px){
     #carousel-bounding
@@ -1165,6 +1216,7 @@ span.agentname {
         height: 50px;
     }
 }
+
 @media only screen and (max-width: 896px) {
 
     .grid-overlay{
@@ -1176,14 +1228,36 @@ span.agentname {
     li.col-sm-3.award-box{
         margin: 10px 6px !important;
     }
-
-
+    
+     .clac .mort_mhalf_right{
+        width: 62%;
+        margin-right: 14%;
+    }
+    .offset-lg-3{
+        margin-left: 18%;
+    }
+    .clac .mhalf_left {
+    width: 62%;
+    margin-left: 18%;
 }
+.res-clac input[type="text"],.res-clac select
+    {
+        width: 60% !important;
+    }
+ 
+.res-sm-clac input[type="text"],.res-sm-clac select
+    {
+        width: 100% !important;
+    }
+}
+
+
 @media only screen and (max-width: 480px)
 {
     .modal-width {
         width: auto;
     }
+   
 }
 @media only screen and (max-width: 414px) {
 
@@ -1221,8 +1295,11 @@ span.agentname {
         width: 100% !important;
         margin:10px 0 !important;
     }
-
-
+.res-sm-clac input[type="text"],.res-sm-clac select
+    {
+        width: 60% !important;
+    }
+    
 
 }
 

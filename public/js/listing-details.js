@@ -5,12 +5,12 @@ var home_url;
 //var listing = "grid";
 //TEMP
 var IsFullView;
-if(typeof listing !== "undefiened" )
+if(typeof listing !== "undefined" )
 {
     viewd = listing;
 }
 else{
-    viewd = "";
+   viewd = "grid";
 }
 
 

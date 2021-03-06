@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.62
+ * Version: 4.1.73
 
  * Author: Curious Projects
 
@@ -4129,7 +4129,7 @@ function webkits_details_shortcode($atts, $content = null)
 
 {
 
-	global $wp;
+	global $wp,$dbHost,$_SERVER;
 
 	$options   = get_option('webkits');
 
@@ -4347,10 +4347,35 @@ function webkits_details_shortcode($atts, $content = null)
 					}
 
 				}
-
+				echo $listing->content->address;
 			}
+			else{
+				if($_SESSION['listings'] == '')
+				{
+					echo '<div class="n-avaliable">Sorry, the listing you are looking for is no longer available.</div><div class="n-avaliable">Please check it out below more similar listing(s) or start new search for your desired home.
 
-			echo $listing->content->address;
+</div>';
+
+					$parts = explode("/", $_SERVER[HTTP_HOST].'/'.$_SERVER[REQUEST_URI]);
+
+					$cityname = $parts[count($parts) - 2];
+					$POST = array();
+					$POST['city'] = $cityname;
+					$link          = "similar/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+					$json          = wp_remote_post($dbHost.$link, array("body" => array("p" => $POST)));
+
+
+					$result = json_decode($json['body']);
+
+					$listings = $result;
+					$isSimilar = true;
+					require "inc/listing_page.php";
+
+
+				}
+            }
+
+
 
 			if(isset($options['webkits_crea_clientid']) && $options['webkits_crea_clientid'] != '')
 			{
@@ -4484,48 +4509,50 @@ function webkits_details_shortcode($atts, $content = null)
 			break;
 
 		case "calculator":
+			if($_SESSION['listings'] != '')
+			{
+				wp_enqueue_script('calculator', plugin_dir_url(__FILE__).'public/js/mortgage.js', '', '', true);
 
-			wp_enqueue_script('calculator', plugin_dir_url(__FILE__).'public/js/mortgage.js', '', '', true);
-
-			require("includes/details_mortgage.php");
-
+				require("includes/details_mortgage.php");
+			}
 			break;
 
 
 
 		case 'map':
-
-			wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
-
-			wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
-
-			wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
-
-			wp_enqueue_script('singlemap', plugin_dir_url(__FILE__).'public/js/singlemap.js', array('jquery'), '', true);
-
-			$options['webkits_map_zoom'] = isset($options['webkits_map_zoom'])?$options['webkits_map_zoom']:10;
-
-			if(isset($options['webkits_map_style']) && $options['webkits_map_style'] != '')
-
+			if($_SESSION['listings'] != '')
 			{
+				wp_enqueue_style('map', plugin_dir_url(__FILE__).('public/css/map.css'));
 
-				echo "<script>zoom = ".$options['webkits_map_zoom'].";lon = ".$listing->longitude.";lat = ".$listing->latitude.";styler = ".str_replace('\"', '"', $options['webkits_map_style'])."</script>";
+				wp_enqueue_script('mpce-gma-google-maps-api', 'https://maps.google.com/maps/api/js?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k', '', '', true);
 
-			}
+				wp_enqueue_script('gmap', plugin_dir_url(__FILE__).'public/js/map.js', array('jquery'), '', true);
 
-			else
+				wp_enqueue_script('singlemap', plugin_dir_url(__FILE__).'public/js/singlemap.js', array('jquery'), '', true);
 
-			{
+				$options['webkits_map_zoom'] = isset($options['webkits_map_zoom'])?$options['webkits_map_zoom']:10;
 
-				echo "<script>zoom = ".$options['webkits_map_zoom'].";lon = ".$listing->longitude.";lat = ".$listing->latitude.";styler = '';</script>";
+				if(isset($options['webkits_map_style']) && $options['webkits_map_style'] != '')
 
-			}
+				{
 
-			echo "<script>single = true;</script>";
+					echo "<script>zoom = ".$options['webkits_map_zoom'].";lon = ".$listing->longitude.";lat = ".$listing->latitude.";styler = ".str_replace('\"', '"', $options['webkits_map_style'])."</script>";
 
-			echo "<script>noCluster = true;</script>";
-			echo '<div id="neighbourhood-highlights" style="width:100%; background:white; margin-bottom:25px;height: 100%;"></div>';
-			echo '<script>
+				}
+
+				else
+
+				{
+
+					echo "<script>zoom = ".$options['webkits_map_zoom'].";lon = ".$listing->longitude.";lat = ".$listing->latitude.";styler = '';</script>";
+
+				}
+
+				echo "<script>single = true;</script>";
+
+				echo "<script>noCluster = true;</script>";
+				echo '<div id="neighbourhood-highlights" style="width:100%; background:white; margin-bottom:25px;height: 100%;"></div>';
+				echo '<script>
   function initSDK() {
     var hq = new HQ.NeighbourhoodHighlights({
       el: "neighbourhood-highlights",
@@ -4533,13 +4560,13 @@ function webkits_details_shortcode($atts, $content = null)
     });
   }
 </script>';
-			echo '<script src="https://sdk.hoodq.com/hq-sdk-v2.js?key=yAJE6g4B6481wZxQG5We13ezDum4uiOB4UJORnkz&cb=initSDK&libs=ah"></script>';
-			//require("includes/listing_map.php");
-			//require("includes/listing_local_logic_map.php");
-			$iframe = "<iframe src='https://maps.google.com/maps?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k&q=".$listing->latitude.",".$listing->longitude."&output=embed' scrolling='no' width='100%' height='500' frameborder='0'></iframe>";
-			echo $iframe;
+				echo '<script src="https://sdk.hoodq.com/hq-sdk-v2.js?key=yAJE6g4B6481wZxQG5We13ezDum4uiOB4UJORnkz&cb=initSDK&libs=ah"></script>';
+				//require("includes/listing_map.php");
+				//require("includes/listing_local_logic_map.php");
+				$iframe = "<iframe src='https://maps.google.com/maps?key=AIzaSyDZ9XDDXc0IBIOPhc3Hw1TaXJEDR2LpU3k&q=".$listing->latitude.",".$listing->longitude."&output=embed' scrolling='no' width='100%' height='500' frameborder='0'></iframe>";
+				echo $iframe;
 
-
+			}
 			break;
 
 		case 'locallogicmap':
@@ -5976,7 +6003,7 @@ function webkits_register()
 
 	$res = json_decode($json['body']);
 
-	if($res->status == 'success')
+	if($res->status == 'suc')
 	{
 		$subject = get_bloginfo( 'name' ) . ' Lead : New User Registration ';
 
@@ -5996,7 +6023,7 @@ function webkits_register()
 		$mail = wp_mail($_POST['user_email'],$user_subject,$user_mail_body,$headers);
 	}
 
-	wp_send_json( $res );
+	wp_send_json( $json['body'] );
 
 }
 function webkits_user_activation($account)
@@ -7102,6 +7129,12 @@ function webkits_listings_sc($atts, $content = null)
 					$_POST['live-search']  = $_SESSION['webkit-search']['live-search'];
 				}
 
+				if(isset($_SESSION['webkit-search']['section-search']) && $_SESSION['webkit-search']['section-search'] == 'true')
+				{
+					$_POST['section-search'] = $_SESSION['webkit-search']['section-search'] ;
+				}
+
+
 
 				$CurrentPage               = 1;
 
@@ -7379,7 +7412,16 @@ function webkits_listings_sc($atts, $content = null)
 				$_POST = $_SESSION['webkit-search'];
 
 			}
+			if(isset($_POST['live-search']))
+			{
+				if(isset($atts['all_filter']) && $atts['all_filter'] == 'true')
+				{
+					$_SESSION['webkit-search']['section-search'] = 'true';
+				}
 
+
+
+			}
 
 
 			if(isset($_POST['input_open_house']) && $_POST['input_open_house'] == 1)
