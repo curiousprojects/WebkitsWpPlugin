@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.73
+ * Version: 4.1.74
 
  * Author: Curious Projects
 
@@ -7163,7 +7163,13 @@ function webkits_listings_sc($atts, $content = null)
 			{
 
 				$_POST = $_SESSION['webkit-search'];
+				if(isset($_GET['listing-page']) && is_numeric($_GET['listing-page']))
+				{
 
+					$_POST['offset'] = $listingPerPage * ($_GET['listing-page'] - 1);
+					$CurrentPage = $_GET['listing-page'];
+
+				}
 			}
 
 
