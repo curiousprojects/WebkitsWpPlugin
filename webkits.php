@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.74
+ * Version: 4.1.78
 
  * Author: Curious Projects
 
@@ -2801,6 +2801,9 @@ add_action('wp_ajax_webkits_blog', 'every_three_minutes_event_func');
 add_action('wp_ajax_nopriv_webkits_register', 'webkits_register');
 add_action('wp_ajax_webkits_register', 'webkits_register');
 
+add_action('wp_ajax_nopriv_webkits_contact', 'webkits_contact');
+add_action('wp_ajax_webkits_contact', 'webkits_contact');
+
 add_action('wp_ajax_nopriv_webkits_user_activation', 'webkits_user_activation');
 add_action('wp_ajax_webkits_user_activation', 'webkits_user_activation');
 
@@ -4645,7 +4648,53 @@ function webkits_details_shortcode($atts, $content = null)
 
 
 
+function webkits_contact()
+{
+	global $wp,$dbHost,$crawler;
+	$options                             = get_option('webkits');
+	$link = "firm/".$options['webkits_site_type']."/".$options['webkits_list_id'];
 
+
+	$response = array();
+	$json_feed_url = $dbHost.$link;
+	$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+	$res = json_decode($json['body']);
+
+	$mail_body = '';
+
+	$_POST['user_subject'] = 'Contact Inquiry from '.$_POST['user_email'];
+	require('includes/contact_mail.php');
+
+	$subject = 	$_POST['user_subject'];
+
+	$headers = "MIME-Version: 1.0"."\r\n";
+	$headers .= "Content-type:text/html;charset=UTF-8"."\r\n";
+
+
+
+	 $email = $res->broker->email;
+	//$email = 'bill@curiousprojects.com';
+	// $email = 'test.thatsend@gmail.com';
+
+	if($email != '')
+	{
+		$mail = wp_mail($email, $subject, $mail_body, $headers);
+
+		$response['status'] = 'suc';
+		$response['msg']  = 'Thank you for contacting us. We will get back to you soon.';
+
+	}
+	else{
+		$response['status'] = 'error';
+		$response['msg']  = 'Something Went Wrong! Please try again later.';
+	}
+
+
+
+	wp_send_json( json_encode($response) );
+
+}
 
 function webkits_agent_shortcode($atts, $content = null)
 
@@ -4726,6 +4775,11 @@ function webkits_agent_shortcode($atts, $content = null)
 		wp_enqueue_script('fancybox_mdi', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-media.js', array('jquery'), '', false);
 
 	}
+	if($args['section'] == "contact"){
+		wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
+
+		wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
+	}
 
 
 
@@ -4736,7 +4790,38 @@ function webkits_agent_shortcode($atts, $content = null)
 	switch($args['section'])
 
 	{
+		case 'contact':
+			$broker = array();
+			if($options['webkits_site_type'] == 'broker')
+			{
+				$broker = explode('|',$options['webkits_list_id']);
+			}
+            elseif($options['webkits_site_type'] == 'both'){
+				$b_list = explode('|',$options['webkits_list_id']);
 
+
+				foreach($b_list as $b)
+				{
+					if(strpos($b,'/') != false)
+					{
+						$broker[] = explode('/',$b)[0];
+					}
+					else
+					{
+						$broker[] = $b;
+					}
+				}
+
+			}
+
+
+			if(count($broker) > 0 && in_array('3',$broker))
+			{
+				echo "<div class='email m-t-10'><a href='javaScript:void(0)' class='modal-contact'>e-Mail ".$agent->agent->firstname." ". $agent->agent->lastname."</a></div>";
+				include("includes/agent_contact.php");
+			}
+
+        break;
 		case 'mini':
 
 			echo $newMini;

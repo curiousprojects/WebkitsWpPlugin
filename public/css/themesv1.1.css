@@ -1,3 +1,13 @@
+/* agent contact*/
+#frmContact .form-control::placeholder
+{
+    color: #666;
+}
+.pt-0{
+    padding-top:0 !important;
+}
+/*agent contact*/
+
 /* Grid Slider */
 .a_info{
     bottom: 10px;position: absolute;left: 0;right: 0;
@@ -77,11 +87,11 @@
 .clac .mort_mhalf_right
 {
    width: 22%;
-    margin-right:25%; 
+    margin-right:25%;
 }
 .amt-div{
     padding: 15px 0;
-    
+
 }
 .res-clac .mhalf_left,.res-clac .mort_mhalf_right{
     width: 100%;
@@ -90,7 +100,7 @@
 .res-md-clac{
   width: 45%;
   margin:auto;
-      
+
 }
 
 .res-sm-clac input[type="text"],.res-sm-clac select{
@@ -247,7 +257,7 @@ li.col-sm-3.award-box img.img-responsive {
     position: relative;
     top: 10px;
 }
-li.col-sm-3.agentsbox {
+li.col-sm-3.award-box {
 
     max-height: 400px !important;
     overflow: hidden;
@@ -270,6 +280,35 @@ li.col-sm-4.award-box img.img-responsive {
     margin-right: auto;
     position: relative;
     top: 10px;
+}
+li.col-sm-3.agentsbox {
+    width: 195px;
+    max-height: 272px;
+    overflow: hidden;
+    padding: 3px;
+    border: 1px solid #d2d2d2;
+    margin: 10px;
+    text-align: center;
+    font-family: lato,arial,sans-serif;
+    box-shadow: 3px 3px 3px #efefef;
+    background-color: #ffffff;
+}
+li.col-sm-3.agentsbox img.img-responsive {
+    max-height: 163px;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    top: 10px;
+}
+
+
+li.col-sm-3.agentsbox.listNavShow {
+    margin-top: 34px;
+}
+
+li.col-sm-3.award-box.listNavShow {
+    margin-top: 34px !important;
 }
 li.col-sm-4.award-box {
 
@@ -1228,7 +1267,7 @@ span.agentname {
     li.col-sm-3.award-box{
         margin: 10px 6px !important;
     }
-    
+
      .clac .mort_mhalf_right{
         width: 62%;
         margin-right: 14%;
@@ -1244,7 +1283,7 @@ span.agentname {
     {
         width: 60% !important;
     }
- 
+
 .res-sm-clac input[type="text"],.res-sm-clac select
     {
         width: 100% !important;
@@ -1257,7 +1296,7 @@ span.agentname {
     .modal-width {
         width: auto;
     }
-   
+
 }
 @media only screen and (max-width: 414px) {
 
@@ -1299,7 +1338,7 @@ span.agentname {
     {
         width: 60% !important;
     }
-    
+
 
 }
 
