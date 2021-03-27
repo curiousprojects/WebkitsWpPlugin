@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.78
+ * Version: 4.1.80
 
  * Author: Curious Projects
 
@@ -4785,7 +4785,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 	ob_start();
 
-	$newMini = str_replace('<a ', '<a target="_blank" ', $agent->agent->list);
+	$newMini = $agent->agent->list;
 
 	switch($args['section'])
 

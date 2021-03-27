@@ -1193,7 +1193,7 @@ span.agentname {
 #listings_pagination, .ln-letters,.listNavShow,.grid2,.grid1{
     font-size: initial !important;
 }
-#modal-popup-login,#modal-popup-signup,#modal-popup-forgot,#modal-popup-success
+#modal-popup-login,#modal-popup-signup,#modal-popup-forgot,#modal-popup-success,#modal-popup-contact
 {
     z-index:999999 !important;
 }
