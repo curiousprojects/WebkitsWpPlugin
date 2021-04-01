@@ -1,8 +1,32 @@
-<?php $mail_body .=  '<html>
+<?php $mail_body .=  nl2br("New Contact Request"."\n\n ");
+
+
+$mail_body.= nl2br("Name: ".$_POST['user_name']."\n\n Email: ".$_POST['user_email']."\n\n ");
+
+
+if( isset($_POST['user_phone']) && $_POST['user_phone'] != ''){
+
+	$mail_body.= nl2br("Phone: ".$_POST['user_phone']."\n\n");
+}
+if( isset($_POST['user_subject']) && $_POST['user_subject'] != ''){
+
+	$mail_body.= nl2br("Subject: ".$_POST['user_subject']."\n\n");
+}
+if( isset($_POST['user_message']) && $_POST['user_message'] != ''){
+
+	$mail_body.= nl2br("Message: ".$_POST['user_message']."\n\n");
+}
+
+if( isset($_POST['agent_email']) && $_POST['agent_email'] != ''){
+	$mail_body.= nl2br("x_for: ".$_POST['agent_email']."\n\n");
+}
+
+
+/*$mail_body .=  '<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head><body>
-	
+
 		<table width="394" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
 			<tr>
 				<td width="350" height="35"></td>
@@ -55,7 +79,6 @@ $mail_body .= '<tr>
 				<td width="350" height="35"></td>
 			</tr>
 		</table>
-	</body></html>';
-
+	</body></html>';*/
 
 ?>

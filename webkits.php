@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.80
+ * Version: 4.1.83
 
  * Author: Curious Projects
 
@@ -4669,7 +4669,7 @@ function webkits_contact()
 	$subject = 	$_POST['user_subject'];
 
 	$headers = "MIME-Version: 1.0"."\r\n";
-	$headers .= "Content-type:text/html;charset=UTF-8"."\r\n";
+	$headers .= "charset=UTF-8"."\r\n";
 
 
 
@@ -4775,11 +4775,7 @@ function webkits_agent_shortcode($atts, $content = null)
 		wp_enqueue_script('fancybox_mdi', plugin_dir_url(__FILE__).'public/js/fancybox-2.1.7/source/helpers/jquery.fancybox-media.js', array('jquery'), '', false);
 
 	}
-	if($args['section'] == "contact"){
-		wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 
-		wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
-	}
 
 
 
@@ -4818,7 +4814,7 @@ function webkits_agent_shortcode($atts, $content = null)
 			if(count($broker) > 0 && in_array('3',$broker))
 			{
 				echo "<div class='email m-t-10'><a href='javaScript:void(0)' class='modal-contact'>e-Mail ".$agent->agent->firstname." ". $agent->agent->lastname."</a></div>";
-				include("includes/agent_contact.php");
+
 			}
 
         break;
@@ -4971,9 +4967,10 @@ function webkits_agent_shortcode($atts, $content = null)
 
 	}
 
+	wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 
-
-
+	wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
+	include("includes/agent_contact.php");
 
 	$content = ob_get_clean();
 
@@ -6003,7 +6000,7 @@ function webkits_styles()
 
 	wp_enqueue_style('bootstrap-theme', plugin_dir_url(__FILE__).('public/css/bootstrap-theme.min.css'));
 
-	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.3'));
+	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.4'));
 
 	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'));
 
