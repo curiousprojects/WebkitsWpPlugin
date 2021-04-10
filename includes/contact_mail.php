@@ -1,27 +1,69 @@
-<?php $mail_body .=  nl2br("New Contact Request"."\n\n ");
+<?php
+
+if($is_listing == true)
+{
+	$mail_body .=  "New Contact Request For ".$_POST['user_address']."\r\n"."\r\n";
 
 
-$mail_body.= nl2br("Name: ".$_POST['user_name']."\n\n Email: ".$_POST['user_email']."\n\n ");
+	$mail_body.= 'Name: '.$_POST["user_name"]." \r\n\r\n";
 
+	$mail_body.= 'Email: '.$_POST["user_email"]." \r\n\r\n";
+	if( isset($_POST['user_phone']) && $_POST['user_phone'] != ''){
 
-if( isset($_POST['user_phone']) && $_POST['user_phone'] != ''){
+		$mail_body.= "Phone: ".$_POST['user_phone']." \r\n\r\n";
+	}
+	if( isset($_POST['user_address']) && $_POST['user_address'] != ''){
 
-	$mail_body.= nl2br("Phone: ".$_POST['user_phone']."\n\n");
+		$mail_body.= "Address: ".$_POST['user_address']." \r\n\r\n";
+	}
+	if( isset($_POST['user_subject']) && $_POST['user_subject'] != ''){
+
+		$mail_body.= "Subject: ".$_POST['user_subject']." \r\n\r\n";
+	}
+	if( isset($_POST['user_message']) && $_POST['user_message'] != ''){
+
+		$mail_body.= "Message: ".$_POST['user_message']." \r\n\r\n";
+	}
+
+	if( isset($_POST['agent_email']) && $_POST['agent_email'] != '' && isset($_POST['agent_broker']) && $_POST['agent_broker'] == 3){
+		$mail_body.= "x_for: ".$_POST['agent_email'];
+	}
+	else{
+		$mail_body.= "x_for: ";
+	}
 }
-if( isset($_POST['user_subject']) && $_POST['user_subject'] != ''){
+else
+{
 
-	$mail_body.= nl2br("Subject: ".$_POST['user_subject']."\n\n");
+	$mail_body .= "New Contact Request "."\r\n"."\r\n";
+
+
+	$mail_body .= 'Name: '.$_POST["user_name"]." \r\n\r\n";
+
+	$mail_body .= 'Email: '.$_POST["user_email"]." \r\n\r\n";
+	if(isset($_POST['user_phone']) && $_POST['user_phone'] != '')
+	{
+
+		$mail_body .= "Phone: ".$_POST['user_phone']." \r\n\r\n";
+	}
+	if(isset($_POST['user_subject']) && $_POST['user_subject'] != '')
+	{
+
+		$mail_body .= "Subject: ".$_POST['user_subject']." \r\n\r\n";
+	}
+	if(isset($_POST['user_message']) && $_POST['user_message'] != '')
+	{
+
+		$mail_body .= "Message: ".$_POST['user_message']." \r\n\r\n";
+	}
+
+	if(isset($_POST['agent_email']) && $_POST['agent_email'] != '')
+	{
+		$mail_body .= "x_for: ".$_POST['agent_email']." \r\n\r\n";
+	}
+
+	$mail_body .= "Team Website Email";
 }
-if( isset($_POST['user_message']) && $_POST['user_message'] != ''){
-
-	$mail_body.= nl2br("Message: ".$_POST['user_message']."\n\n");
-}
-
-if( isset($_POST['agent_email']) && $_POST['agent_email'] != ''){
-	$mail_body.= nl2br("x_for: ".$_POST['agent_email']."\n\n");
-}
-
-
 /*$mail_body .=  '<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

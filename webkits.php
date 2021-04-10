@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.83
+ * Version: 4.1.87
 
  * Author: Curious Projects
 
@@ -2804,6 +2804,9 @@ add_action('wp_ajax_webkits_register', 'webkits_register');
 add_action('wp_ajax_nopriv_webkits_contact', 'webkits_contact');
 add_action('wp_ajax_webkits_contact', 'webkits_contact');
 
+add_action('wp_ajax_nopriv_webkits_listing', 'webkits_listing');
+add_action('wp_ajax_webkits_listing', 'webkits_listing');
+
 add_action('wp_ajax_nopriv_webkits_user_activation', 'webkits_user_activation');
 add_action('wp_ajax_webkits_user_activation', 'webkits_user_activation');
 
@@ -4320,6 +4323,16 @@ function webkits_details_shortcode($atts, $content = null)
 	switch($args['section'])
 
 	{
+		case 'email':
+            if(isset($listing->content->A_Name) && $listing->content->A_Name->email != '')
+            {
+	            include("includes/contact_form.php");
+	            wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
+
+            }
+
+
+
 
 		case 'address':
 
@@ -4665,11 +4678,11 @@ function webkits_contact()
 
 	$_POST['user_subject'] = 'Contact Inquiry from '.$_POST['user_email'];
 	require('includes/contact_mail.php');
-
+	remove_filter( 'wp_mail_content_type', 'set_content_type' );
 	$subject = 	$_POST['user_subject'];
 
 	$headers = "MIME-Version: 1.0"."\r\n";
-	$headers .= "charset=UTF-8"."\r\n";
+	$headers .= "Content-type:text/plain;charset=UTF-8"."\r\n";
 
 
 
@@ -6000,9 +6013,10 @@ function webkits_styles()
 
 	wp_enqueue_style('bootstrap-theme', plugin_dir_url(__FILE__).('public/css/bootstrap-theme.min.css'));
 
-	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.4'));
+	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.5'));
 
 	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'));
+	wp_enqueue_style('select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css');
 
 }
 
@@ -6019,6 +6033,7 @@ function webkits_js()
 
 	wp_enqueue_script('jquery-migrate', plugin_dir_url(__FILE__).'public/js/jquery-migrate.js', '', false);
 	wp_enqueue_script('bootstrapjs', plugin_dir_url(__FILE__).'public/js/bootstrap.min.js', array('jquery'), '', false);
+	wp_enqueue_script('select2-js', "https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js", array('jquery'), '', false);
 
 }
 
@@ -6106,6 +6121,78 @@ function webkits_register()
 	}
 
 	wp_send_json( $json['body'] );
+
+}
+function webkits_listing()
+{
+	global $wp,$dbHost,$crawler;
+	$options                             = get_option('webkits');
+
+	if(isset($_POST['g-recaptcha-response']) && $_POST['g-recaptcha-response'] != '')
+	{
+		$secretKey = $options['webkits_google_secret_key'];
+
+		$url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secretKey).'&response='.urlencode($_POST['g-recaptcha-response']);
+		$verifyResponse = file_get_contents($url);
+		$responseData = json_decode($verifyResponse);
+		if(($responseData->success == true && $responseData->score >= 0.5))
+		{
+
+			$link = "firm/".$options['webkits_site_type']."/".$options['webkits_list_id'];
+
+
+			$response = array();
+			$json_feed_url = $dbHost.$link;
+			$json          = wp_remote_post($json_feed_url, array("body" => array("p" => $_POST)));
+
+			$res = json_decode($json['body']);
+
+			$mail_body = '';
+			$is_listing = true;
+			$_POST['user_subject'] = 'Contact Inquiry from '.$_POST['user_email'];
+			require('includes/contact_mail.php');
+			remove_filter( 'wp_mail_content_type', 'set_content_type' );
+			$subject = 	$_POST['user_subject'];
+
+			$headers = "MIME-Version: 1.0"."\r\n";
+			$headers .= "Content-type:text/plain;charset=UTF-8"."\r\n";
+
+
+
+			$email = $res->broker->email;
+			//$email = 'bill@curiousprojects.com';
+			//	$email = 'test.thatsend@gmail.com';
+
+			if($email != '')
+			{
+				$mail = wp_mail($email, $subject, $mail_body, $headers);
+
+				$response['status'] = 'suc';
+				$response['msg']  = 'Thank you for contacting us. We will get back to you soon.';
+
+			}
+			else{
+				$response['status'] = 'error';
+				$response['msg']  = 'Something Went Wrong! Please try again later.';
+			}
+		}
+		else{
+			$response['status'] = 'error';
+			$response['msg']  = 'Verification Failed! Please try again later.';
+		}
+	}
+	else{
+		$response['status'] = 'error';
+		$response['msg']  = 'Something Went Wrong! Please try again later.';
+	}
+
+
+
+
+
+
+
+	wp_send_json( json_encode($response) );
 
 }
 function webkits_user_activation($account)

@@ -1,4 +1,11 @@
 /* agent contact*/
+.w-20
+{
+    width:20% !important;
+}
+#frmListing input[type="text"]{
+    padding: 0.75em !important;
+}
 #frmContact .form-control::placeholder
 {
     color: #666;
@@ -899,6 +906,17 @@ label.btn {
 }
 .success{
     color: green;
+}
+.modal .success{
+    font-size: 20px;
+}
+#contact-success
+{
+    font-size: 14px !important;
+}
+#frmListing .f-20
+{
+    font-size:20px !important;
 }
 .text-red{
     color: red !important;
