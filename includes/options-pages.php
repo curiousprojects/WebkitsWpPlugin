@@ -272,6 +272,21 @@ $authors = get_users();
                     <input id="datepicker" name="webkits_blog_time" type="text" value="<?php echo $webkits_blog_time; ?>"/>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2"><hr/></td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_google_site_key">Google reCaptcha Site Key<br/></label></th>
+                <td>
+                    <input name="webkits_google_site_key" type="text" value="<?php echo $webkits_google_site_key; ?>"/>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="webkits_google_secret_key">Google reCaptcha Secret Key<br/></label></th>
+                <td>
+                    <input name="webkits_google_secret_key" type="text" value="<?php echo $webkits_google_secret_key; ?>"/>
+                </td>
+            </tr>
             </tbody>
         </table>
 

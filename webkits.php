@@ -8,7 +8,7 @@
 
  * Description: Search and Display Real Estate Listings
 
- * Version: 4.1.87
+ * Version: 4.1.94
 
  * Author: Curious Projects
 
@@ -4324,16 +4324,10 @@ function webkits_details_shortcode($atts, $content = null)
 
 	{
 		case 'email':
-            if(isset($listing->content->A_Name) && $listing->content->A_Name->email != '')
-            {
+
 	            include("includes/contact_form.php");
-	            wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
-
-            }
-
-
-
-
+	            wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '7.2', false);
+        break;
 		case 'address':
 
 			if(isset($_SESSION['listings']))
@@ -4982,7 +4976,7 @@ function webkits_agent_shortcode($atts, $content = null)
 
 	wp_enqueue_script('jquery-v', plugin_dir_url(__FILE__).('public/js/jquery-validation-1.16.0/dist/jquery.validate.js'));
 
-	wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '', false);
+	wp_enqueue_script('contact_js', plugin_dir_url(__FILE__).'public/js/contact.js', array('jquery'), '7.2', false);
 	include("includes/agent_contact.php");
 
 	$content = ob_get_clean();
@@ -5087,6 +5081,8 @@ function webkits_options()
 			$options['webkits_blog_website']  = $_POST['webkits_blog_website'];
 			$options['webkits_blog_time']  = $_POST['webkits_blog_time'];
 			$options['webkits_blog_author']  = $_POST['webkits_blog_author'];
+			$options['webkits_google_site_key']  = $_POST['webkits_google_site_key'];
+			$options['webkits_google_secret_key']  = $_POST['webkits_google_secret_key'];
 			update_option('webkits', $options);
 
 
@@ -5168,6 +5164,8 @@ function webkits_options()
 		$webkits_blog_website      = (isset($options['webkits_blog_website']))?$options['webkits_blog_website']:"";
 		$webkits_blog_time      = (isset($options['webkits_blog_time']))?$options['webkits_blog_time']:"";
 		$webkits_blog_author      = (isset($options['webkits_blog_author']))?$options['webkits_blog_author']:"";
+		$webkits_google_site_key      = (isset($options['webkits_google_site_key']))?$options['webkits_google_site_key']:"";
+		$webkits_google_secret_key      = (isset($options['webkits_google_secret_key']))?$options['webkits_google_secret_key']:"";
 	}
 
 	$pages = get_pages();
@@ -6013,7 +6011,7 @@ function webkits_styles()
 
 	wp_enqueue_style('bootstrap-theme', plugin_dir_url(__FILE__).('public/css/bootstrap-theme.min.css'));
 
-	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.5'));
+	wp_enqueue_style('dd-theme', plugin_dir_url(__FILE__).('public/css/themesv1.1.css?v=1.7'));
 
 	wp_enqueue_style('fa', ('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'));
 	wp_enqueue_style('select2-css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css');
@@ -6135,7 +6133,7 @@ function webkits_listing()
 		$url = 'https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secretKey).'&response='.urlencode($_POST['g-recaptcha-response']);
 		$verifyResponse = file_get_contents($url);
 		$responseData = json_decode($verifyResponse);
-		if(($responseData->success == true && $responseData->score >= 0.5))
+		if(($responseData->success == true ))
 		{
 
 			$link = "firm/".$options['webkits_site_type']."/".$options['webkits_list_id'];

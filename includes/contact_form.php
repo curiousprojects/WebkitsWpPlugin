@@ -34,6 +34,10 @@
 			<div id="contact-error" role="alert" class="error f-20 text-center"></div>
 			<div id="contact-success" role="alert" class="success f-20 text-center"></div>
 		</div>
+        <div id='recaptcha' class="g-recaptcha"
+             data-sitekey="<?php echo $options['webkits_google_site_key'] ?>"
+             data-callback="submit_form"
+             data-size="invisible"></div>
 		<div class="col-md-12 col-sm-12 col-xs-12 form-group center text-center">
 			<button type="submit" class="btn btn-danger w-20 btn-login btn-reg"> Submit </button>
 		</div>

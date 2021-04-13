@@ -11,11 +11,8 @@
 			</div>
 			<div class="modal-body pt-0">
 				<form id="frmContact" method="post" role="form">
-					<div class="form-group">
-						<div id="contact-error" role="alert" class="error"></div>
-						<div id="contact-success" role="alert" class="success"></div>
-					</div>
-					<div class="row">
+
+					<div class="row ">
 
 						<div class="col-md-12 col-sm-12 form-group">
 							<input type="text" class="form-control required" name="user_name" id="user_name" data-msg-required="Please enter your name" placeholder="First and Last Name">
@@ -40,7 +37,10 @@
 
 
 						</div>
-    
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <div id="contact-error" role="alert" class="error f-20 text-center"></div>
+                            <div id="contact-success" role="alert" class="success f-20 text-center"></div>
+                        </div>
 					</div>
 				</form>
 			</div>

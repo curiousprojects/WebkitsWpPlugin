@@ -46,24 +46,13 @@ function contact()
     }
 
     if(jQuery("#frmListing").length) {
+
+
         jQuery("#frmListing").validate({
 
             submitHandler: function (form) {
-                jQuery("#frmListing button[type=submit]").attr("disabled", "disabled");
+                grecaptcha.execute();
 
-                var param = jQuery("#frmListing").serializeArray();
-                if(typeof grecaptcha != 'undefined')
-                {
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute(webkits_google_site_key, {action: 'submit'}).then(function(token) {
-
-                            param.push({"name":"g-recaptcha-response","value":token});
-                        });
-                    });
-                }
-                param.push({"name":"action","value":"webkits_listing"});
-
-                setTimeout(function(){ ajax_listing(ajaxurl,param); }, 1000);
 
             }
         });
@@ -94,4 +83,14 @@ function ajax_listing(ajaxurl,param)
 
     });
 
+}
+function submit_form(token)
+{
+    jQuery("#frmListing button[type=submit]").attr("disabled", "disabled");
+
+    var param = jQuery("#frmListing").serializeArray();
+
+    param.push({"name":"action","value":"webkits_listing"});
+
+    setTimeout(function(){ ajax_listing(ajaxurl,param); }, 1000);
 }

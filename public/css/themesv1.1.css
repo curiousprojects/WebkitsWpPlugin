@@ -219,7 +219,9 @@ ul#lightSlider {
     position:relative;
 }
 /* */
-
+.m-t-10{
+    margin-top: 10px !important;
+}
 .agentmini{
 
     max-height: 450px;
@@ -910,10 +912,7 @@ label.btn {
 .modal .success{
     font-size: 20px;
 }
-#contact-success
-{
-    font-size: 14px !important;
-}
+
 #frmListing .f-20
 {
     font-size:20px !important;
