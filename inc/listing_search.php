@@ -1,4 +1,4 @@
-<form id="search" class="search-listing searcharrow" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo get_post($options['webkits_listings_page'])->guid;}?>">
+<form id="search" class="search-listing searcharrow" method="post" action="<?php if (isset($atts['redirect']) && $atts['redirect'] ==1 ){ echo str_replace('http://','https://',get_post($options['webkits_listings_page'])->guid);}?>">
 
 	<input name="wk-advanced" id="advancedValue" value="<?php if (isset($_POST['advanced'])) echo $_POST['advanced']; else echo 0; ?>"
 	    type="hidden">
@@ -14,22 +14,65 @@
 			<select  class="form-control search-select " placeholder="" name="wk-input_property_type">
 				<?php $options = get_option('webkits'); ?>
 				<?php $bcAgent = isset($options['webkits_bc_agent']) ? $options['webkits_bc_agent'] : 0; ?>
-				<option value="0" <?php if ($input_property_type==0 ) echo "selected"; ?> class="text">Property Type</option>
-				<option value="1" <?php if ($input_property_type==1 ) echo "selected"; ?> class="text">Homes for Sale</option>
-				<option value="2" <?php if ($input_property_type==2 ) echo "selected"; ?> class="text">Carriage Trade</option>
-				<option value="3" <?php if ($input_property_type==3 ) echo "selected"; ?> class="text">Commercial</option>
-				<option value="4" <?php if ($input_property_type==4 ) echo "selected"; ?> class="text">Farm</option>
-				<option value="5" <?php if ($input_property_type==5 ) echo "selected"; ?> class="text">Lot</option>
-				<option value="6" <?php if ($input_property_type==6 ) echo "selected"; ?> class="text">
+				<option value="0" <?php if ($input_property_type==0 ) echo "selected"; ?> class="text ptype-all">Property Type</option>
+				<option value="1" <?php if ($input_property_type==1 ) echo "selected"; ?> class="text ptype-homes">Homes for Sale</option>
+				<option value="2" <?php if ($input_property_type==2 ) echo "selected"; ?> class="text ptype-carriage">Carriage Trade</option>
+				<option value="3" <?php if ($input_property_type==3 ) echo "selected"; ?> class="text ptype-commercial">Commercial</option>
+				<option value="4" <?php if ($input_property_type==4 ) echo "selected"; ?> class="text ptype-farm">Farm</option>
+				<option value="5" <?php if ($input_property_type==5 ) echo "selected"; ?> class="text ptype-lot">Lot</option>
+				<option value="6" <?php if ($input_property_type==6 ) echo "selected"; ?> class="text ptype-condo">
 					<?php echo ($bcAgent == 1 ? 'Strata' : 'Condo'); ?>
 				</option>
-				<option value="7" <?php if ($input_property_type==7 ) echo "selected"; ?> class="text">Multi-family</option>
-				<option value="8" <?php if ($input_property_type==8 ) echo "selected"; ?> class="text">Recreational</option>
-				<option value="9" <?php if ($input_property_type==9 ) echo "selected"; ?> class="text">Exclusive</option>
-				<option value="10" <?php if ($input_property_type==10 ) echo "selected"; ?> class="text">Mobile</option>
+				<option value="7" <?php if ($input_property_type==7 ) echo "selected"; ?> class="text ptype-multi">Multi-family</option>
+				<option value="8" <?php if ($input_property_type==8 ) echo "selected"; ?> class="text ptype-rece">Recreational</option>
+				<option value="9" <?php if ($input_property_type==9 ) echo "selected"; ?> class="text ptype-exe">Exclusive</option>
+				<option value="10" <?php if ($input_property_type==10 ) echo "selected"; ?> class="text ptype-mobile">Mobile</option>
 			</select>
 		</div>
 	</div>
+
+    <div class="flexible-div width-element" id="building_type">
+        <div class="search-select-wrap">
+			<?php $input_building_type = (isset($_POST['input_building_type']) ? $_POST['input_building_type'] : '');
+
+
+			$building_type = array(
+				'' => 'Building Type',
+				'Apartment' => 'Apartment',
+				'Commercial Mix' => 'Commercial Mix',
+				'Duplex' => 'Duplex',
+				'Fourplex' => 'Fourplex',
+				'Garden Home' => 'Garden Home',
+				'Manufactured Home' => 'Manufactured Home',
+				'Mobile Home' => 'Mobile Home',
+				'Multi-Family' => 'Multi-Family',
+				'Multi-Tenant Industrial' => 'Multi-Tenant Industrial',
+				'Offices' => 'Offices',
+				'Parking' => 'Parking',
+				'Recreational' => 'Recreational',
+				'Residential Commercial Mix' => 'Residential Commercial Mix',
+				'Retail' => 'Retail',
+				'Row / Townhouse' => 'Row / Townhouse',
+				'Special Purpose' => 'Special Purpose',
+				'Triplex' => 'Triplex',
+				'Warehouse' => 'Warehouse',
+			);
+
+			?>
+			<?php $options = get_option('webkits'); ?>
+            <select class="form-control search-select"  name="wk-input_building_type">
+
+				<?php
+
+				foreach($building_type as $key => $building)
+				{
+					?>
+                    <option value="<?php echo $key ?>" <?php if ($input_building_type==$key ) echo "selected"; ?> class="text"><?php echo $building ?></option>
+				<?php } ?>
+
+            </select>
+        </div>
+    </div>
 
 	<div class="flexible-div width-element" id="transaction_type">
 		<div class="search-select-wrap">
@@ -42,15 +85,16 @@
 		</div>
 	</div>
                     <?php $input_sort_by = (isset($_POST['input_sort_by']) ? $_POST['input_sort_by'] : 0); ?>
-    <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
+                        <input type="hidden" name="wk-input_sort_by" class="input-sort-by" value="<?php echo $input_sort_by ?>">
     <input type="hidden" name="wk-input_sort_search" class="input-sort-search" value="false">
+
 	<div class="flexible-div width-element" id="bedroom">
 		<div class="search-select-wrap">
 			<select class="form-control search-select" name="wk-bedroom">
 				<option style="color:gray" disabled selected hidden>Bedrooms</option>
 				<?php for ($i = 1; $i <= 10; $i++) { ?>
 				<option class="text" value="<?= $i; ?>" <?= isset($_POST[ 'bedroom']) && $_POST[ 'bedroom']== $i ? 'selected="selected"' : '' ?> >
-					<?= $i; ?>
+					<?= $i.'+';?>
 				</option>
 				<?php } ?>
 			</select>
@@ -62,7 +106,7 @@
 				<option style="color:gray" disabled selected hidden>Bathrooms</option>
 				<?php for ($i = 1; $i <= 10; $i++) { ?>
 				<option class="text" value="<?= $i; ?>" <?= isset($_POST[ 'bathroom']) && $_POST[ 'bathroom']== $i ? 'selected="selected"' : '' ?> >
-					<?= $i; ?>
+					<?= $i.'+'; ?>
 				</option>
 				<?php } ?>
 			</select>
@@ -124,7 +168,7 @@
 <?php
 if(isset($_POST['price']))
 	$mm = explode(';',$_POST['price']);
-	else $mm = array(0,1000);
+	else $mm = array(0,2000);
 ?>
 
 <script>
@@ -141,7 +185,7 @@ if(isset($_POST['price']))
     type: "double",
     grid: true,
     min: 0,
-    max: 1000,
+    max: 2000,
     from: <?= $mm[0]?>,
     to: <?= $mm[1]?>,
     prefix: "$",
@@ -149,7 +193,7 @@ if(isset($_POST['price']))
 	max_postfix: "M+",
     prettify_enabled: true,
     prettify: function (num) {
-        if(num == 1000) return 1;
+        if(num == 2000) return 2;
         else return num+"k";
     }
 });
